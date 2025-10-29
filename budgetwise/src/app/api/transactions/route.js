@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
-import { getTransactions } from '../../../BackEnd/api/transactions';
+import supabase from '../../../helpers/databaseConnector';
 
 // GET /api/transactions
 export async function GET() {
   try {
-    const { Transactions } = await getTransactions();
+    const { data: Transactions, error } = await supabase
+      .from('Transactions')
+      .select('*');
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
     return NextResponse.json({ Transactions });
   } catch (err) {
     console.error('❌ Error fetching transactions:', err);

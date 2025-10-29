@@ -42,3 +42,9 @@
 .bw-text-muted { color: var(--color-text-muted); }
 .bw-accent { color: var(--color-accent); }
 .bw-border { border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); }
+
+/* Table niceties */
+.bw-table { border-collapse: separate; border-spacing: 0; }
+.bw-table th { position: sticky; top: 0; backdrop-filter: saturate(120%) blur(6px); }
+.bw-table td, .bw-table th { border-color: rgba(255,255,255,0.08); }
+.bw-table tr:nth-child(even) td { background: color-mix(in oklab, var(--color-surface) 92%, white 8%); }
