@@ -111,20 +111,20 @@ export default function TransactionsPage({ transactions }) {
 
       {/* Filters */}
       <div className="bw-card p-4 mb-4">
-        <div className="grid md:grid-cols-4 gap-3">
-          <div>
-            <label className="block text-xs bw-text-muted mb-1">Type</label>
-            <select
-              className="w-full px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-white/10"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="all">All</option>
-              <option value="debit">Debit (−)</option>
-              <option value="credit">Credit (+)</option>
-            </select>
-          </div>
+        <div className="grid md:grid-cols-3 gap-3">
           <div className="space-y-3">
+            <div>
+              <label className="block text-xs bw-text-muted mb-1">Type</label>
+              <select
+                className="w-full px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-white/10"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+              >
+                <option value="all">All</option>
+                <option value="debit">Debit (−)</option>
+                <option value="credit">Credit (+)</option>
+              </select>
+            </div>
             <div>
               <label className="block text-xs bw-text-muted mb-1">Start Date</label>
               <input
@@ -224,22 +224,68 @@ export default function TransactionsPage({ transactions }) {
                   </div>
                   <div className="mt-1 text-xs font-mono flex justify-between items-center">
                     <span className="bw-text-muted">{toCAD(domainMin)}</span>
-                    <span>{toCAD(Math.min(currMin, currMax))} — {toCAD(Math.max(currMin, currMax))}</span>
+                    <span className="flex items-center gap-2">
+                      <span className="opacity-70">$</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        inputMode="decimal"
+                        className="bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-inherit text-center w-24"
+                        value={String(Math.min(currMin, currMax))}
+                        onChange={(e) => {
+                          // Accept raw typing; only validate on blur
+                          const v = e.target.value;
+                          // Allow empty during typing
+                          if (v === "") { setMinAmount(""); return; }
+                          setMinAmount(v);
+                        }}
+                        onBlur={(e) => {
+                          const raw = e.target.value;
+                          const num = Number(raw);
+                          if (isNaN(num)) { setMinAmount(String(domainMin)); return; }
+                          const next = clamp(Math.min(num, currMax), domainMin, domainMax);
+                          setMinAmount(String(next));
+                        }}
+                        title="Min amount"
+                      />
+                      <span>—</span>
+                      <span className="opacity-70">$</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        inputMode="decimal"
+                        className="bg-transparent border-none outline-none focus:outline-none focus:ring-0 text-inherit text-center w-24"
+                        value={String(Math.max(currMin, currMax))}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          if (v === "") { setMaxAmount(""); return; }
+                          setMaxAmount(v);
+                        }}
+                        onBlur={(e) => {
+                          const raw = e.target.value;
+                          const num = Number(raw);
+                          if (isNaN(num)) { setMaxAmount(String(domainMax)); return; }
+                          const next = clamp(Math.max(num, currMin), domainMin, domainMax);
+                          setMaxAmount(String(next));
+                        }}
+                        title="Max amount"
+                      />
+                    </span>
                     <span className="bw-text-muted">{toCAD(domainMax)}</span>
+                  </div>
+                  <div className="mt-3 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={clear}
+                      className="px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-white/10 hover:bg-white/10 hover:border-white/20 transition-colors"
+                    >
+                      Clear filters
+                    </button>
                   </div>
                 </div>
               </>
             );
           })()}
-        </div>
-        <div className="mt-3 flex justify-center gap-3">
-          <button
-            type="button"
-            onClick={clear}
-            className="px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-white/10 hover:bg-white/10 hover:border-white/20 transition-colors"
-          >
-            Clear filters
-          </button>
         </div>
       </div>
 
