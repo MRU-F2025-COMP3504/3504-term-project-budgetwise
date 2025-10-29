@@ -1,0 +1,50 @@
+/* Centralized CSS variables for theming */
+:root {
+  /* Core palette */
+  --color-bg: #0b1020;          /* background base */
+  --color-surface: #121933;     /* cards/panels */
+  --color-surface-2: #1b2547;   /* hover/alt surface */
+  --color-text: #e6e8ef;        /* primary text */
+  --color-text-muted: #aab1c9;  /* secondary text */
+  --color-accent: #6ee7b7;      /* mint accent */
+  --color-accent-2: #60a5fa;    /* blue accent */
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
+  --color-success: #34d399;
+
+  --radius: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg: #f7f8fb;
+    --color-surface: #ffffff;
+    --color-surface-2: #f0f3fa;
+    --color-text: #0f172a;
+    --color-text-muted: #475569;
+    --color-accent: #0ea5e9;
+    --color-accent-2: #7c3aed;
+  }
+}
+
+/* Basic utility classes that work with Tailwind if desired */
+.bw-container { max-width: 1100px; margin-inline: auto; padding: 1.25rem; }
+.bw-card {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.bw-card-muted { background: var(--color-surface-2); }
+.bw-text-muted { color: var(--color-text-muted); }
+.bw-accent { color: var(--color-accent); }
+.bw-border { border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); }
+
+/* Table niceties */
+.bw-table { border-collapse: separate; border-spacing: 0; }
+.bw-table th { position: sticky; top: 0; backdrop-filter: saturate(120%) blur(6px); }
+.bw-table td, .bw-table th { border-color: rgba(255,255,255,0.08); }
+.bw-table tr:nth-child(even) td { background: color-mix(in oklab, var(--color-surface) 92%, white 8%); }

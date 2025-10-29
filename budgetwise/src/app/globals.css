@@ -1,8 +1,10 @@
 @import "tailwindcss";
+@import "../FrontEnd/styles/theme.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Back-compat mapping to new theme variables */
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
 }
 
 @theme inline {
@@ -12,12 +14,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Dark mode handled in theme.css via prefers-color-scheme */
 
 body {
   background: var(--background);
