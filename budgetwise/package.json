@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
+    "dotenv": "^17.2.3",
     "next": "^16.0.1-canary.4",
+    "openai": "^6.7.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
