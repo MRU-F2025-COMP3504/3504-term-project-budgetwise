@@ -24,7 +24,17 @@ export default function Table({ columns, rows, keyField = 'id', emptyText = 'No 
     const num = Number(n);
     return isNaN(num)
       ? String(n ?? '')
-      : new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(num);
+      : new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(num);
+  };
+
+  // Stable date formatting that doesn't depend on server/client locale or timezone
+  const formatDateUTC = (v) => {
+    const d = new Date(v);
+    if (isNaN(d.getTime())) return String(v ?? '');
+    // ISO string is always in UTC; trim milliseconds for brevity
+    const iso = d.toISOString(); // 2025-10-28T12:34:56.789Z
+    const short = iso.replace('T', ' ').replace(/\.\d{3}Z$/, ' UTC'); // 2025-10-28 12:34:56 UTC
+    return short;
   };
 
   const colDefs = (columns && columns.length > 0
@@ -36,7 +46,7 @@ export default function Table({ columns, rows, keyField = 'id', emptyText = 'No 
     if (value == null) return '';
     if (isCurrencyKey(key) && isNumeric(value)) return currency(value);
     if (isDateish(key, value)) {
-      try { return new Date(value).toLocaleString(); } catch { /* fallthrough */ }
+      try { return formatDateUTC(value); } catch { /* fallthrough */ }
     }
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
