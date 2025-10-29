@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import supabase from '../../../../helpers/databaseConnector';
+import supabase from '../../../helpers/databaseConnector';
 
+// GET /api/transactions
 export async function GET() {
   try {
     const { data: Transactions, error } = await supabase
@@ -17,3 +18,7 @@ export async function GET() {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+
+// POST /api/transactions
+
+// UPDATE /api/transactions
