@@ -1,6 +1,8 @@
 require('dotenv').config({path: 'E:\\Coding\\3504-term-project-budgetwise\\budgetwise\\prototypes\\ai-quiz\\.env'});
 const OpenAI = require('openai');
 const readLine = require('readline');
+
+
 const rl = readLine.createInterface({
     input: process.stdin,
     output: process.stdout
@@ -44,8 +46,6 @@ async function startQuiz() {
         { role: "system", content: systemPrompt },
         { role: "user", content: "Hi! I'm ready to start the budgeting quiz." }
     ];
-
-    console.log("Getting first question from AI...");
 
     // Initial AI question
     let aiResponse = await getAIResponse(messages);
