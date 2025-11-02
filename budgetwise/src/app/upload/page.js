@@ -21,8 +21,6 @@ export default function UploadPage() {
     const data = await res.json()
     if (res.ok) {
       setMessage(`✅ Uploaded successfully: ${data.file}`)
-      console.log(data);
-      localStorage.setItem('parsed_transaction',JSON.stringify(data.transaction) );
     } else {
       setMessage(`❌ Upload failed: ${data.error}`)
     }

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import supabase from '../../../../../lib/helpers/DatabaseConnector';
+import supabase from '../../../../lib/helpers/DatabaseConnector';
 import {
   getFileFromRequest,
   parseCSVFile,
@@ -7,7 +7,7 @@ import {
   uploadFileToStorage,
   insertStatementRecord,
   insertTransactions,
-} from '../../../../../lib/helpers/uploadHelper';
+} from '../../../../lib/helpers/uploadHelper';
 // GET /api/statements
 export async function GET() {
   try {

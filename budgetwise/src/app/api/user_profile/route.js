@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import supabase from '../../../../../lib/helpers/DatabaseConnector';
+import supabase from '../../../../lib/helpers/DatabaseConnector';
 
 export async function GET() {
 try {
