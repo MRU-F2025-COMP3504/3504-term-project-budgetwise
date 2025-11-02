@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import supabase from '../../../helpers/databaseConnector';
+import supabase from '../../../../../lib/helpers/DatabaseConnector';
 
 // GET /api/transactions
 export async function GET() {
@@ -20,5 +20,7 @@ export async function GET() {
 }
 
 // POST /api/transactions
-
+function POST(req) {
+  return NextResponse.json({ message: "POST /api/transactions not yet implemented" }, { status: 501 });
+}
 // UPDATE /api/transactions

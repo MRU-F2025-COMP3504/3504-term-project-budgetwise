@@ -31,7 +31,7 @@
     "**/*.js",
     "**/*.jsx",
     ".next/dev/types/**/*.ts"
-  ],
+, "../lib/helpers/CsvParser.js", "../lib/helpers/CalgarySpendingCategories.js", "../lib/helpers/CategorizeTransactions.js", "../lib/helpers/DatabaseConnector.js"  ],
   "exclude": [
     "node_modules"
   ]
