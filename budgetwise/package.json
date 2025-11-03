@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "test": "jest --watchAll"
+    "test": "jest "
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.76.1",
