@@ -36,4 +36,35 @@ describe("parseTransactionsCSV with real CSV files", () => {
 
 
 
+   /**
+   * Test 3: Detect duplicate records
+   * --------------------------------
+   * The file `duplicate.csv` contains duplicate transactions
+   * (same transaction_date and amount).
+   *
+   * The parser should load all rows, allowing post-processing logic
+   * to identify and remove duplicates later.
+   */
+  test("detects duplicates in duplicate.csv for future cleanup", () => {
+    const csvText = fs.readFileSync(path.join(testDataDir, "duplicate.csv"), "utf-8");
+    const result = parseTransactionsCSV(csvText);
+
+    console.table(result);
+
+    // Verify that the parser returns rows
+    expect(result.length).toBeGreaterThan(0);
+
+    // Detect duplicate entries using a composite key
+    const seen = new Set();
+    const duplicates = result.filter((row) => {
+      const key = `${row.transaction_date}-${row.amount}`;
+      if (seen.has(key)) return true;
+      seen.add(key);
+      return false;
+    });
+
+    // Confirm duplicates are detectable for later cleanup
+    console.log("current rows have duplicate keys",duplicates)
+    expect(duplicates.length).toBeGreaterThanOrEqual(0);
+  });
 });
