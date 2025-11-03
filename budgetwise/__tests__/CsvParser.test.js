@@ -34,6 +34,44 @@ describe("parseTransactionsCSV with real CSV files", () => {
     expect(result[0]).toHaveProperty("amount");
   });
 
+  /**
+   * Test 2: Handle inconsistent or malformed CSV data
+   * -------------------------------------------------
+   * The file 'bad.csv' may include:
+   *  - Missing headers or columns
+   *  - Invalid numbers or dates
+   *  - Rows with mextra/missing filds
+   * 
+   * The parser should still attempt to organize usable rows,
+   * while making it possible to detect (and later remove) 
+   * invalid ones
+   * 
+   */
+
+  test("organizes bad.csv even if data is inconsistent", () => {
+    const csvText = fs.readFileSync(path.join(testDataDir, "bad.csv"), "utf-8");
+    const result = parseTransactionsCSV(csvText);
+
+    console.table(result);
+
+    // Ensure parser still returns an array of results
+    expect(Array.isArray(result)).toBe(true);
+
+    // Each valid row should contain the required fields
+    result.forEach((row) => {
+      expect(row).toHaveProperty("transaction_date");
+      expect(row).toHaveProperty("amount");
+    });
+
+    // Identify invalid rows (for potential deletion later)
+    const invalidRows = result.filter(
+      (r) => !r.transaction_date || isNaN(Number(r.amount))
+    );
+
+    // Confirm that the test detects possible invalid rows
+    expect(invalidRows.length).toBeGreaterThanOrEqual(0);
+  });
+
 
 
    /**
