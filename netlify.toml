@@ -1,6 +1,6 @@
 [build]
   base = "budgetwise"
-  command = "npm run build"
+  command = "npm test && npm run build"
   publish = ".next"
 
 [[plugins]]
