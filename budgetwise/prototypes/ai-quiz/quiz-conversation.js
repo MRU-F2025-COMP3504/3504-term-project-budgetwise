@@ -1,4 +1,5 @@
-require('dotenv').config({path: 'E:\\Coding\\3504-term-project-budgetwise\\budgetwise\\prototypes\\ai-quiz\\.env'});
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const OpenAI = require('openai');
 const readLine = require('readline');
 
@@ -30,6 +31,16 @@ Rules:
 
 When you've asked an adequate number of questions (at least 5), end the quiz with a summary and
 a basic profile breakdown.
+
+These are the main things we want to learn about the user:
+- Monthly income
+- Monthly estimated budget
+- Monthly spending habits
+- Financial goals
+- Their level of experience and financial knowledge
+- Anything else the user shares that you deem relevant
+
+Remain flexible, do a minimum of 5 questions but try to keep it under 10 if possible.
 `;
 
 // Waits for user input

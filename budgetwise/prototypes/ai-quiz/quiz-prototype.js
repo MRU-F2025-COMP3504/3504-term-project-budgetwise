@@ -1,5 +1,6 @@
 // Loads environment variables from .env file
-require('dotenv').config({path: 'E:\\Coding\\3504-term-project-budgetwise\\budgetwise\\prototypes\\ai-quiz\\.env'});
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 // Load OpenAI library
 
 // Test if API key is loaded correctly, prints to console
