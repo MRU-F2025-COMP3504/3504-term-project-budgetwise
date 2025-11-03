@@ -1,0 +1,5 @@
+date,description,withdraw,deposit,balance
+2025-01-01,Paycheck,,3000,3000
+2025-01-02,Coffee,5,,2995
+2025-01-03,Grocery,80,,2915
+2025-01-04,Transfer,,500,3415
