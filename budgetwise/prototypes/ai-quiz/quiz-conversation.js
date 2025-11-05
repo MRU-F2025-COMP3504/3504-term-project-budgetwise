@@ -1,6 +1,8 @@
+const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const OpenAI = require('openai');
+const { quizSystemPrompt } = require('./prompts.js');
 const readLine = require('readline');
 
 
@@ -14,40 +16,6 @@ const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1"
 });
 
-const systemPrompt = `
-You are a friendly financial advisor named BudgetWise helping a user understand their spending habits and give
-financial advice based on their responses to a quiz about budgeting.
-
-Your goal is to quiz the user on their spending habits, and build a user profile that you will
-rely on to provide personalized financial advice in the future. 
-
-Rules:
-- Always be friendly and supportive.
-- Ask one question at a time.
-- Wait for the user's response before asking the next question.
-- Use the user's responses to build a profile of their spending habits.
-- At the end of the quiz, summarize the user's spending habits based on their answers.
-- If user provides unclear or incomplete answers, ask follow-up questions to clarify.
-
-Error Handling:
-- If the user provides an invalid response, gently prompt them to provide a valid answer.
-- If the user seems confused, offer to rephrase or explain the question.
-
-When you've asked an adequate number of questions (at least 5), end the quiz with a summary and
-a basic profile breakdown.
-
-These are the main things we want to learn about the user:
-- Monthly income
-- Monthly estimated budget
-- Monthly spending habits
-- Monthly savings goals
-- Financial goals
-- Their level of experience and financial knowledge
-- Anything else the user shares that you deem relevant
-
-Remain flexible, do a minimum of 5 questions but try to keep it under 10 if possible.
-`;
-
 // Waits for user input
 function askUser(question) {
     return new Promise((resolve) => {
@@ -59,13 +27,13 @@ function askUser(question) {
 
 async function startQuiz() {
     const messages = [
-        { role: "system", content: systemPrompt },
+        { role: "system", content: quizSystemPrompt },
         { role: "user", content: "Hi! I'm ready to start the budgeting quiz." }
     ];
 
     // Initial AI question
     let aiResponse = await getAIResponse(messages);
-    console.log("AI:", aiResponse);
+    console.log("BudgetWise:", aiResponse);
 
     // Add AI response to history
     messages.push({ role: "assistant", content: aiResponse });
@@ -79,7 +47,7 @@ async function startQuiz() {
 
         // Get AI response
         aiResponse = await getAIResponse(messages);
-        console.log("\nAI:", aiResponse);
+        console.log("\nBudgetWise:", aiResponse);
 
         // Add AI response to history
         messages.push({ role: "assistant", content: aiResponse });
@@ -88,6 +56,9 @@ async function startQuiz() {
         if (aiResponse.toLowerCase().includes("summary") ||
            (aiResponse.toLowerCase().includes("profile"))) {
             console.log("\nQuiz ended. Thank you for participating!");
+
+            saveQuizSummary(aiResponse);
+
             rl.close();
             break;
         }
@@ -100,6 +71,27 @@ async function getAIResponse(messages) {
         messages: messages
     });
     return response.choices[0].message.content;
+}
+
+function saveQuizSummary(summary) {
+    try {
+        // Extract JSON object from the response using regex
+        const match = summary.match(/{[\s\S]*}/);
+        if (!match) {
+            throw new Error("No JSON found in AI response.");
+        }
+        const jsonSummary = JSON.parse(match[0]);
+
+        // Generate filename with timestamp
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const filename = `quiz_summary_${timestamp}.json`;
+
+        // Save to file
+        fs.writeFileSync(path.join(__dirname, '../user profiles', filename), JSON.stringify(jsonSummary, null, 2));
+        console.log(`Quiz summary saved to ${filename}`);
+    } catch (error) {
+        console.error("Failed to save quiz summary:", error);
+    }
 }
 
 startQuiz();
