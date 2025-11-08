@@ -13,7 +13,6 @@ const rl = readLine.createInterface({
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1"
 });
 
 // Waits for user input
@@ -67,7 +66,7 @@ async function startQuiz() {
 
 async function getAIResponse(messages) {
     const response = await openai.chat.completions.create({
-        model: "openai/gpt-4o",
+        model: "gpt-4o",
         messages: messages
     });
     return response.choices[0].message.content;
