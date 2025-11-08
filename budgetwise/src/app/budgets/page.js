@@ -1,7 +1,6 @@
 'use client'
-import UploadPage from '../../FrontEnd/pages/UploadPage'
-
+import BudgetsPage from '../../FrontEnd/pages/BudgetsPage'
 export const dynamic = 'force-dynamic'
 export default function Page(){
-  return <UploadPage />
+  return <BudgetsPage />
 }
