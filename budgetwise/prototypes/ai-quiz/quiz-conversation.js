@@ -30,43 +30,47 @@ async function startQuiz() {
         { role: "user", content: "Hi! I'm ready to start the budgeting quiz." }
     ];
 
+    let quizCompleted = false;
+
     // Initial AI question
     let aiResponse = await getAIResponse(messages);
     console.log("BudgetWise:", aiResponse);
 
-    // Add AI response to history
     messages.push({ role: "assistant", content: aiResponse });
 
     while (true) {
-        // Get user input
         const userInput = await askUser("\nYou: ");
-
-        // Add user input to history
         messages.push({ role: "user", content: userInput });
 
-        // Get AI response
         aiResponse = await getAIResponse(messages);
         console.log("\nBudgetWise:", aiResponse);
 
-        // Add AI response to history
         messages.push({ role: "assistant", content: aiResponse });
 
-        // Check if quiz should end
-        if (aiResponse.toLowerCase().includes("summary") ||
-           (aiResponse.toLowerCase().includes("profile"))) {
-            console.log("\nQuiz ended. Thank you for participating!");
-
+        // Check for JSON in AI response
+        const match = aiResponse.match(/{[\s\S]*}/);
+        if (!quizCompleted && match) {
             saveQuizSummary(aiResponse);
+            quizCompleted = true;
 
-            rl.close();
-            break;
+            // Ask if user wants to update
+            const updateInput = await askUser("\nDo you want to change or update anything? (yes/no): ");
+            if (updateInput.trim().toLowerCase() === "no") {
+                console.log("\nQuiz ended. Thank you for participating!");
+                rl.close();
+                break;
+            } else {
+                // Optionally, you can add a message to the AI to indicate the user wants to update
+                messages.push({ role: "user", content: "I want to update my answers." });
+                continue;
+            }
         }
     }
 }
 
 async function getAIResponse(messages) {
     const response = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "gpt-4.1-mini",
         messages: messages
     });
     return response.choices[0].message.content;
