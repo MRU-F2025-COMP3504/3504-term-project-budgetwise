@@ -1,3 +1,5 @@
+import CategoryChart from "../components/CategoryChart"; 
+
 "use client";
 import { useEffect, useState } from "react";
 import StatSummary from "../components/StatSummary";
@@ -53,7 +55,11 @@ export default function DashboardPage() {
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         <div className="bw-card p-4">
           <h2 className="font-medium mb-2">Top Categories</h2>
-          <ul className="text-sm space-y-1">
+
+          {/* 🔹 Add chart visualization */}
+          <CategoryChart data={topCats} />
+
+          <ul className="text-sm space-y-1 mt-4">
             {topCats.map(([c, amt]) => (
               <li key={c} className="flex justify-between">
                 <span>{c}</span>
