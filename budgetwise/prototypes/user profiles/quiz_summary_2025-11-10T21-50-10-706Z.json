@@ -1,0 +1,20 @@
+{
+  "monthly_income": "$1400",
+  "monthly_budget_goal": "$800",
+  "spending_habits": {
+    "food_entertainment_misc": "$300-$600 combined with high fluctuation"
+  },
+  "monthly_savings": {
+    "current": "$250 into TFSA",
+    "goal": "$500"
+  },
+  "financial_goals": {
+    "car_mod": {
+      "target_amount": "$3000",
+      "time_frame_months": 8,
+      "monthly_target": "$375"
+    }
+  },
+  "financial_experience_level": "intermediate",
+  "budgeting_method": "mental tracking"
+}

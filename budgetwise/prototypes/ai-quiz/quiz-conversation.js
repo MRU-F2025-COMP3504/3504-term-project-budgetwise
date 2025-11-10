@@ -62,6 +62,7 @@ async function startQuiz() {
             } else {
                 // Optionally, you can add a message to the AI to indicate the user wants to update
                 messages.push({ role: "user", content: "I want to update my answers." });
+                quizCompleted = false;
                 continue;
             }
         }
