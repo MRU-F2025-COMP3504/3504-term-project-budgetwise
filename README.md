@@ -209,6 +209,8 @@ Example:
 npm test -- -t "authenticateUser returns user"
 ```
 
-## Operation Use cases
+## Operational Use cases
 ### Use case 3: Scanning bank statements
-the user needs to be loged in 
+
+### Use Case 5: Taking the User Quiz
+
