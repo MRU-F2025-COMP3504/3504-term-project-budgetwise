@@ -1,3 +1,4 @@
+## Group
 Communication: 
 
 Whatsapp Group: Contact Member for invite
@@ -14,8 +15,153 @@ Anmol Verma <br>
 - SHARE WHICH USE CASE(S)/FEATURES ARE OPERATIONAL
 - CLEAR INSTRUCTIONS ON HOW TO BUILD, TEST, AND RUN THE SYSTEM
     (APOORVE SHOULD BE ABLE TO BUILD OUR PROJECT)
+# Build & Run Instructions
 
-## Testing Guide
+This project uses **Next.js** with a **Supabase backend** and is deployed through **Netlify**.  
+Follow these instructions to build, run, and deploy the system.
+
+---
+
+## System Requirements
+
+| Requirement | Version |
+|------------|--------|
+Node.js | v18+  
+npm | Latest  
+Supabase account | Required  
+Netlify account | Required for deployment |
+
+---
+
+## 1. Clone the Repository
+
+```bash
+git clone <repo-url>
+cd budgetwise
+```
+
+---
+
+## 2. Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 3. Environment Variables (Required)
+
+This project requires Supabase environment variables.
+
+### Local Setup
+
+Create `.env.local` in the project root:
+
+```env
+# Supabase Config
+SUPABASE_URL=YOUR_SUPABASE_URL
+SUPABASE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
+
+NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY
+```
+
+If you do not have access to these, contact the team members in the **Members** section.
+
+**Do not commit this file.**
+
+---
+
+## 4. Run Locally
+
+### Development
+
+```bash
+npm run dev
+```
+
+Visit:
+
+```
+http://localhost:3000
+```
+
+### Production Simulation
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## Deployment (Netlify)
+
+Deployment is automatic when pushing to the `main` branch.
+
+However, Netlify must be configured with the same Supabase environment variables.
+
+### Netlify Setup Steps
+
+1. Login to Netlify and select project
+2. Go to:
+
+```
+Site Settings → Environment Variables
+```
+
+3. Add these keys:
+
+| Variable | Value |
+|--------|-------|
+SUPABASE_URL | Your Supabase URL |
+SUPABASE_KEY | Your Supabase Service Key |
+NEXT_PUBLIC_SUPABASE_URL | Your Supabase URL |
+NEXT_PUBLIC_SUPABASE_KEY | Your Supabase Public Key |
+
+4. Save changes and redeploy
+
+---
+
+## Netlify Build Configuration
+
+`netlify.toml`:
+
+```toml
+[build]
+  base = "budgetwise"
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+```
+
+Netlify will handle:
+
+- Installing dependencies
+- Running `npm run build`
+- Deploying your application
+
+---
+
+## Summary
+
+| Action | Command |
+|--------|--------|
+Install dependencies | `npm install` |
+Start local dev | `npm run dev` |
+Build production | `npm run build` |
+Run production | `npm start` |
+Deploy on Netlify | Automatic on push |
+Netlify env setup | Must match `.env.local` |
+
+---
+
+This ensures the system can be built and run locally and in production.
+
+# Testing Guide
 
 This project uses Jest for automated testing. Follow the steps below to run tests successfully.
 
@@ -62,7 +208,6 @@ Example:
 ```bash
 npm test -- -t "authenticateUser returns user"
 ```
-## Making a build
 
 ## Operation Use cases
 ### Use case 3: Scanning bank statements
