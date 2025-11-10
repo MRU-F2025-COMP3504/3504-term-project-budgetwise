@@ -1,21 +1,21 @@
-# 💸 BudgetWise
+# BudgetWise
 
 **BudgetWise** is a web-based budgeting tool that helps users track spending habits, categorize expenses, and get personalized financial insights from AI — all without connecting to their bank accounts.
 
 ---
 
-## 📘 Overview
+## Overview
 
 BudgetWise allows users to upload their bank statements or receipts, have them automatically parsed and categorized, and receive AI-driven advice on how to improve their budgeting.
 
-### 🌟 Goals
+### Goals
 
 * Simplify personal budgeting for young adults.
 * Provide AI-powered insights into spending habits.
 * Keep data private — no direct bank linking.
 * Offer a **“pay-what-you-want”** donation model (no subscriptions).
 
-### 🧹 Tech Stack
+### Tech Stack
 
 | Layer    | Technology                   |
 | -------- | ---------------------------- |
@@ -27,7 +27,7 @@ BudgetWise allows users to upload their bank statements or receipts, have them a
 
 ---
 
-## 👥 Team & Roles
+## Team & Roles
 
 | Member        | Role          | Focus                      |
 | ------------- | ------------- | -------------------------- |
@@ -39,7 +39,7 @@ BudgetWise allows users to upload their bank statements or receipts, have them a
 
 ---
 
-## ⚙️ Core Features
+## Core Features
 
 1. Register / Login
 2. AI-based Onboarding Quiz
@@ -51,40 +51,40 @@ BudgetWise allows users to upload their bank statements or receipts, have them a
 
 ---
 
-## 🧬 Main Use Cases
+## Main Use Cases
 
-### 1️⃣ Register Account
+### 1 - Register Account
 
 * **Actors:** User, System
 * **Trigger:** User opens app and creates an account.
 * **Flow:** Enter details → verify → login → dashboard.
 * **Exceptions:** Duplicate email, invalid input.
 
-### 2️⃣ Login
+### 2️ - Login
 
 * **Actors:** User, System
 * **Flow:** User enters credentials → verified → navigates to dashboard.
 * **Exceptions:** Wrong credentials, invalid format.
 
-### 3️⃣ Take Spending Quiz
+### 3️ - Take Spending Quiz
 
 * **Purpose:** Build a spending profile for AI recommendations.
 * **Flow:** AI asks 5–7 adaptive questions → user answers → profile summary generated.
 * **Extension:** User can redo quiz or edit answers later.
 
-### 4️⃣ Scan Bank Statements
+### 4️ - Scan Bank Statements
 
 * **Purpose:** Extract transactions without bank syncing.
 * **Flow:** User uploads file → system validates → parses → categorizes → stores results.
 * **Extensions:** Multi-file upload, duplicate detection, OCR support.
 
-### 5️⃣ Does Budget Allow for Spending?
+### 5️ - Does Budget Allow for Spending?
 
 * **Purpose:** AI assistant answers user prompts like “Can I afford dinner out?”
 * **Flow:** User chats with AI → AI checks budget context → gives advice or projections.
 * **Extension:** Can also create/update budgets on request.
 
-### 6️⃣ Categorize Spending
+### 6️ - Categorize Spending
 
 * **Purpose:** Manage and reorganize categories.
 * **Flow:** User requests new or modified category → AI applies rules and updates dashboard.
@@ -92,7 +92,7 @@ BudgetWise allows users to upload their bank statements or receipts, have them a
 
 ---
 
-## 🔗 API Routes (Planned)
+## API Routes (Planned)
 
 | Route                | Method   | Description                  |
 | -------------------- | -------- | ---------------------------- |
@@ -109,7 +109,7 @@ BudgetWise allows users to upload their bank statements or receipts, have them a
 
 ---
 
-## 🧱 Architecture Snapshot
+## Architecture Snapshot
 
 ```
 Next.js (App Router)
@@ -141,7 +141,7 @@ Next.js (App Router)
 
 ---
 
-## 🔒 Non-Functional Requirements
+## Non-Functional Requirements
 
 * **Usability:** Upload → Categorize → View results in ≤ 2 clicks
 * **Security:** PIPEDA-compliant, encrypted uploads, no bank syncing
@@ -150,7 +150,7 @@ Next.js (App Router)
 
 ---
 
-## 🤪 Testing Plan
+## Testing Plan
 
 * **Unit Tests:** Parser, Categorization Rules, Budget Math
 * **Integration Tests:** Upload → Parse → Categorize → Display Flow
@@ -159,7 +159,7 @@ Next.js (App Router)
 
 ---
 
-## 📄 Developer Quick Start
+## Developer Quick Start
 
 ```bash
 # Clone repo
@@ -180,7 +180,7 @@ npm run dev
 
 ---
 
-## 🧩 Folder Structure
+## Folder Structure
 
 ```
 /app              → Next.js App Router pages
@@ -193,7 +193,7 @@ npm run dev
 
 ---
 
-## 🦯 Future Goals
+## Future Goals
 
 * ✅ iOS/Android integration
 * ✅ Real-time budget tracking

@@ -1,7 +1,6 @@
 'use client'
-import UploadPage from '../../FrontEnd/pages/UploadPage'
-
+import AIPage from '../../FrontEnd/pages/AIPage'
 export const dynamic = 'force-dynamic'
 export default function Page(){
-  return <UploadPage />
+  return <AIPage />
 }

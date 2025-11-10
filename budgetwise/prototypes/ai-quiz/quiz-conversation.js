@@ -1,5 +1,8 @@
-require('dotenv').config({path: 'E:\\Coding\\3504-term-project-budgetwise\\budgetwise\\prototypes\\ai-quiz\\.env'});
+const fs = require('fs');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const OpenAI = require('openai');
+const { quizSystemPrompt } = require('./prompts.js');
 const readLine = require('readline');
 
 
@@ -10,27 +13,7 @@ const rl = readLine.createInterface({
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1"
 });
-
-const systemPrompt = `
-You are a friendly financial advisor helping a user understand their spending habits and give
-financial advice based on their responses to a quiz about budgeting.
-
-Your goal is to quiz the user on their spending habits, and build a user profile that you will
-rely on to provide personalized financial advice in the future. 
-
-Rules:
-- Always be friendly and supportive.
-- Ask one question at a time.
-- Wait for the user's response before asking the next question.
-- Use the user's responses to build a profile of their spending habits.
-- At the end of the quiz, summarize the user's spending habits based on their answers.
-- If user provides unclear or incomplete answers, ask follow-up questions to clarify.
-
-When you've asked an adequate number of questions (at least 5), end the quiz with a summary and
-a basic profile breakdown.
-`;
 
 // Waits for user input
 function askUser(question) {
@@ -43,47 +26,75 @@ function askUser(question) {
 
 async function startQuiz() {
     const messages = [
-        { role: "system", content: systemPrompt },
+        { role: "system", content: quizSystemPrompt },
         { role: "user", content: "Hi! I'm ready to start the budgeting quiz." }
     ];
 
+    let quizCompleted = false;
+
     // Initial AI question
     let aiResponse = await getAIResponse(messages);
-    console.log("AI:", aiResponse);
+    console.log("BudgetWise:", aiResponse);
 
-    // Add AI response to history
     messages.push({ role: "assistant", content: aiResponse });
 
     while (true) {
-        // Get user input
         const userInput = await askUser("\nYou: ");
-
-        // Add user input to history
         messages.push({ role: "user", content: userInput });
 
-        // Get AI response
         aiResponse = await getAIResponse(messages);
-        console.log("\nAI:", aiResponse);
+        console.log("\nBudgetWise:", aiResponse);
 
-        // Add AI response to history
         messages.push({ role: "assistant", content: aiResponse });
 
-        // Check if quiz should end
-        if (aiResponse.toLowerCase().includes("summary") ||
-           (aiResponse.toLowerCase().includes("profile"))) {
-            console.log("\nQuiz ended. Thank you for participating!");
-            rl.close();
-            break;
+        // Check for JSON in AI response
+        const match = aiResponse.match(/{[\s\S]*}/);
+        if (!quizCompleted && match) {
+            saveQuizSummary(aiResponse);
+            quizCompleted = true;
+
+            // Ask if user wants to update
+            const updateInput = await askUser("\nDo you want to change or update anything? (yes/no): ");
+            if (updateInput.trim().toLowerCase() === "no") {
+                console.log("\nQuiz ended. Thank you for participating!");
+                rl.close();
+                break;
+            } else {
+                // Optionally, you can add a message to the AI to indicate the user wants to update
+                messages.push({ role: "user", content: "I want to update my answers." });
+                continue;
+            }
         }
     }
 }
 
 async function getAIResponse(messages) {
     const response = await openai.chat.completions.create({
-        model: "openai/gpt-4o",
+        model: "gpt-4.1-mini",
         messages: messages
     });
     return response.choices[0].message.content;
+}
+
+function saveQuizSummary(summary) {
+    try {
+        // Extract JSON object from the response using regex
+        const match = summary.match(/{[\s\S]*}/);
+        if (!match) {
+            throw new Error("No JSON found in AI response.");
+        }
+        const jsonSummary = JSON.parse(match[0]);
+
+        // Generate filename with timestamp
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const filename = `quiz_summary_${timestamp}.json`;
+
+        // Save to file
+        fs.writeFileSync(path.join(__dirname, '../user profiles', filename), JSON.stringify(jsonSummary, null, 2));
+        console.log(`Quiz summary saved to ${filename}`);
+    } catch (error) {
+        console.error("Failed to save quiz summary:", error);
+    }
 }
 
 startQuiz();
