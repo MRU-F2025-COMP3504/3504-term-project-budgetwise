@@ -128,6 +128,7 @@ SUPABASE_URL | Your Supabase URL |
 SUPABASE_KEY | Your Supabase Service Key |
 NEXT_PUBLIC_SUPABASE_URL | Your Supabase URL |
 NEXT_PUBLIC_SUPABASE_KEY | Your Supabase Public Key |
+OPENAI_API_KEY | Your OpenAI API Key |
 
 4. Save changes and redeploy
 
