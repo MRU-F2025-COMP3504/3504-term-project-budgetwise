@@ -15,7 +15,6 @@ Anmol Verma <br>
 - CLEAR INSTRUCTIONS ON HOW TO BUILD, TEST, AND RUN THE SYSTEM
     (APOORVE SHOULD BE ABLE TO BUILD OUR PROJECT)
 
-## Performing tests
 ## Testing Guide
 
 This project uses Jest for automated testing. Follow the steps below to run tests successfully.
