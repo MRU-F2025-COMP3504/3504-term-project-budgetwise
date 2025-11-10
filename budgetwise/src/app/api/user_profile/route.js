@@ -1,23 +1,16 @@
 import { NextResponse } from 'next/server';
 import supabase from '../../../../lib/helpers/DatabaseConnector';
+import { get } from 'http';
+import { GetUserProfile } from '../../../../lib/helpers/UserProfile';
 
 export async function GET() {
-try {
-    let { data: UserProfile, error } = await supabase
-      .from('UserProfile')
-      .select('*');
-    
-        if (error) {
-          return NextResponse.json({ error: error.message }, { status: 500 });
-        }
-    
-        return NextResponse.json({ UserProfile });
+  let data = await GetUserProfile();
+  if (!data) {
+    return NextResponse.json({ error: "Failed to fetch user profiles" }, { status: 500 });
+  } else {
+    return NextResponse.json({ data }, { status: 200 });
 
-    
-} catch (error) {
-     console.error('❌ Error fetching transactions:', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
-}    
+  }
 
 
 }
@@ -86,3 +79,5 @@ export async function PUT(req) {
     );
   }
 }
+
+GET();
