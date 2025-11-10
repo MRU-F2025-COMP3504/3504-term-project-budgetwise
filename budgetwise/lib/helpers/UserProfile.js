@@ -4,6 +4,13 @@ import supabase from "./DatabaseConnector.js";
 
 export async function GetUserProfile() {
   try {
+
+     // Demo auth – replace with real session handling
+    const { data: userData, error: loginError } = await supabase.auth.signInWithPassword({
+      email: 'test1@gmail.com',
+      password: '12345',
+    });
+
     const { data: UserProfile, error } = await supabase
       .from("User_Profile")
       .select("*");
@@ -20,15 +27,22 @@ export async function GetUserProfile() {
     return null;
   }
 }
-async function CreateUserProfile(data) {
+async function CreateUserProfile(upload_data) {
+   // Demo auth – replace with real session handling
+  const { data: userData, error: loginError } = await supabase.auth.signInWithPassword({
+        email: 'test1@gmail.com',
+        password: '12345',
+  });
+
+
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) throw new Error("User not logged in");
 
   const userdata = {
     user_id: user.id,
-    name: data.name,
-    profile_data: data || {}
+    name: upload_data.name,
+    profile_data: upload_data || {}
   };
 
   const { data, error } = await supabase
