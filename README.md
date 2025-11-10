@@ -23,6 +23,7 @@ This project uses Jest for automated testing. Follow the steps below to run test
 
 ### Prerequisites
 Before running tests:
+- Ensure your in the budgetwise directory
 - Ensure your `.env` file is configured  
 - Install project dependencies
 ```bash
@@ -42,7 +43,7 @@ Run all tests:
 ```bash
 npm test
 ```
-Jest runs in watch mode, re-running tests automatically when files change.
+
 ---
 ### Running a Specific Test File
 ```bash
