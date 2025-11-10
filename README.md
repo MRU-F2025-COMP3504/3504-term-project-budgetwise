@@ -54,7 +54,7 @@ npm install
 
 This project requires Supabase environment variables.
 
-### Local Setup
+### Local Setup - Supabase
 
 Create `.env.local` in the project root:
 
@@ -67,7 +67,16 @@ NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY
 ```
 
-If you do not have access to these, contact the team members in the **Members** section.
+### Local Setup - AI
+
+Create `.env` in the project root:
+
+```env
+# OpenAI API Key Config
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+```
+
+If you do not have access to either key or URL, contact the team members in the **Members** section.
 
 **Do not commit this file.**
 
