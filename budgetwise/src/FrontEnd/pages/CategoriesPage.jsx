@@ -50,7 +50,7 @@ export default function CategoriesPage() {
           />
           <button
             onClick={add}
-            className="px-4 py-2 rounded-md bg-[var(--color-accent-2)] text-white"
+            className="bw-btn bw-btn-primary"
           >Add</button>
         </div>
       </div>

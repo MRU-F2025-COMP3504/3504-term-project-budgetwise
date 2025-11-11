@@ -31,33 +31,47 @@ export default function UploadPage() {
 
   return (
     <div className="bw-container py-8">
-      <h1 className="text-2xl font-semibold mb-4">Upload CSV File</h1>
+      <h1 className="text-2xl font-semibold mb-2">Upload CSV File</h1>
+      <p className="bw-text-muted text-sm mb-6 max-w-prose">Upload individual or multiple bank statement CSV files. Each file is processed and categorized automatically.</p>
       <div className="grid gap-6 md:grid-cols-2 relative">
-        <div className="bw-card p-6 relative">
+        {/* Single file upload card */}
+        <div className="bw-card p-6 relative flex flex-col">
           <h2 className="font-medium mb-3">Single File</h2>
-          <form onSubmit={handleSubmit} className="w-full" autoComplete="off">
-            <div className="border-2 border-dashed border-gray-400 rounded-xl p-6 w-full flex flex-col items-center gap-4 relative">
+          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4" autoComplete="off" aria-label="Single CSV upload form">
+            <div className="border-2 border-dashed border-[rgba(255,255,255,0.1)] rounded-xl p-5 w-full flex flex-col gap-4 relative">
+              <label className="text-xs uppercase tracking-wide font-semibold opacity-80" htmlFor="single-file-input">Choose CSV File</label>
               <input
+                id="single-file-input"
                 type="file"
                 name="file"
                 accept=".csv"
                 onChange={handleFileChange}
-                className="bw-input w-full"
+                className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[var(--color-surface-2)] file:text-[var(--color-text)] file:cursor-pointer file:hover:bg-[var(--color-surface)] file:transition"
+                aria-describedby={preview ? 'selected-file' : undefined}
               />
               {preview && (
-                <p className="text-sm text-gray-600">Selected: {preview}</p>
+                <p id="selected-file" className="text-xs bw-text-muted">Selected: {preview}</p>
               )}
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 relative z-10"
+                className="bw-btn bw-btn-primary bw-btn-block"
+                aria-label="Upload selected CSV file"
               >
-                Upload
+                Upload File
               </button>
             </div>
           </form>
-          {message && <p className="mt-4 text-center text-gray-700">{message}</p>}
+          {message && (
+            <p
+              role="status"
+              className={`mt-4 text-center text-sm ${message.startsWith('❌') ? 'text-[var(--color-danger)]' : 'text-[var(--color-success)]'}`}
+            >
+              {message}
+            </p>
+          )}
         </div>
-        <div className="bw-card p-6">
+        {/* Bulk upload section */}
+        <div className="bw-card p-6 flex flex-col">
           <h2 className="font-medium mb-3">Bulk Upload (Multi-file)</h2>
           <FileUploadQueue />
         </div>

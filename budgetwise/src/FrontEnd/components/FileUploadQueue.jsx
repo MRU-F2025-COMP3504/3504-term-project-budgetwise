@@ -37,13 +37,16 @@ export default function FileUploadQueue() {
         multiple
         accept=".csv"
         onChange={onSelect}
-        className="bw-input"
+        className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[var(--color-surface-2)] file:text-[var(--color-text)] file:cursor-pointer file:hover:bg-[var(--color-surface)] file:transition"
+        aria-label="Select one or more CSV files for bulk upload"
       />
       {files.length > 0 && (
         <button
           onClick={uploadAll}
           disabled={uploading}
-          className="px-4 py-2 rounded bg-[var(--color-accent-2)] text-white"
+          className="bw-btn bw-btn-primary bw-btn-block"
+          aria-label={uploading ? 'Uploading files' : `Upload ${files.length} files`}
+          aria-busy={uploading ? 'true' : 'false'}
         >
           {uploading ? "Uploading..." : `Upload ${files.length} file(s)`}
         </button>

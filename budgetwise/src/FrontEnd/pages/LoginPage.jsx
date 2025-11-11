@@ -29,9 +29,11 @@ export default function LoginPage() {
 	}
 
 	return (
-		<div className="bw-container max-w-md">
-			<h1 className="text-2xl font-semibold mb-4">Login</h1>
-			<form onSubmit={submit} className="space-y-4 bw-card p-6">
+		<div className="bw-container">
+			<div className="flex justify-center mt-8">
+				<div className="w-full max-w-sm">
+					<h1 className="text-2xl font-semibold mb-4 text-center">Login</h1>
+					<form onSubmit={submit} className="bw-card p-5 space-y-3">
 				<input
 					type="email"
 					required
@@ -50,7 +52,7 @@ export default function LoginPage() {
 				/>
 				<button
 					disabled={loading}
-					className="px-4 py-2 rounded-md bg-[var(--color-accent-2)] text-white w-full"
+					className="bw-btn bw-btn-primary bw-btn-block"
 				>
 					{loading ? "Logging in..." : "Login"}
 				</button>
@@ -58,7 +60,9 @@ export default function LoginPage() {
 				<p className="text-xs text-[var(--color-text-muted)]">
 					Don’t have an account? <a href="/register" className="underline">Register</a>
 				</p>
-			</form>
+					</form>
+				</div>
+			</div>
 		</div>
 	);
 }

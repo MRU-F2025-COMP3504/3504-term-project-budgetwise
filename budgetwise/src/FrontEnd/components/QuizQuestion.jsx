@@ -12,43 +12,45 @@ export default function QuizQuestion({ question, value, onChange, disabled }) {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm">{text}</p>
+      <p className="text-lg font-medium text-center">{text}</p>
 
-      {inputType === 'number' && (
-        <input
-          type="number"
-          className="bw-input w-full"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="Enter amount"
-          disabled={disabled}
-        />
-      )}
+      <div className="max-w-sm w-full mx-auto">
+        {inputType === 'number' && (
+          <input
+            type="number"
+            className="bw-input w-full"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="Enter amount"
+            disabled={disabled}
+          />
+        )}
 
-      {inputType === 'select' && Array.isArray(options) && (
-        <select
-          className="bw-input w-full"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          disabled={disabled}
-        >
-          <option value="">Select...</option>
-          {options.map((o) => (
-            <option key={o} value={o}>{o}</option>
-          ))}
-        </select>
-      )}
+        {inputType === 'select' && Array.isArray(options) && (
+          <select
+            className="bw-input w-full"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            disabled={disabled}
+          >
+            <option value="">Select...</option>
+            {options.map((o) => (
+              <option key={o} value={o}>{o}</option>
+            ))}
+          </select>
+        )}
 
-      {(inputType === 'text' || !inputType) && (
-        <input
-          type="text"
-          className="bw-input w-full"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="Type your answer"
-          disabled={disabled}
-        />
-      )}
+        {(inputType === 'text' || !inputType) && (
+          <input
+            type="text"
+            className="bw-input w-full"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="Type your answer"
+            disabled={disabled}
+          />
+        )}
+      </div>
     </div>
   );
 }

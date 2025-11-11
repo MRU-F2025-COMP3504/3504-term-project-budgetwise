@@ -57,7 +57,7 @@ export default function BudgetsPage() {
           value={form.limit}
           onChange={e => setForm(f => ({ ...f, limit: e.target.value }))}
         />
-        <button className="px-4 py-2 rounded-md bg-[var(--color-accent)] text-black">
+        <button className="bw-btn bw-btn-accent">
           Add Budget
         </button>
       </form>

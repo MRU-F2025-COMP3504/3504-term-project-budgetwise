@@ -41,10 +41,10 @@ export default function AIPage() {
               key={i}
               className={`p-2 rounded-md text-sm ${
                 m.role === "user"
-                  ? "bg-[var(--color-accent-2)] text-white ml-auto max-w-[75%]"
+                  ? "bg-[var(--buttoncolor1)] text-white ml-auto max-w-[75%]"
                   : m.role === "assistant"
-                  ? "bg-[var(--color-surface-2)] max-w-[75%]"
-                  : "text-[var(--color-text-muted)] text-xs italic"
+                  ? "bg-[var(--surface-raised)] max-w-[75%]"
+                  : "text-[var(--textcolor3)] text-xs italic"
               }`}
             >
               {m.content}
@@ -63,7 +63,7 @@ export default function AIPage() {
           <button
             onClick={send}
             disabled={loading}
-            className="px-4 py-2 rounded-md bg-[var(--color-accent)] text-black"
+            className="bw-btn bw-btn-accent"
           >
             Send
           </button>

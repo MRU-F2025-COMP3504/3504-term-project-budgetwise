@@ -55,9 +55,11 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="bw-container max-w-lg">
-      <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
-      <div className="bw-card p-6 space-y-4">
+  <div className="bw-container mt-8">
+    <div className="flex justify-center">
+      <div className="w-full max-w-[420px]">
+        <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
+        <div className="bw-card p-6 space-y-4">
         {error && <div className="text-red-600 text-sm">{error}</div>}
         {!currentQ && <p className="text-sm">{loading ? "Loading first question..." : "Preparing quiz..."}</p>}
         {currentQ && (
@@ -72,7 +74,7 @@ export default function QuizPage() {
               <button
                 disabled={loading || !answer}
                 onClick={handleSubmit}
-                className="px-4 py-2 rounded-md bg-[var(--color-accent-2)] text-white"
+                className="bw-btn bw-btn-primary"
               >
                 {loading ? "Thinking..." : "Next"}
               </button>
@@ -80,7 +82,9 @@ export default function QuizPage() {
             <p className="text-[10px] text-right text-[var(--color-text-muted)]">Question {displayQuestionNumber}</p>
           </>
         )}
+        </div>
       </div>
+    </div>
     </div>
   );
 }

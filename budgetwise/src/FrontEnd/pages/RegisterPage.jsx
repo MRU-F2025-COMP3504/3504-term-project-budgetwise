@@ -63,7 +63,7 @@ export default function RegisterPage() {
         />
         <button
           disabled={loading}
-          className="px-4 py-2 rounded-md bg-[var(--color-accent)] text-black w-full"
+          className="bw-btn bw-btn-accent bw-btn-block"
         >
           {loading ? "Registering..." : "Register"}
         </button>

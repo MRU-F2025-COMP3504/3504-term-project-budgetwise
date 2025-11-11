@@ -1,31 +1,81 @@
 /* Centralized CSS variables for theming */
 :root {
-  /* Core palette */
-  --color-bg: #0b1020;          /* background base */
-  --color-surface: #121933;     /* cards/panels */
-  --color-surface-2: #1b2547;   /* hover/alt surface */
-  --color-text: #e6e8ef;        /* primary text */
-  --color-text-muted: #aab1c9;  /* secondary text */
-  --color-accent: #6ee7b7;      /* mint accent */
-  --color-accent-2: #60a5fa;    /* blue accent */
-  --color-danger: #f87171;
-  --color-warning: #fbbf24;
-  --color-success: #34d399;
+  /* Cozy, low-contrast dark palette (overhaul) */
+  --app-bg: #1e1f22;            /* app background */
+  --card-bg: #26282c;           /* card surface */
+  --surface-raised: #2f3237;    /* raised elements / inputs */
+
+  /* Button / interactive colors */
+  --buttoncolor1: #5b4b8a;      /* primary (calm violet) */
+  --buttoncolor2: #3d7d6b;      /* accent (muted teal) */
+  --buttoncolor3: #b68b3c;      /* tertiary (warm amber) */
+  --hovercolor1: color-mix(in srgb, var(--buttoncolor1) 88%, white 12%);
+  --hovercolor2: color-mix(in srgb, var(--buttoncolor2) 88%, white 12%);
+  --hovercolor3: color-mix(in srgb, var(--buttoncolor3) 88%, white 12%);
+
+  /* Status colors */
+  --status-danger: #d95858;
+  --status-warning: #e6b65a;
+  --status-success: #4aa883;
+
+  /* Text tiers */
+  --textcolor1: #eceef2;        /* primary text */
+  --textcolor2: #c9ced6;        /* secondary strong */
+  --textcolor3: #a3abb7;        /* secondary muted */
+  --secondarytext1: #a3abb7;    /* subtle 1 */
+  --secondarytext2: #8b929d;    /* subtle 2 */
+  --secondarytext3: #747b85;    /* subtle 3 */
+
+  /* Back-compat mapping */
+  --color-bg: var(--app-bg);
+  --color-surface: var(--card-bg);
+  --color-surface-2: var(--surface-raised);
+  --color-text: var(--textcolor1);
+  --color-text-muted: var(--textcolor3);
+  --color-accent: var(--buttoncolor2);
+  --color-accent-2: var(--buttoncolor1);
+  --color-danger: var(--status-danger);
+  --color-warning: var(--status-warning);
+  --color-success: var(--status-success);
 
   --radius: 12px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
-  --shadow-md: 0 6px 16px rgba(0,0,0,0.25);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.12);
+  --shadow-md: 0 6px 18px rgba(0,0,0,0.28);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --color-bg: #f7f8fb;
-    --color-surface: #ffffff;
-    --color-surface-2: #f0f3fa;
-    --color-text: #0f172a;
-    --color-text-muted: #475569;
-    --color-accent: #0ea5e9;
-    --color-accent-2: #7c3aed;
+    /* Light theme counterparts (soft, cozy) */
+    --app-bg: #f5f6f8;
+    --card-bg: #ffffff;
+    --surface-raised: #eef1f5;
+    --buttoncolor1: #5b4b8a; /* keep brand hue */
+    --buttoncolor2: #3d7d6b;
+    --buttoncolor3: #b68b3c;
+    --hovercolor1: color-mix(in srgb, var(--buttoncolor1) 82%, white 18%);
+    --hovercolor2: color-mix(in srgb, var(--buttoncolor2) 82%, white 18%);
+    --hovercolor3: color-mix(in srgb, var(--buttoncolor3) 82%, white 18%);
+    --status-danger: #d64747;
+    --status-warning: #dca645;
+    --status-success: #2e966e;
+    --textcolor1: #101721;
+    --textcolor2: #2e3742;
+    --textcolor3: #4b5663;
+    --secondarytext1: #4b5663;
+    --secondarytext2: #5d6875;
+    --secondarytext3: #6e7a87;
+
+    /* Back-compat mapping in light mode */
+    --color-bg: var(--app-bg);
+    --color-surface: var(--card-bg);
+    --color-surface-2: var(--surface-raised);
+    --color-text: var(--textcolor1);
+    --color-text-muted: var(--textcolor3);
+    --color-accent: var(--buttoncolor2);
+    --color-accent-2: var(--buttoncolor1);
+    --color-danger: var(--status-danger);
+    --color-warning: var(--status-warning);
+    --color-success: var(--status-success);
   }
 }
 
@@ -48,3 +98,79 @@
 .bw-table th { position: sticky; top: 0; backdrop-filter: saturate(120%) blur(6px); }
 .bw-table td, .bw-table th { border-color: rgba(255,255,255,0.08); }
 .bw-table tr:nth-child(even) td { background: color-mix(in oklab, var(--color-surface) 92%, white 8%); }
+
+/* -------------------------------------------------- */
+/* Buttons                                             */
+/* -------------------------------------------------- */
+/* Base button class using CSS variables so it themes */
+.bw-btn {
+  --btn-bg: var(--color-surface-2);
+  --btn-bg-hover: var(--color-surface);
+  --btn-bg-active: var(--color-surface-2);
+  --btn-color: var(--color-text);
+  --btn-border: rgba(255,255,255,0.10);
+  font-size: .875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .65rem 1rem;
+  border-radius: var(--radius);
+  background: var(--btn-bg);
+  color: var(--btn-color);
+  border: 1px solid var(--btn-border);
+  cursor: pointer;
+  position: relative;
+  transition: background .18s ease, box-shadow .18s ease, transform .12s ease;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.bw-btn:hover:not([disabled]) { background: var(--btn-bg-hover); }
+.bw-btn:active:not([disabled]) { transform: translateY(1px); background: var(--btn-bg-active); }
+.bw-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(96,165,250,0.45); }
+.bw-btn[disabled], .bw-btn.is-disabled { opacity: .55; cursor: not-allowed; pointer-events: none; }
+.bw-btn-block { width: 100%; }
+
+/* Primary / Accent variants */
+.bw-btn-primary {
+  --btn-bg: var(--buttoncolor1);
+  --btn-bg-hover: var(--hovercolor1);
+  --btn-bg-active: color-mix(in srgb, var(--buttoncolor1) 70%, black 30%);
+  --btn-color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.bw-btn-primary:hover:not([disabled]) { box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
+
+.bw-btn-accent {
+  --btn-bg: var(--buttoncolor2);
+  --btn-bg-hover: var(--hovercolor2);
+  --btn-bg-active: color-mix(in srgb, var(--buttoncolor2) 70%, black 30%);
+  --btn-color: #fff;
+}
+
+/* Danger variant */
+.bw-btn-danger {
+  --btn-bg: var(--status-danger);
+  --btn-bg-hover: color-mix(in srgb, var(--status-danger) 88%, white 12%);
+  --btn-bg-active: color-mix(in srgb, var(--status-danger) 72%, black 28%);
+  --btn-color: #fff;
+}
+
+/* Neutral surface button variant */
+.bw-btn-neutral {
+  --btn-bg: var(--surface-raised);
+  --btn-bg-hover: color-mix(in srgb, var(--surface-raised) 88%, white 12%);
+  --btn-bg-active: color-mix(in srgb, var(--surface-raised) 70%, black 30%);
+  --btn-color: var(--textcolor2);
+}
+
+@media (hover: none) {
+  .bw-btn:hover:not([disabled]) { background: var(--btn-bg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bw-btn { transition: none; }
+  .bw-btn:active:not([disabled]) { transform: none; }
+}
