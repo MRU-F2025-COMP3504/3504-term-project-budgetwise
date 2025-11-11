@@ -1,0 +1,106 @@
+{
+  "savedAt": "2025-11-11T04:53:13.192Z",
+  "profile": {
+    "monthlyIncome": 1000,
+    "monthlyBudget": 300,
+    "savingsGoal": 100,
+    "experienceLevel": "Medium",
+    "insights": [
+      "You have a solid monthly income but a low budget for expenses.",
+      "You're saving for a car, which is a great goal!",
+      "Your spending is primarily on bills and groceries, which are essential categories."
+    ],
+    "raw": {
+      "answers": {
+        "monthlyIncome": "1000",
+        "monthlyBudget": "300",
+        "savingsGoal": "100",
+        "financialGoals": "Saving for a car",
+        "experienceLevel": "Medium",
+        "spendingCategories": "Overall bills and groceries",
+        "billsSpending": "200",
+        "groceriesSpending": "100",
+        "debts": "none"
+      }
+    }
+  },
+  "summary": "You have a monthly income of $1000 and a budget of $300 for expenses. You save $100 each month towards your goal of buying a car. Your spending mainly goes towards bills and groceries, with no debts to manage. With a medium level of financial knowledge, you're on a good path to achieving your savings goal!",
+  "history": [
+    {
+      "role": "user",
+      "content": "Hi! I'm ready to start the budgeting quiz."
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly income after taxes?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q1: 1000"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly budget for expenses?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q2: 300"
+    },
+    {
+      "role": "assistant",
+      "content": "How much do you currently save each month?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q3: 100"
+    },
+    {
+      "role": "assistant",
+      "content": "What are your primary financial goals? (e.g., saving for a house, paying off debt, building an emergency fund)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q4: Saving for a car "
+    },
+    {
+      "role": "assistant",
+      "content": "How would you rate your level of financial knowledge? (Low, Medium, High)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q5: Medium"
+    },
+    {
+      "role": "assistant",
+      "content": "What categories do you spend the most on each month? (e.g., groceries, entertainment, bills)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q6: Overall bills and groceries"
+    },
+    {
+      "role": "assistant",
+      "content": "What is the total amount you typically spend on bills each month?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q7: 200"
+    },
+    {
+      "role": "assistant",
+      "content": "How much do you typically spend on groceries each month?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q8: 100"
+    },
+    {
+      "role": "assistant",
+      "content": "Do you have any debts? If yes, please specify the type and amount."
+    },
+    {
+      "role": "user",
+      "content": "Answer to q9: none"
+    }
+  ]
+}
