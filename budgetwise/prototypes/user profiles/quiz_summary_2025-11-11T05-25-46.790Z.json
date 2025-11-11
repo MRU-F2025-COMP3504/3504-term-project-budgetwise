@@ -1,0 +1,87 @@
+{
+  "savedAt": "2025-11-11T05:25:46.790Z",
+  "profile": {
+    "monthlyIncome": 1,
+    "monthlyBudget": 12,
+    "savingsGoal": 213,
+    "experienceLevel": "Low",
+    "insights": [
+      "You have a very low monthly income compared to your budget and savings goals, which may require adjustments to your spending habits.",
+      "Tracking your spending is a great habit that can help you manage your finances better."
+    ],
+    "raw": {
+      "answers": {
+        "monthlyIncome": "1",
+        "monthlyBudget": "12",
+        "monthlySpending": "213",
+        "savingsGoal": "213",
+        "financialGoals": "buy wedding cake",
+        "experienceLevel": "Low",
+        "trackSpending": "Yes"
+      }
+    }
+  },
+  "summary": "You have a monthly income of $1 and a budget of $12, with a savings goal of $213, primarily for a wedding cake. You consider your financial knowledge to be low, but you're actively tracking your spending, which is a positive step towards better financial management.",
+  "history": [
+    {
+      "role": "user",
+      "content": "Hi! I'm ready to start the budgeting quiz."
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly income after taxes?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q1: 1"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly budget for expenses?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q2: 12"
+    },
+    {
+      "role": "assistant",
+      "content": "How much do you typically spend each month?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q3: 213"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly savings goal?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q4: 213"
+    },
+    {
+      "role": "assistant",
+      "content": "What are your main financial goals (e.g., saving for a house, retirement, paying off debt)?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q5: buy wedding  cake"
+    },
+    {
+      "role": "assistant",
+      "content": "How would you rate your level of financial knowledge? (Low, Medium, High)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q6: Low"
+    },
+    {
+      "role": "assistant",
+      "content": "Do you track your spending regularly? (Yes or No)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q7: Yes"
+    }
+  ]
+}

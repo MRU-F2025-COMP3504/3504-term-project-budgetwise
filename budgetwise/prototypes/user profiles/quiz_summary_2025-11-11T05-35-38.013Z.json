@@ -1,0 +1,89 @@
+{
+  "savedAt": "2025-11-11T05:35:38.013Z",
+  "profile": {
+    "monthlyIncome": 2132,
+    "monthlyBudget": 320,
+    "savingsGoal": 500,
+    "experienceLevel": "Low",
+    "insights": [
+      "You have a modest monthly income and budget.",
+      "Your spending on entertainment is significant compared to your budget.",
+      "You have a clear savings goal for travel, which is great!",
+      "Tracking your spending could help you reach your savings goal more effectively."
+    ],
+    "raw": {
+      "answers": {
+        "monthlyIncome": "2132",
+        "monthlyBudget": "320",
+        "spendingHabits": "200 dollars on buying games and other entertainment",
+        "savingsGoal": "500",
+        "financialGoals": "I want to go to Japan",
+        "financialKnowledge": "Low",
+        "trackSpending": "No"
+      }
+    }
+  },
+  "summary": "You have a monthly income of $2132 and a budget of $320, with a spending habit focused on entertainment, particularly gaming. You aim to save $500 monthly for your goal of traveling to Japan. With a low level of financial knowledge and no current tracking of your spending, implementing a system to monitor your expenses could greatly assist you in achieving your savings goal.",
+  "history": [
+    {
+      "role": "user",
+      "content": "Hi! I'm ready to start the budgeting quiz."
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly income after taxes?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q1: 2132"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly budget for expenses?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q2: 320"
+    },
+    {
+      "role": "assistant",
+      "content": "What are your typical monthly spending habits? Please categorize your spending (e.g., groceries, entertainment, bills) and provide approximate amounts for each category."
+    },
+    {
+      "role": "user",
+      "content": "Answer to q3: i usaually spend 200 dollars on buying games and other enterintemnt"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly savings goal?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q4: 500"
+    },
+    {
+      "role": "assistant",
+      "content": "What are your financial goals (e.g., saving for a house, retirement, travel)?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q5: i wan to go to japan"
+    },
+    {
+      "role": "assistant",
+      "content": "How would you rate your level of financial knowledge? (Low, Medium, High)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q6: Low"
+    },
+    {
+      "role": "assistant",
+      "content": "Do you currently track your spending? (Yes or No)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q7: No"
+    }
+  ]
+}

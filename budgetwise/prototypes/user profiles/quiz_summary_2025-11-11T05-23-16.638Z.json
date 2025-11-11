@@ -1,0 +1,78 @@
+{
+  "savedAt": "2025-11-11T05:23:16.638Z",
+  "profile": {
+    "monthlyIncome": 1,
+    "monthlyBudget": 1,
+    "savingsGoal": 12,
+    "experienceLevel": "Low",
+    "insights": [
+      "Consider increasing your monthly income and budget to meet your savings goal.",
+      "Focus on understanding basic budgeting principles to improve your financial planning."
+    ],
+    "raw": {
+      "answers": {
+        "monthlyIncome": "1",
+        "monthlyBudget": "1",
+        "spendingHabits": "12",
+        "savingsGoal": "12",
+        "financialGoals": "buy a supa house",
+        "experienceLevel": "Low"
+      }
+    }
+  },
+  "summary": "You have a monthly income of $1 and a budget of $1, with a savings goal of $12 to buy a house. Your experience level is low, which suggests you may benefit from learning more about budgeting and financial planning.",
+  "history": [
+    {
+      "role": "user",
+      "content": "Hi! I'm ready to start the budgeting quiz."
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly income after taxes?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q1: 1"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly budget for expenses?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q2: 1"
+    },
+    {
+      "role": "assistant",
+      "content": "What are your typical monthly spending habits? Please provide details on categories like groceries, entertainment, bills, etc."
+    },
+    {
+      "role": "user",
+      "content": "Answer to q3: 12"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your monthly savings goal?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q4: 12"
+    },
+    {
+      "role": "assistant",
+      "content": "What are your short-term financial goals (e.g., saving for a vacation, paying off debt)?"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q5: buy a supa house"
+    },
+    {
+      "role": "assistant",
+      "content": "What is your level of experience with budgeting and financial planning? (Low, Medium, High)"
+    },
+    {
+      "role": "user",
+      "content": "Answer to q6: Low"
+    }
+  ]
+}

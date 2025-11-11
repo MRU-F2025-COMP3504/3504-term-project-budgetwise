@@ -10,8 +10,9 @@ export default function ProfilePage() {
     (async () => {
       try {
         const res = await fetch("/api/user_profile");
+        console.log("🚀 Fetched user profile:", res);
         const data = await res.json().catch(()=>({}));
-        if (!ignore) setProfiles(data.UserProfile || []);
+        if (!ignore) setProfiles([data.profile] || []);
       } catch {
         if (!ignore) setProfiles([]);
       } finally {

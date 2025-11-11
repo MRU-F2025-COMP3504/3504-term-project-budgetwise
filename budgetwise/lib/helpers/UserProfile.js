@@ -27,7 +27,7 @@ export async function GetUserProfile() {
     return null;
   }
 }
-async function CreateUserProfile(upload_data) {
+export async function CreateUserProfile(upload_data) {
    // Demo auth – replace with real session handling
   const { data: userData, error: loginError } = await supabase.auth.signInWithPassword({
         email: 'test1@gmail.com',
@@ -41,21 +41,20 @@ async function CreateUserProfile(upload_data) {
 
   const userdata = {
     user_id: user.id,
-    name: upload_data.name,
+    name: upload_data.name || " ",
     profile_data: upload_data || {}
   };
 
   const { data, error } = await supabase
-    .from("User_Profile")
-    .insert([userdata])
-    .select();
+  .from("User_Profile")
+  .upsert(userdata, { onConflict: "user_id" })
+  .select();
 
   if (error) throw error;
   console.log(" Profile created:", data);
 }
 
 
-GetUserProfile();
 
 
 
