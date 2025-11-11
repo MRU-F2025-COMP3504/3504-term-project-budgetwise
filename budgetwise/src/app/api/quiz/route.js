@@ -1,8 +1,11 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { quizSystemPrompt, quizResponseContract } from "../../../../lib/helpers/QuizPrompts";
-// Dev-only optional file save (commented by default to avoid serverless FS issues)
-// import { saveQuizSummaryToFile } from "../../../../lib/helpers/QuizFileSaver";
+// Dev-only optional file save
+import { saveQuizSummaryToFile } from "../../../../lib/helpers/QuizFileSaver";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -70,6 +73,7 @@ export async function POST(req) {
 
     // Optional: persist a local JSON artifact of the completed quiz.
     // Uncomment to enable during development.
+<<<<<<< HEAD
      if (data.status === 'complete') {
        try {
          await saveQuizSummaryToFile({ profile: data.profile, summary: data.summary, history });
@@ -77,6 +81,16 @@ export async function POST(req) {
          console.warn('Failed to save quiz summary locally:', e.message);
        }
      }
+=======
+    if (data.status === 'complete') {
+      try {
+        const savedTo = await saveQuizSummaryToFile({ profile: data.profile, summary: data.summary, history });
+        console.log("[quiz] saved summary to:", savedTo);
+      } catch (e) {
+        console.warn('Failed to save quiz summary locally:', e.message);
+      }
+    }
+>>>>>>> 0ba706c229c584e42e6f10c18667bba974eeccb3
 
     return NextResponse.json({ data, raw: text }, { status: 200 });
   } catch (err) {

@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <nav className="bw-border mb-6 mx-auto max-w-[1100px] mt-4">
           <div className="flex items-center justify-between px-4 py-3">
-            <a href="/" className="font-semibold">BudgetWise</a>
+            <a href="/" className="font-semibold"><img src="/BudgetWiseLogo.png" alt="BudgetWise Logo" className="h-15 w-auto" /></a>
             <div className="flex gap-4 text-sm flex-wrap">
               <a href="/dashboard" className="hover:underline">Dashboard</a>
               <a href="/upload" className="hover:underline">Upload</a>
