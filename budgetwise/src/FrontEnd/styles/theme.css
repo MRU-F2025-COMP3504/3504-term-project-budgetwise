@@ -41,6 +41,24 @@
   --radius: 12px;
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.12);
   --shadow-md: 0 6px 18px rgba(0,0,0,0.28);
+
+  /* Focus ring + input tokens */
+  --focus-ring-color: color-mix(in oklab, var(--buttoncolor1) 38%, transparent 62%);
+  --input-bg: var(--surface-raised);
+  --input-border: rgba(255,255,255,0.10);
+  --input-border-hover: rgba(255,255,255,0.16);
+  --input-text: var(--textcolor1);
+  --input-placeholder: var(--secondarytext2);
+  --input-ring: 0 0 0 3px var(--focus-ring-color);
+
+    /* Focus ring + input tokens (dark mapping lives above; keep same here) */
+    --focus-ring-color: color-mix(in oklab, var(--buttoncolor1) 38%, transparent 62%);
+    --input-bg: var(--surface-raised);
+    --input-border: rgba(0,0,0,0.06);
+    --input-border-hover: rgba(0,0,0,0.12);
+    --input-text: var(--textcolor1);
+    --input-placeholder: var(--secondarytext2);
+    --input-ring: 0 0 0 3px var(--focus-ring-color);
 }
 
 @media (prefers-color-scheme: light) {
@@ -129,7 +147,7 @@
 }
 .bw-btn:hover:not([disabled]) { background: var(--btn-bg-hover); }
 .bw-btn:active:not([disabled]) { transform: translateY(1px); background: var(--btn-bg-active); }
-.bw-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(96,165,250,0.45); }
+.bw-btn:focus-visible { outline: none; box-shadow: var(--input-ring); }
 .bw-btn[disabled], .bw-btn.is-disabled { opacity: .55; cursor: not-allowed; pointer-events: none; }
 .bw-btn-block { width: 100%; }
 
@@ -173,4 +191,30 @@
 @media (prefers-reduced-motion: reduce) {
   .bw-btn { transition: none; }
   .bw-btn:active:not([disabled]) { transform: none; }
+}
+
+/* -------------------------------------------------- */
+/* Inputs                                             */
+/* -------------------------------------------------- */
+.bw-input {
+  display: block;
+  width: 100%;
+  padding: .65rem .8rem;
+  border-radius: var(--radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  outline: none;
+  box-shadow: none;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.bw-input::placeholder { color: var(--input-placeholder); opacity: 1; }
+.bw-input:hover { border-color: var(--input-border-hover); }
+.bw-input:focus { border-color: var(--input-border-hover); box-shadow: var(--input-ring); }
+.bw-input:focus-visible { border-color: var(--input-border-hover); box-shadow: var(--input-ring); }
+.bw-input:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Remove default glow on some browsers */
+input.bw-input, textarea.bw-input, select.bw-input {
+  -webkit-tap-highlight-color: transparent;
 }
