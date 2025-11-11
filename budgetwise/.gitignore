@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Ignore the contents but keep file
 budgetwise/__tests__/test-users.json
+
+# Ignore sample user profiles created by quiz
+budgetwise/prototypes/user profiles/*.json
