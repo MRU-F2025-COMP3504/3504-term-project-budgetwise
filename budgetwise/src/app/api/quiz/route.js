@@ -73,15 +73,7 @@ export async function POST(req) {
 
     // Optional: persist a local JSON artifact of the completed quiz.
     // Uncomment to enable during development.
-<<<<<<< HEAD
-     if (data.status === 'complete') {
-       try {
-         await saveQuizSummaryToFile({ profile: data.profile, summary: data.summary, history });
-       } catch (e) {
-         console.warn('Failed to save quiz summary locally:', e.message);
-       }
-     }
-=======
+
     if (data.status === 'complete') {
       try {
         const savedTo = await saveQuizSummaryToFile({ profile: data.profile, summary: data.summary, history });
@@ -90,8 +82,6 @@ export async function POST(req) {
         console.warn('Failed to save quiz summary locally:', e.message);
       }
     }
->>>>>>> 0ba706c229c584e42e6f10c18667bba974eeccb3
-
     return NextResponse.json({ data, raw: text }, { status: 200 });
   } catch (err) {
     console.error("/api/quiz error:", err);
