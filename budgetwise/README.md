@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## BudgetWise Application
 
-## Getting Started
+This repository contains the BudgetWise web app (Next.js App Router) with Supabase persistence and AI-powered budgeting features.
 
-First, run the development server:
+### Key Features
+* CSV / statement upload & parsing
+* Categorized transactions and summaries
+* AI quiz that builds a personalized budgeting profile (dynamic, OpenAI powered)
+* User profile persistence in Supabase
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Prerequisites
+Create a `.env.local` (or `.env`) at the project root with:
+
+```
+OPENAI_API_KEY=sk-...
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The quiz API will return 500 if `OPENAI_API_KEY` is missing.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Visit http://localhost:3000/quiz for the AI onboarding quiz.
 
-To learn more about Next.js, take a look at the following resources:
+### AI Quiz Architecture
+* Client (`src/FrontEnd/pages/QuizPage.jsx`) maintains a chat-style `history` and current question state.
+* Server route (`src/app/api/quiz/route.js`) composes system prompts from `lib/helpers/QuizPrompts.js` and calls OpenAI.
+* The model must respond with strict JSON:
+	* `{"status":"question", ...}` for next question
+	* `{"status":"complete", "profile": {...}, "summary": "..."}` to finish
+* On completion a best-effort POST to `/api/user_profile` persists the profile.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Extending
+* Add validation / rate limiting in `api/quiz/route.js` for production.
+* Move ephemeral `history` to a server session or DB keyed by user for multi-device continuity.
+* Enhance prompt contract to include confidence scoring or required fields.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Testing the Quiz Locally
+1. Ensure env vars are set.
+2. Start dev server.
+3. Navigate to `/quiz` and answer questions. After ≥5 questions the model will eventually send a completion payload.
 
-## Deploy on Vercel
+### Security Notes
+* Never expose `OPENAI_API_KEY` to the browser. Calls are server-side only.
+* Current profile persistence is minimal; add authentication + ownership checks before storing real user data.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+Generated base README replaced to document project-specific setup and AI quiz integration.
