@@ -6,7 +6,8 @@ export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
-
+  const [passwordVisibile, setPasswordVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
   const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   async function submit(e) {
