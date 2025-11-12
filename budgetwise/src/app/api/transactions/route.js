@@ -1,12 +1,15 @@
 import { NextResponse } from 'next/server';
 import supabase from '../../../../lib/helpers/DatabaseConnector';
+import { getCurrentUser } from '../../../../lib/helpers/AuthHelper';
 
 // GET /api/transactions
 export async function GET() {
   try {
+    const userData = await getCurrentUser();
     const { data: Transactions, error } = await supabase
       .from('Transactions')
-      .select('*');
+      .select('*')
+      .eq('user_id', userData.id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

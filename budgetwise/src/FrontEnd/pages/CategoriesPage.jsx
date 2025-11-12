@@ -3,11 +3,7 @@ import { useState, useMemo } from "react";
 import Table from "../components/Table";
 
 export default function CategoriesPage() {
-  const [categories, setCategories] = useState([
-    { id: "1", name: "Groceries", monthlyBudget: 400 },
-    { id: "2", name: "Dining", monthlyBudget: 150 },
-    { id: "3", name: "Transit", monthlyBudget: 120 }
-  ]);
+  const [categories, setCategories] = useState([]);
   const [newName, setNewName] = useState("");
   const [newBudget, setNewBudget] = useState("");
 
