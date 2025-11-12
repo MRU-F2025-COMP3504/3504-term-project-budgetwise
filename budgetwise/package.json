@@ -15,7 +15,7 @@
     "formidable": "^3.5.4",
     "next": "^16.0.1-canary.4",
     "node-tesseract-ocr": "^2.2.1",
-    "openai": "^6.7.0",
+    "openai": "^6.8.1",
     "pdf-lib": "^1.17.1",
     "plaid": "^39.1.0",
     "react": "19.1.0",

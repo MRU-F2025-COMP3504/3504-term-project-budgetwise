@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
+;
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
 
@@ -15,17 +16,18 @@ export default function RegisterPage() {
       setMsg("❌ Passwords do not match.");
       return;
     }
+ 
     setLoading(true);
     try {
       const res = await fetch("/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: form.password })
+        body: JSON.stringify({name: form.name, email: form.email, password: form.password })
       });
       let data = {};
       try { data = await res.json(); } catch { /* ignore */ }
       if (!res.ok) throw new Error(data.error || "Registration failed");
-      setMsg("✅ Registered. You can now login.");
+      setMsg("✅ Registered. Please check your email to verify your account.");
     } catch (err) {
       setMsg(`❌ ${err.message}`);
     } finally {
@@ -37,6 +39,15 @@ export default function RegisterPage() {
     <div className="bw-container max-w-md">
       <h1 className="text-2xl font-semibold mb-4">Create Account</h1>
       <form onSubmit={submit} className="space-y-4 bw-card p-6">
+         <input
+          type="text"
+          required
+          placeholder="Name"
+          value={form.name}
+          onChange={e => update("name", e.target.value)}
+          className="bw-input w-full"
+        />
+
         <input
           type="email"
           required
