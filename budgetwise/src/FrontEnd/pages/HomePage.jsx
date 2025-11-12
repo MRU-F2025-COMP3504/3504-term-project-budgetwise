@@ -16,11 +16,17 @@ export default function HomePage() {
 
   // Signed in - utility dashboard
   if (user) {
+    // Get the user's name from user_metadata (set during registration)
+    // If display_name exists, extract just the first name
+    // Otherwise fall back to first part of email or 'there'
+    const fullName = user.user_metadata?.display_name || user.email?.split('@')[0] || 'there';
+    const firstName = fullName.split(' ')[0];
+    
     return (
       <div className="bw-container">
         <header className="mb-8">
           <h1 className="text-3xl font-semibold" style={{ color: 'var(--textcolor1)' }}>
-            Welcome back {user.user_metadata?.full_name || user.display_name}!
+            Hi, {firstName}!
           </h1>
           <p className="mt-2" style={{ color: 'var(--textcolor3)' }}>
             Your financial command center
