@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 
+
 export default function LoginPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -12,15 +13,21 @@ export default function LoginPage() {
 		setLoading(true);
 		setMsg("");
 		try {
+			
+			 
 			const res = await fetch("/api/user/login", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email, password })
 			});
+			
+			
+			
 			let data = {};
 			try { data = await res.json(); } catch { /* ignore parse errors */ }
 			if (!res.ok) throw new Error(data.error || "Login failed");
 			setMsg("✅ Logged in (stub). Redirect coming soon.");
+			console.log(data);
 		} catch (err) {
 			setMsg(`❌ ${err.message}`);
 		} finally {
