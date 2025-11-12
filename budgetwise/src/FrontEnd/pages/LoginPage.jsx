@@ -1,9 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
+import supabase from "../../../lib/helpers/DatabaseConnector";
 
 export default function LoginPage() {
 	const router = useRouter();
+	const { user, refreshSession } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -14,15 +17,29 @@ export default function LoginPage() {
 		setLoading(true);
 		setMsg("");
 		try {
+			// Use the backend API route (which properly sets server-side session)
 			const res = await fetch("/api/user/login", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email, password })
 			});
 			
-			let data = {};
-			try { data = await res.json(); } catch { /* ignore parse errors */ }
-			if (!res.ok) throw new Error(data.error || "Login failed");
+			let responseData = {};
+			try { responseData = await res.json(); } catch { /* ignore parse errors */ }
+			if (!res.ok) throw new Error(responseData.error || "Login failed");
+			
+			// Set the session on the client-side Supabase instance
+			if (responseData.data?.session) {
+				await supabase.auth.setSession({
+					access_token: responseData.data.session.access_token,
+					refresh_token: responseData.data.session.refresh_token
+				});
+			}
+			
+			setMsg("✅ Logged in! Checking profile...");
+			
+			// Refresh the session in AuthContext so navbar updates
+			await refreshSession();
 			
 			// Check if user has a profile
 			const profileRes = await fetch("/api/user_profile");
@@ -32,7 +49,7 @@ export default function LoginPage() {
 				
 				// If profile exists, redirect to dashboard
 				if (profileData.profile) {
-					setMsg("✅ Logged in! Redirecting to dashboard...");
+					setMsg("✅ Profile found! Redirecting to dashboard...");
 					setTimeout(() => router.push("/dashboard"), 500);
 				} else {
 					// No profile, redirect to quiz
