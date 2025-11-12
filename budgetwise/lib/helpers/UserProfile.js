@@ -1,15 +1,13 @@
 import 'dotenv/config';
 import supabase from "./DatabaseConnector.js";
+import { getCurrentUser } from "./AuthHelper.js";
 
 
 export async function GetUserProfile() {
   try {
 
-     // Demo auth – replace with real session handling
-    const { data: userData, error: loginError } = await supabase.auth.signInWithPassword({
-      email: 'test1@gmail.com',
-      password: '12345',
-    });
+    // Demo auth – replace with real session handling
+    const user = await getCurrentUser();
 
     const { data: UserProfile, error } = await supabase
       .from("User_Profile")
@@ -28,14 +26,7 @@ export async function GetUserProfile() {
   }
 }
 export async function CreateUserProfile(upload_data) {
-   // Demo auth – replace with real session handling
-  const { data: userData, error: loginError } = await supabase.auth.signInWithPassword({
-        email: 'test1@gmail.com',
-        password: '12345',
-  });
-
-
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   if (!user) throw new Error("User not logged in");
 
@@ -46,15 +37,10 @@ export async function CreateUserProfile(upload_data) {
   };
 
   const { data, error } = await supabase
-  .from("User_Profile")
-  .upsert(userdata, { onConflict: "user_id" })
-  .select();
+    .from("User_Profile")
+    .upsert(userdata, { onConflict: "user_id" })
+    .select();
 
   if (error) throw error;
   console.log(" Profile created:", data);
 }
-
-
-
-
-

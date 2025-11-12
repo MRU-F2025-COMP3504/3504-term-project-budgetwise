@@ -1,5 +1,7 @@
 import supabase from "./DatabaseConnector";
 import { parseTransactionsCSV } from "./CsvParser";
+import { getCurrentUser } from "./AuthHelper";
+import { get } from "http";
 
 // Get file from the form data
 export async function getFileFromRequest(req) {
@@ -17,13 +19,7 @@ export async function parseCSVFile(file) {
 
 // Authenticate Supabase user
 export async function authenticateUser() {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: "test1@gmail.com",
-    password: "12345",
-  });
-
-  if (error) throw new Error(error.message);
-  return data.user;
+  return await getCurrentUser();
 }
 
 // Upload file to Supabase Storage
