@@ -1,14 +1,29 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 import StatSummary from "../components/StatSummary";
 import Table from "../components/Table";
 import api from "../services/api";
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Check if user is authenticated
   useEffect(() => {
+    if (!authLoading && !user) {
+      // User is not authenticated, redirect to login
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
+
+  useEffect(() => {
+    // Don't fetch if user is not authenticated
+    if (!user) return;
+    
     let isMounted = true;
     
     const fetchTransactions = async () => {
@@ -29,7 +44,7 @@ export default function DashboardPage() {
     
     fetchTransactions();
     return () => { isMounted = false; };
-  }, []);
+  }, [user]);
 
   // Calculate financial totals
   const totalNetFlow = transactions.reduce((sum, transaction) => {
@@ -68,6 +83,22 @@ export default function DashboardPage() {
     { label: "Total Outflow", value: formatCurrency(totalOutflow) },
     { label: "Categories", value: Object.keys(categorizedAmounts).length }
   ];
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="bw-container">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <p className="text-[var(--color-text-muted)]">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render dashboard if user is not authenticated
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="bw-container">
