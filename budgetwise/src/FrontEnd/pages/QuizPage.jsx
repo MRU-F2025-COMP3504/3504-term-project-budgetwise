@@ -14,7 +14,7 @@ export default function QuizPage() {
   const router = useRouter();
   const [answer, setAnswer] = useState("");
   const [redirecting, setRedirecting] = useState(false);
-  const { currentQ, loading, error, done, summary, displayQuestionNumber, submitAnswer } = useQuiz({
+  const { currentQ, loading, error, done, summary, submitAnswer } = useQuiz({
     onComplete: async ({ profile, summary }) => {
       // Persist profile (best-effort) when quiz finishes
       try {
@@ -99,7 +99,6 @@ export default function QuizPage() {
                 {loading ? "Thinking..." : "Next"}
               </button>
             </div>
-            <p className="text-[10px] text-right text-[var(--color-text-muted)]">Question {displayQuestionNumber}</p>
           </>
         )}
         </div>

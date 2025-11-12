@@ -31,7 +31,6 @@ export default function RootLayout({ children }) {
               <a href="/categories" className="hover:underline">Categories</a>
               <a href="/budgets" className="hover:underline">Budgets</a>
               <a href="/ai" className="hover:underline">AI</a>
-              <a href="/quiz" className="hover:underline">Quiz</a>
               <a href="/profile" className="hover:underline">Profile</a>
               <a href="/login" className="hover:underline">Login</a>
             </div>

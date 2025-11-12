@@ -23,16 +23,7 @@ export default function useQuiz({ apiPath = '/api/quiz', onComplete } = {}) {
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
   const [summary, setSummary] = useState(null);
-
-  const questionCount = useMemo(
-    () => history.filter((m) => m.role === 'assistant').length,
-    [history]
-  );
-
-  const displayQuestionNumber = useMemo(() => {
-    if (!currentQ) return 0;
-    return Math.max(1, questionCount);
-  }, [currentQ, questionCount]);
+  const [initialized, setInitialized] = useState(false);
 
   const fetchNext = useCallback(async (h) => {
     setLoading(true);
@@ -68,7 +59,10 @@ export default function useQuiz({ apiPath = '/api/quiz', onComplete } = {}) {
 
   // Auto-start quiz on mount
   useEffect(() => {
-    fetchNext(history);
+    if (!initialized) {
+      setInitialized(true);
+      fetchNext(history);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -87,7 +81,6 @@ export default function useQuiz({ apiPath = '/api/quiz', onComplete } = {}) {
     error,
     done,
     summary,
-    displayQuestionNumber,
     // actions
     submitAnswer,
   };
