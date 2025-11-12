@@ -1,15 +1,17 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-;
+import { useAuth } from "../contexts/AuthContext";
+import supabase from "../../../lib/helpers/DatabaseConnector";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { user, refreshSession } = useAuth();
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
-  
-
+  const [passwordVisibile, setPasswordVisible] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
   const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   async function submit(e) {
@@ -22,18 +24,30 @@ export default function RegisterPage() {
  
     setLoading(true);
     try {
+      // Use the backend API route (which properly sets server-side session)
       const res = await fetch("/api/user/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({name: form.name, email: form.email, password: form.password })
       });
-      let data = {};
-      try { data = await res.json(); } catch { /* ignore */ }
-      if (!res.ok) throw new Error(data.error || "Registration failed");
-      setMsg("✅ Registered. Please check your email to verify your account.");
-
-      //redirect to login
-      router.push("/login");
+      let responseData = {};
+      try { responseData = await res.json(); } catch { /* ignore */ }
+      if (!res.ok) throw new Error(responseData.error || "Registration failed");
+      
+      // Set the session on the client-side Supabase instance
+      if (responseData.data?.session) {
+        await supabase.auth.setSession({
+          access_token: responseData.data.session.access_token,
+          refresh_token: responseData.data.session.refresh_token
+        });
+      }
+      
+      // Refresh the session in AuthContext so navbar updates
+      await refreshSession();
+      
+      // After successful registration, redirect to quiz for profile setup
+      setMsg("✅ Registered! Redirecting to profile setup...");
+      setTimeout(() => router.push("/quiz"), 1500);
     } catch (err) {
       setMsg(`❌ ${err.message}`);
     } finally {

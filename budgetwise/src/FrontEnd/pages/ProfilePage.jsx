@@ -2,19 +2,28 @@
 import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
-  const [profiles, setProfiles] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let ignore = false;
     (async () => {
       try {
         const res = await fetch("/api/user_profile");
-        console.log("🚀 Fetched user profile:", res);
-        const data = await res.json().catch(()=>({}));
-        if (!ignore) setProfiles([data.profile] || []);
-      } catch {
-        if (!ignore) setProfiles([]);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch profile: ${res.statusText}`);
+        }
+        const data = await res.json();
+        if (!ignore) {
+          setProfile(data.profile || null);
+          setError(null);
+        }
+      } catch (err) {
+        if (!ignore) {
+          setProfile(null);
+          setError(err.message);
+        }
       } finally {
         if (!ignore) setLoading(false);
       }
@@ -22,18 +31,93 @@ export default function ProfilePage() {
     return () => { ignore = true; };
   }, []);
 
+  if (loading) {
+    return (
+      <div className="bw-container">
+        <h1 className="text-2xl font-semibold mb-4">Profile</h1>
+        <p className="text-sm text-[var(--color-text-muted)]">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bw-container">
+        <h1 className="text-2xl font-semibold mb-4">Profile</h1>
+        <div className="bw-card p-4 bg-red-900/20 border-red-500/30">
+          <p className="text-red-400">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="bw-container">
+        <h1 className="text-2xl font-semibold mb-4">Profile</h1>
+        <div className="bw-card p-4">
+          <p className="text-[var(--color-text-muted)]">No profile data found.</p>
+          <p className="text-xs mt-2 text-[var(--color-text-muted)]">
+            Complete the quiz to create your profile.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bw-container">
       <h1 className="text-2xl font-semibold mb-4">Profile</h1>
-      {loading && <p className="text-sm text-[var(--color-text-muted)]">Loading...</p>}
-      {profiles.length === 0 && !loading && <p className="text-[var(--color-text-muted)]">No profile records.</p>}
+      
       <div className="space-y-4">
-        {profiles.map(p => (
-          <div key={p.id} className="bw-card p-4 text-xs">
-            <pre>{JSON.stringify(p, null, 2)}</pre>
+        {/* Personal Information */}
+        {profile.name && (
+          <div className="bw-card p-4">
+            <h2 className="font-medium text-lg mb-3">Personal Information</h2>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-[var(--color-text-muted)]">Name:</span>
+                <span className="font-medium">{profile.name}</span>
+              </div>
+            </div>
           </div>
-        ))}
+        )}
+
+        {/* Financial Goals */}
+        {profile.financialGoals && (
+          <div className="bw-card p-4">
+            <h2 className="font-medium text-lg mb-3">Financial Goals</h2>
+            <p className="text-sm">{profile.financialGoals}</p>
+          </div>
+        )}
+
+        {/* Spending Habits */}
+        {profile.spendingHabits && (
+          <div className="bw-card p-4">
+            <h2 className="font-medium text-lg mb-3">Spending Habits</h2>
+            <p className="text-sm">{profile.spendingHabits}</p>
+          </div>
+        )}
+
+        {/* Risk Profile */}
+        {profile.riskProfile && (
+          <div className="bw-card p-4">
+            <h2 className="font-medium text-lg mb-3">Risk Profile</h2>
+            <p className="text-sm capitalize">{profile.riskProfile}</p>
+          </div>
+        )}
+
+        {/* All Profile Data (for debugging/completeness) */}
+        <details className="bw-card p-4">
+          <summary className="cursor-pointer font-medium text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]">
+            View Raw Profile Data
+          </summary>
+          <pre className="mt-3 text-xs overflow-auto p-3 bg-[var(--color-surface-2)] rounded">
+            {JSON.stringify(profile, null, 2)}
+          </pre>
+        </details>
       </div>
+
       <p className="text-xs mt-6 text-[var(--color-text-muted)]">
         Future: editable preferences, goals, risk profile, quiz answers normalization.
       </p>

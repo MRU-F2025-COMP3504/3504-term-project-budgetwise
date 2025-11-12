@@ -9,6 +9,7 @@
     "test": "jest "
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.9",
     "@supabase/supabase-js": "^2.76.1",
     "canvas": "^3.2.0",
     "dotenv": "^17.2.3",

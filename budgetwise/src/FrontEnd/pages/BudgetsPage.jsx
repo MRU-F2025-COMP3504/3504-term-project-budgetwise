@@ -20,11 +20,7 @@ function Progress({ value, target }) {
 }
 
 export default function BudgetsPage() {
-  const [budgets, setBudgets] = useState([
-    { id: "1", category: "Groceries", limit: 400, spent: -220 },
-    { id: "2", category: "Dining", limit: 150, spent: -180 },
-    { id: "3", category: "Transit", limit: 120, spent: -35 }
-  ]);
+  const [budgets, setBudgets] = useState([]);
 
   const [form, setForm] = useState({ category: "", limit: "" });
 

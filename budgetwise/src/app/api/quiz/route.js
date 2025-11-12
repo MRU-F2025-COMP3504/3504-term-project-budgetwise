@@ -2,12 +2,10 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
-import OpenAI from "openai";
+import { getAIHelper } from "../../../../lib/helpers/AIHelper";
 import { quizSystemPrompt, quizResponseContract } from "../../../../lib/helpers/QuizPrompts";
 // Dev-only optional file save
 // import { saveQuizSummaryToFile } from "../../../../lib/helpers/QuizFileSaver";
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 function buildMessages(history = []) {
   // history is an array of { role: 'user'|'assistant', content: string }
@@ -37,8 +35,15 @@ function tryParseJson(text) {
 
 export async function POST(req) {
   try {
-    if (!process.env.OPENAI_API_KEY) {
-      return NextResponse.json({ error: "Missing OPENAI_API_KEY" }, { status: 500 });
+    const aiHelper = getAIHelper();
+    
+    // Check token limits before processing
+    const usage = aiHelper.getUsageStats();
+    if (usage.remaining < 100) {
+      return NextResponse.json({ 
+        error: "Daily AI token limit nearly reached. Please try again tomorrow.",
+        tokensRemaining: usage.remaining 
+      }, { status: 429 });
     }
 
     const body = await req.json().catch(() => ({}));
@@ -46,15 +51,12 @@ export async function POST(req) {
 
     const messages = buildMessages(history);
 
-    const resp = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    // Use AIHelper's chat method with JSON mode enabled
+    const text = await aiHelper.chat(messages, { 
       temperature: 0.4,
-      messages,
-      // Force strict JSON so we don't need to salvage free-form text
-      response_format: { type: "json_object" },
+      responseFormat: { type: "json_object" }
     });
 
-    const text = resp?.choices?.[0]?.message?.content || "";
     // With response_format=json_object, content should already be valid JSON
     let data = tryParseJson(text);
     // Fallback: if the model still returns something unexpected, try a minimal cleanup
@@ -83,7 +85,15 @@ export async function POST(req) {
       }
     } 
     */
-    return NextResponse.json({ data, raw: text }, { status: 200 });
+    
+    // Include token usage stats in response for monitoring
+    const finalUsage = aiHelper.getUsageStats();
+    return NextResponse.json({ 
+      data, 
+      raw: text,
+      tokensUsed: finalUsage.sessionUsed,
+      tokensRemaining: finalUsage.remaining
+    }, { status: 200 });
   } catch (err) {
     console.error("/api/quiz error:", err);
     return NextResponse.json({ error: err?.message || "Server error" }, { status: 500 });
