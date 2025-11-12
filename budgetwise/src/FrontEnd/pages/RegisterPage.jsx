@@ -1,11 +1,14 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 ;
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+  
 
   const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -28,6 +31,9 @@ export default function RegisterPage() {
       try { data = await res.json(); } catch { /* ignore */ }
       if (!res.ok) throw new Error(data.error || "Registration failed");
       setMsg("✅ Registered. Please check your email to verify your account.");
+
+      //redirect to login
+      router.push("/login");
     } catch (err) {
       setMsg(`❌ ${err.message}`);
     } finally {

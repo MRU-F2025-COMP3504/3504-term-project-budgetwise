@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 
 export default function LoginPage() {
@@ -7,6 +8,7 @@ export default function LoginPage() {
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [msg, setMsg] = useState("");
+	const router = useRouter();
 
 	async function submit(e) {
 		e.preventDefault();
@@ -26,6 +28,7 @@ export default function LoginPage() {
 			let data = {};
 			try { data = await res.json(); } catch { /* ignore parse errors */ }
 			if (!res.ok) throw new Error(data.error || "Login failed");
+			router.push("/dashboard");
 			setMsg("✅ Logged in (stub). Redirect coming soon.");
 			console.log(data);
 		} catch (err) {
