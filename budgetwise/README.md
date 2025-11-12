@@ -21,10 +21,15 @@ The quiz API will return 500 if `OPENAI_API_KEY` is missing.
 
 ### Development
 
+**⚠️ IMPORTANT: After pulling from the repository, always run:**
+
 ```bash
+cd budgetwise
 npm install
 npm run dev
 ```
+
+This will install all required dependencies including `@headlessui/react` and other packages.
 
 Visit http://localhost:3000/quiz for the AI onboarding quiz.
 
