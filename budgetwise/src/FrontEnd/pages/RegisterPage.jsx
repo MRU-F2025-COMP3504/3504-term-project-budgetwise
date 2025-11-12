@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
-;
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
@@ -28,7 +29,10 @@ export default function RegisterPage() {
       let data = {};
       try { data = await res.json(); } catch { /* ignore */ }
       if (!res.ok) throw new Error(data.error || "Registration failed");
-      setMsg("✅ Registered. Please check your email to verify your account.");
+      
+      // After successful registration, redirect to quiz for profile setup
+      setMsg("✅ Registered! Redirecting to profile setup...");
+      setTimeout(() => router.push("/quiz"), 1500);
     } catch (err) {
       setMsg(`❌ ${err.message}`);
     } finally {

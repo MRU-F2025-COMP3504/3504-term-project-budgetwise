@@ -1,7 +1,0 @@
-'use client'
-import UploadPage from '../../FrontEnd/pages/UploadPage'
-
-export const dynamic = 'force-dynamic'
-export default function Page(){
-  return <UploadPage />
-}

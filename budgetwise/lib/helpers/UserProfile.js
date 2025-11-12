@@ -5,13 +5,12 @@ import { getCurrentUser } from "./AuthHelper.js";
 
 export async function GetUserProfile() {
   try {
-
-    // Demo auth – replace with real session handling
     const user = await getCurrentUser();
 
     const { data: UserProfile, error } = await supabase
       .from("User_Profile")
-      .select("*");
+      .select("*")
+      .eq('user_id', user.id);
 
     if (error) {
       console.error(" Supabase error fetching user profile:", error);

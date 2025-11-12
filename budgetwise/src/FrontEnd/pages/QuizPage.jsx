@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import useQuiz from "../hooks/useQuiz";
 import QuizQuestion from "../components/QuizQuestion";
 
@@ -10,7 +11,9 @@ import QuizQuestion from "../components/QuizQuestion";
 // and responds with either a {status:"question"} or {status:"complete"} JSON payload.
 
 export default function QuizPage() {
+  const router = useRouter();
   const [answer, setAnswer] = useState("");
+  const [redirecting, setRedirecting] = useState(false);
   const { currentQ, loading, error, done, summary, displayQuestionNumber, submitAnswer } = useQuiz({
     onComplete: async ({ profile, summary }) => {
       // Persist profile (best-effort) when quiz finishes
@@ -29,6 +32,16 @@ export default function QuizPage() {
     },
   });
 
+  // Auto-redirect to dashboard after quiz completion
+  useEffect(() => {
+    if (done && !redirecting) {
+      setRedirecting(true);
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 3000); // 3 second delay to show completion message
+    }
+  }, [done, redirecting, router]);
+
   const handleSubmit = async () => {
     if (!currentQ || !answer) return;
     const value = answer;
@@ -39,17 +52,24 @@ export default function QuizPage() {
   if (done) {
     return (
       <div className="bw-container max-w-lg">
-        <h1 className="text-2xl font-semibold mb-4">Quiz Complete</h1>
+        <h1 className="text-2xl font-semibold mb-4">Quiz Complete! ✅</h1>
         <p className="text-[var(--color-text-muted)] mb-4">
           Your profile has been saved. These insights will power personalized budgeting advice.
         </p>
         {summary?.summary && (
           <div className="bw-card p-4 text-sm mb-3 whitespace-pre-wrap">{summary.summary}</div>
         )}
-        <pre className="bw-card p-4 text-xs overflow-auto">
-          {JSON.stringify(summary?.profile || {}, null, 2)}
-        </pre>
-        <a href="/dashboard" className="inline-block mt-4 underline text-sm">Go to Dashboard</a>
+        <div className="bw-card p-4 bg-blue-900/20 border-blue-500/30 mb-4">
+          <p className="text-sm text-blue-300">
+            {redirecting ? "Redirecting to dashboard in a moment..." : "Preparing your dashboard..."}
+          </p>
+        </div>
+        <button 
+          onClick={() => router.push("/dashboard")}
+          className="bw-btn bw-btn-primary"
+        >
+          Go to Dashboard Now
+        </button>
       </div>
     );
   }
