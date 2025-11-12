@@ -3,67 +3,72 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import supabase from "../../../lib/helpers/DatabaseConnector";
+import Alert from "../components/Alert";
+import api from "../services/api";
 
 export default function LoginPage() {
 	const router = useRouter();
-	const { user, refreshSession } = useAuth();
+	const { user } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [loading, setLoading] = useState(false);
-	const [msg, setMsg] = useState("");
+		const [loading, setLoading] = useState(false);
+		// msg: { type: 'info'|'success'|'error'|'loading', text: string }
+		const [msg, setMsg] = useState(null);
 
 	async function submit(e) {
 		e.preventDefault();
 		setLoading(true);
-		setMsg("");
+		setMsg(null);
 		try {
-			// Use the backend API route (which properly sets server-side session)
-			const res = await fetch("/api/user/login", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email, password })
+			// Use backend API to establish server-side session
+			const response = await api.auth.login(email, password);
+			
+			// Backend returns { data: { data: { session, user } } }
+			// because Supabase returns { data: { session, user } }
+			const session = response.data?.data?.session || response.data?.session;
+			
+			if (!session) {
+				throw new Error("No session returned from login");
+			}
+			
+			// CRITICAL: Set the client-side session to match server
+			const { error: sessionError } = await supabase.auth.setSession({
+				access_token: session.access_token,
+				refresh_token: session.refresh_token
 			});
 			
-			let responseData = {};
-			try { responseData = await res.json(); } catch { /* ignore parse errors */ }
-			if (!res.ok) throw new Error(responseData.error || "Login failed");
-			
-			// Set the session on the client-side Supabase instance
-			if (responseData.data?.session) {
-				await supabase.auth.setSession({
-					access_token: responseData.data.session.access_token,
-					refresh_token: responseData.data.session.refresh_token
-				});
+			if (sessionError) {
+				console.error('Session sync error:', sessionError);
 			}
 			
-			setMsg("✅ Logged in! Checking profile...");
-			
-			// Refresh the session in AuthContext so navbar updates
-			await refreshSession();
-			
-			// Check if user has a profile
-			const profileRes = await fetch("/api/user_profile");
-			
-			if (profileRes.ok) {
-				const profileData = await profileRes.json();
+			// Check if user has a profile to determine redirect destination
+			let redirectTo = "/dashboard";
+			try {
+				const profileResponse = await api.profile.get();
+				const hasProfile = profileResponse?.data?.profile && 
+				                  Object.keys(profileResponse.data.profile).length > 0;
 				
-				// If profile exists, redirect to dashboard
-				if (profileData.profile) {
-					setMsg("✅ Profile found! Redirecting to dashboard...");
-					setTimeout(() => router.push("/dashboard"), 500);
+				if (!hasProfile) {
+					redirectTo = "/quiz";
+					setMsg({ type: "success", text: "Logged in successfully! Let's set up your profile..." });
 				} else {
-					// No profile, redirect to quiz
-					setMsg("✅ Logged in! Please complete your profile...");
-					setTimeout(() => router.push("/quiz"), 500);
+					setMsg({ type: "success", text: "Logged in successfully! Redirecting..." });
 				}
-			} else {
-				// Profile API returned error (404 means no profile)
-				setMsg("✅ Logged in! Please complete your profile...");
-				setTimeout(() => router.push("/quiz"), 500);
+			} catch (profileErr) {
+				// If profile check fails, assume no profile and redirect to quiz
+				console.log('No profile found, redirecting to quiz');
+				redirectTo = "/quiz";
+				setMsg({ type: "success", text: "Logged in successfully! Let's set up your profile..." });
 			}
+			
+			// Wait 1 second so user can see the success message
+			await new Promise(resolve => setTimeout(resolve, 1000));
+			
+			// Force a page reload to ensure all contexts pick up the new session
+			window.location.href = redirectTo;
+			
 		} catch (err) {
-			setMsg(`❌ ${err.message}`);
-		} finally {
+			setMsg({ type: "error", text: err.message || "Login failed" });
 			setLoading(false);
 		}
 	}
@@ -96,7 +101,13 @@ export default function LoginPage() {
 				>
 					{loading ? "Logging in..." : "Login"}
 				</button>
-				{msg && <p className="text-sm">{msg}</p>}
+										{msg && (
+											<div className="mt-2">
+												<Alert type={msg.type} onClose={() => setMsg(null)}>
+													{msg.text}
+												</Alert>
+											</div>
+										)}
 				<p className="text-xs text-[var(--color-text-muted)]">
 					Don’t have an account? <a href="/register" className="underline">Register</a>
 				</p>

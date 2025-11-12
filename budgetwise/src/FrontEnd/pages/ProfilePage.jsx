@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import api from "../services/api";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -7,28 +8,27 @@ export default function ProfilePage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let ignore = false;
-    (async () => {
+    let isMounted = true;
+    
+    const fetchProfile = async () => {
       try {
-        const res = await fetch("/api/user_profile");
-        if (!res.ok) {
-          throw new Error(`Failed to fetch profile: ${res.statusText}`);
-        }
-        const data = await res.json();
-        if (!ignore) {
+        const { data } = await api.profile.get();
+        if (isMounted) {
           setProfile(data.profile || null);
           setError(null);
+          setLoading(false);
         }
       } catch (err) {
-        if (!ignore) {
+        if (isMounted) {
           setProfile(null);
           setError(err.message);
+          setLoading(false);
         }
-      } finally {
-        if (!ignore) setLoading(false);
       }
-    })();
-    return () => { ignore = true; };
+    };
+    
+    fetchProfile();
+    return () => { isMounted = false; };
   }, []);
 
   if (loading) {

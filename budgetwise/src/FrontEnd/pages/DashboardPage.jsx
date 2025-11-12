@@ -2,69 +2,99 @@
 import { useEffect, useState } from "react";
 import StatSummary from "../components/StatSummary";
 import Table from "../components/Table";
+import api from "../services/api";
 
 export default function DashboardPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let ignore = false;
-    (async () => {
+    let isMounted = true;
+    
+    const fetchTransactions = async () => {
       try {
-        const res = await fetch("/api/transactions");
-        const data = await res.json().catch(()=>({}));
-        if (!ignore) setTransactions(data.Transactions || []);
-      } catch {
-        if (!ignore) setTransactions([]);
-      } finally {
-        if (!ignore) setLoading(false);
+        const { data } = await api.transactions.list();
+        if (isMounted) {
+          setTransactions(data.Transactions || []);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Failed to fetch transactions:', error);
+        if (isMounted) {
+          setTransactions([]);
+          setLoading(false);
+        }
       }
-    })();
-    return () => { ignore = true; };
+    };
+    
+    fetchTransactions();
+    return () => { isMounted = false; };
   }, []);
 
-  const total = transactions.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
-  const outflow = transactions.filter(t => Number(t.amount) < 0)
-    .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
-  const inflow = transactions.filter(t => Number(t.amount) > 0)
-    .reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+  // Calculate financial totals
+  const totalNetFlow = transactions.reduce((sum, transaction) => {
+    return sum + (Number(transaction.amount) || 0);
+  }, 0);
+  
+  const totalOutflow = transactions
+    .filter(transaction => Number(transaction.amount) < 0)
+    .reduce((sum, transaction) => sum + (Number(transaction.amount) || 0), 0);
+  
+  const totalInflow = transactions
+    .filter(transaction => Number(transaction.amount) > 0)
+    .reduce((sum, transaction) => sum + (Number(transaction.amount) || 0), 0);
 
-  const categories = transactions.reduce((map, t) => {
-    const c = t.category || "Uncategorized";
-    map[c] = (map[c] || 0) + (Number(t.amount) || 0);
-    return map;
+  // Group transactions by category
+  const categorizedAmounts = transactions.reduce((categoryMap, transaction) => {
+    const category = transaction.category || "Uncategorized";
+    categoryMap[category] = (categoryMap[category] || 0) + (Number(transaction.amount) || 0);
+    return categoryMap;
   }, {});
-  const topCats = Object.entries(categories)
+  
+  const topCategories = Object.entries(categorizedAmounts)
     .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
     .slice(0, 5);
 
-  const fmt = (n) => new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD'}).format(n);
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: 'CAD'
+    }).format(amount);
+  };
+
   const stats = [
-    { label: "Net Flow", value: fmt(total) },
-    { label: "Total Inflow", value: fmt(inflow) },
-    { label: "Total Outflow", value: fmt(outflow) },
-    { label: "Categories", value: Object.keys(categories).length }
+    { label: "Net Flow", value: formatCurrency(totalNetFlow) },
+    { label: "Total Inflow", value: formatCurrency(totalInflow) },
+    { label: "Total Outflow", value: formatCurrency(totalOutflow) },
+    { label: "Categories", value: Object.keys(categorizedAmounts).length }
   ];
 
   return (
     <div className="bw-container">
       <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
+      
       <StatSummary stats={stats} />
+      
       <div className="mt-6 grid gap-6 md:grid-cols-2">
+        {/* Top Categories Card */}
         <div className="bw-card p-4">
           <h2 className="font-medium mb-2">Top Categories</h2>
           <ul className="text-sm space-y-1">
-            {topCats.map(([c, amt]) => (
-              <li key={c} className="flex justify-between">
-                <span>{c}</span>
-                <span className={amt < 0 ? "text-[var(--color-danger)] font-mono" : "font-mono"}>
-                  {fmt(amt)}
+            {topCategories.map(([category, amount]) => (
+              <li key={category} className="flex justify-between">
+                <span>{category}</span>
+                <span className={amount < 0 ? "text-[var(--color-danger)] font-mono" : "font-mono"}>
+                  {formatCurrency(amount)}
                 </span>
               </li>
             ))}
-            {topCats.length === 0 && <li className="text-[var(--color-text-muted)]">No data</li>}
+            {topCategories.length === 0 && (
+              <li className="text-[var(--color-text-muted)]">No data available</li>
+            )}
           </ul>
         </div>
+        
+        {/* Recent Transactions Card */}
         <div className="bw-card p-4">
           <h2 className="font-medium mb-2">Recent Transactions</h2>
           <Table
@@ -75,11 +105,14 @@ export default function DashboardPage() {
               { key: "amount", label: "Amount" },
               { key: "category", label: "Category" }
             ]}
-            emptyText="None"
+            emptyText="No transactions yet"
           />
         </div>
       </div>
-      {loading && <p className="text-xs mt-4 text-[var(--color-text-muted)]">Loading...</p>}
+      
+      {loading && (
+        <p className="text-xs mt-4 text-[var(--color-text-muted)]">Loading transactions...</p>
+      )}
     </div>
   );
 }

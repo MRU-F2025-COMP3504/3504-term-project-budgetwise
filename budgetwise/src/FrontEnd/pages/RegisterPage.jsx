@@ -3,54 +3,75 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import supabase from "../../../lib/helpers/DatabaseConnector";
+import Alert from "../components/Alert";
+import api from "../services/api";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { user, refreshSession } = useAuth();
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const { user } = useAuth();
+  const [formData, setFormData] = useState({ 
+    name: "", 
+    email: "", 
+    password: "", 
+    confirmPassword: "" 
+  });
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState("");
-  const [passwordVisibile, setPasswordVisible] = useState(false);
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  // msg object: { type: 'success'|'error'|'info'|'loading', text }
+  const [msg, setMsg] = useState(null);
 
-  async function submit(e) {
+  const updateField = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  async function handleSubmit(e) {
     e.preventDefault();
-    setMsg("");
-    if (form.password !== form.confirm) {
-      setMsg("❌ Passwords do not match.");
+    setMsg(null);
+    
+    if (formData.password !== formData.confirmPassword) {
+      setMsg({ type: "error", text: "Passwords do not match." });
       return;
     }
  
     setLoading(true);
     try {
-      // Use the backend API route (which properly sets server-side session)
-      const res = await fetch("/api/user/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({name: form.name, email: form.email, password: form.password })
-      });
-      let responseData = {};
-      try { responseData = await res.json(); } catch { /* ignore */ }
-      if (!res.ok) throw new Error(responseData.error || "Registration failed");
+      // Use backend API to establish server-side session
+      const response = await api.auth.register(
+        formData.name, 
+        formData.email, 
+        formData.password
+      );
       
-      // Set the session on the client-side Supabase instance
-      if (responseData.data?.session) {
-        await supabase.auth.setSession({
-          access_token: responseData.data.session.access_token,
-          refresh_token: responseData.data.session.refresh_token
-        });
+      // Backend returns { data: { data: { session, user } } }
+      // because Supabase returns { data: { session, user } }
+      const session = response.data?.data?.session || response.data?.session;
+      
+      if (!session) {
+        // Some Supabase configurations require email confirmation
+        setMsg({ type: "info", text: "Please check your email to confirm your account" });
+        setLoading(false);
+        return;
       }
       
-      // Refresh the session in AuthContext so navbar updates
-      await refreshSession();
+      // Sync client-side session to match server
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token
+      });
       
-      // After successful registration, redirect to quiz for profile setup
-      setMsg("✅ Registered! Redirecting to profile setup...");
-      setTimeout(() => router.push("/quiz"), 1500);
+      if (sessionError) {
+        console.error('Session sync error:', sessionError);
+      }
+      
+      setMsg({ type: "success", text: "Account created successfully! Setting up your profile..." });
+      
+      // Wait 1.5 seconds to ensure session is fully synced
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Force a page reload to ensure all contexts pick up the new session
+      window.location.href = "/quiz";
+      
     } catch (err) {
-      setMsg(`❌ ${err.message}`);
-    } finally {
+      setMsg({ type: "error", text: err.message || "Registration failed" });
       setLoading(false);
     }
   }
@@ -58,13 +79,14 @@ export default function RegisterPage() {
   return (
     <div className="bw-container max-w-md">
       <h1 className="text-2xl font-semibold mb-4">Create Account</h1>
-      <form onSubmit={submit} className="space-y-4 bw-card p-6">
-         <input
+      
+      <form onSubmit={handleSubmit} className="space-y-4 bw-card p-6">
+        <input
           type="text"
           required
           placeholder="Name"
-          value={form.name}
-          onChange={e => update("name", e.target.value)}
+          value={formData.name}
+          onChange={(e) => updateField("name", e.target.value)}
           className="bw-input w-full"
         />
 
@@ -72,33 +94,42 @@ export default function RegisterPage() {
           type="email"
           required
           placeholder="Email"
-          value={form.email}
-          onChange={e => update("email", e.target.value)}
+          value={formData.email}
+          onChange={(e) => updateField("email", e.target.value)}
           className="bw-input w-full"
         />
+        
         <input
           type="password"
           required
           placeholder="Password"
-          value={form.password}
-          onChange={e => update("password", e.target.value)}
+          value={formData.password}
+          onChange={(e) => updateField("password", e.target.value)}
           className="bw-input w-full"
         />
+        
         <input
           type="password"
           required
           placeholder="Confirm Password"
-          value={form.confirm}
-          onChange={e => update("confirm", e.target.value)}
+          value={formData.confirmPassword}
+          onChange={(e) => updateField("confirmPassword", e.target.value)}
           className="bw-input w-full"
         />
+        
         <button
           disabled={loading}
           className="bw-btn bw-btn-accent bw-btn-block"
         >
-          {loading ? "Registering..." : "Register"}
+          {loading ? "Creating Account..." : "Register"}
         </button>
-        {msg && <p className="text-sm">{msg}</p>}
+        
+        {msg && (
+          <Alert type={msg.type} onClose={() => setMsg(null)} autoDismiss={5000}>
+            {msg.text}
+          </Alert>
+        )}
+        
         <p className="text-xs text-[var(--color-text-muted)]">
           Already have an account? <a href="/login" className="underline">Login</a>
         </p>

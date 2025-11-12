@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 import useQuiz from "../hooks/useQuiz";
 import QuizQuestion from "../components/QuizQuestion";
+import api from "../services/api";
 
 // QuizPage is a thin client around the AI-driven quiz.
 // It keeps a chat-like `history`, renders the current question,
@@ -12,21 +14,18 @@ import QuizQuestion from "../components/QuizQuestion";
 
 export default function QuizPage() {
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
   const [answer, setAnswer] = useState("");
   const [redirecting, setRedirecting] = useState(false);
   const { currentQ, loading, error, done, summary, submitAnswer } = useQuiz({
     onComplete: async ({ profile, summary }) => {
       // Persist profile (best-effort) when quiz finishes
       try {
-        await fetch("/api/user_profile", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            profile_type: "ai_quiz",
-            profile: profile || {},
-            summary: summary || "",
-            created_at: new Date().toISOString(),
-          }),
+        await api.profile.upsert({
+          profile_type: "ai_quiz",
+          profile: profile || {},
+          summary: summary || "",
+          created_at: new Date().toISOString(),
         });
       } catch (_) {}
     },
@@ -48,6 +47,46 @@ export default function QuizPage() {
     setAnswer("");
     await submitAnswer(value);
   };
+
+  // Show loading state while checking authentication
+  if (authLoading) {
+    return (
+      <div className="bw-container mt-8">
+        <div className="flex justify-center">
+          <div className="w-full max-w-[420px]">
+            <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
+            <div className="bw-card p-6">
+              <p className="text-sm text-[var(--color-text-muted)]">Verifying your session...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!authLoading && !user) {
+    return (
+      <div className="bw-container mt-8">
+        <div className="flex justify-center">
+          <div className="w-full max-w-[420px]">
+            <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
+            <div className="bw-card p-6">
+              <p className="text-sm text-[var(--color-text-muted)] mb-4">
+                You need to be logged in to take the quiz.
+              </p>
+              <button 
+                onClick={() => router.push("/login")}
+                className="bw-btn bw-btn-primary"
+              >
+                Go to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (done) {
     return (

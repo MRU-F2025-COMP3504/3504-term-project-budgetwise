@@ -2,7 +2,9 @@
 
 import { useAuth } from '../FrontEnd/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Menu } from '@headlessui/react';
+import { signedInNavLinks } from '../FrontEnd/components/config/navLinks';
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();
@@ -23,9 +25,9 @@ export default function Navbar() {
   return (
     <nav className="bw-border mb-6 mx-auto max-w-[1100px] mt-4">
       <div className="flex items-center justify-between px-4 py-3">
-        <a href="/" className="font-semibold">
+        <Link href="/" className="font-semibold">
           <img src="/BudgetWiseLogo.png" alt="BudgetWise Logo" className="h-15 w-auto" />
-        </a>
+        </Link>
         <div className="flex gap-4 text-m flex-wrap items-center">
           {loading ? (
             // Show loading state while checking auth
@@ -33,13 +35,9 @@ export default function Navbar() {
           ) : user ? (
             <>
               {/* Show nav links when signed in */}
-              <a href="/dashboard" className="hover:underline">Dashboard</a>
-              <a href="/upload" className="hover:underline">Upload</a>
-              <a href="/statements" className="hover:underline">Statements</a>
-              <a href="/transactions" className="hover:underline">Transactions</a>
-              <a href="/categories" className="hover:underline">Categories</a>
-              <a href="/budgets" className="hover:underline">Budgets</a>
-              <a href="/ai" className="hover:underline">AI</a>
+              {signedInNavLinks.map((l) => (
+                <Link key={l.href} href={l.href} className="hover:underline">{l.label}</Link>
+              ))}
               
               {/* Profile icon dropdown */}
               <Menu as="div" className="relative inline-block">
@@ -50,7 +48,7 @@ export default function Navbar() {
                   <div className="py-1">
                     <Menu.Item>
                       {({ active }) => (
-                        <a
+                        <Link
                           href="/profile"
                           className={`${
                             active ? 'bg-[var(--surface-raised)]' : ''
@@ -58,7 +56,7 @@ export default function Navbar() {
                           style={{ color: 'var(--textcolor1)' }}
                         >
                           Profile
-                        </a>
+                        </Link>
                       )}
                     </Menu.Item>
                     <Menu.Item>
@@ -81,8 +79,8 @@ export default function Navbar() {
           ) : (
             <>
               {/* Show only Login and Register when not signed in */}
-              <a href="/login" className="hover:underline">Login</a>
-              <a href="/register" className="hover:underline">Register</a>
+              <Link href="/login" className="hover:underline">Login</Link>
+              <Link href="/register" className="hover:underline">Register</Link>
             </>
           )}
         </div>

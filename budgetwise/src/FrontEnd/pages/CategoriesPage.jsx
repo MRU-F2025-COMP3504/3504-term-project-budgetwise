@@ -4,23 +4,33 @@ import Table from "../components/Table";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
-  const [newName, setNewName] = useState("");
-  const [newBudget, setNewBudget] = useState("");
+  const [newCategory, setNewCategory] = useState({ name: "", monthlyBudget: "" });
 
-  const add = () => {
-    if (!newName.trim()) return;
-    setCategories(c => [...c, {
+  const handleAddCategory = () => {
+    if (!newCategory.name.trim()) return;
+    
+    const category = {
       id: String(Date.now()),
-      name: newName.trim(),
-      monthlyBudget: Number(newBudget) || 0
-    }]);
-    setNewName(""); setNewBudget("");
+      name: newCategory.name.trim(),
+      monthlyBudget: Number(newCategory.monthlyBudget) || 0
+    };
+    
+    setCategories(prev => [...prev, category]);
+    setNewCategory({ name: "", monthlyBudget: "" });
   };
 
-  const updateBudget = (id, value) => {
-    setCategories(c => c.map(cat =>
-      cat.id === id ? { ...cat, monthlyBudget: Number(value) || 0 } : cat
-    ));
+  const updateCategoryBudget = (categoryId, newBudget) => {
+    setCategories(prev => 
+      prev.map(category =>
+        category.id === categoryId 
+          ? { ...category, monthlyBudget: Number(newBudget) || 0 }
+          : category
+      )
+    );
+  };
+
+  const updateField = (field, value) => {
+    setNewCategory(prev => ({ ...prev, [field]: value }));
   };
 
   const tableRows = useMemo(() => categories, [categories]);
@@ -28,26 +38,29 @@ export default function CategoriesPage() {
   return (
     <div className="bw-container">
       <h1 className="text-2xl font-semibold mb-4">Categories</h1>
+      
       <div className="bw-card p-4 mb-6 space-y-3">
         <h2 className="font-medium">Add Category</h2>
         <div className="flex gap-2 flex-wrap">
           <input
-            value={newName}
-            onChange={e => setNewName(e.target.value)}
+            value={newCategory.name}
+            onChange={(e) => updateField("name", e.target.value)}
             placeholder="Name"
             className="bw-input flex-1"
           />
           <input
-            value={newBudget}
-            onChange={e => setNewBudget(e.target.value)}
+            value={newCategory.monthlyBudget}
+            onChange={(e) => updateField("monthlyBudget", e.target.value)}
             placeholder="Monthly Budget (CAD)"
             type="number"
             className="bw-input w-44"
           />
           <button
-            onClick={add}
+            onClick={handleAddCategory}
             className="bw-btn bw-btn-primary"
-          >Add</button>
+          >
+            Add
+          </button>
         </div>
       </div>
 
@@ -58,17 +71,17 @@ export default function CategoriesPage() {
           {
             key: "monthlyBudget",
             label: "Monthly Budget",
-            render: (v, row) => (
+            render: (value, row) => (
               <input
                 type="number"
                 className="bg-transparent w-28 text-right font-mono"
                 value={row.monthlyBudget}
-                onChange={e => updateBudget(row.id, e.target.value)}
+                onChange={(e) => updateCategoryBudget(row.id, e.target.value)}
               />
             )
           }
         ]}
-        emptyText="No categories."
+        emptyText="No categories yet. Add one to get started!"
       />
     </div>
   );

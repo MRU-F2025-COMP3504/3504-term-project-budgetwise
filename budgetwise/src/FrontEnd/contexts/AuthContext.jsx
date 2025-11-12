@@ -75,13 +75,23 @@ export function AuthProvider({ children }) {
 
     // Refresh session - call this after backend login/register
     const refreshSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
+        // Force a fresh session fetch
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+            console.error('Error refreshing session:', error);
+            setUser(null);
+            return null;
+        }
+        
         if (session?.user) {
             setUser(session.user);
+            setLoading(false);
+            return session.user;
         } else {
             setUser(null);
+            setLoading(false);
+            return null;
         }
-        return session?.user;
     };
 
     const value = {

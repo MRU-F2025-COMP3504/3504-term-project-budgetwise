@@ -1,6 +1,10 @@
 "use client";
 import Link from "next/link";
 import { useAuth } from "../contexts/AuthContext";
+import CardLink from "../components/CardLink";
+import FeatureCard from "../components/FeatureCard";
+import QuickAccess from "../components/QuickAccess";
+import { dashboardCards, featureCards, quickLinks } from "../components/config/homeData";
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -33,91 +37,13 @@ export default function HomePage() {
           </p>
         </header>
 
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 mb-8">
-          {/* Upload */}
-          <Link href="/upload" className="bw-card p-6 hover:shadow-lg transition-shadow" style={{ boxShadow: '0 0 20px rgba(91, 75, 138, 0.15)' }}>
-            <div className="flex items-start justify-between mb-3">
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--textcolor1)' }}>Upload</h2>
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: 'var(--buttoncolor1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>↑</div>
-            </div>
-            <p style={{ color: 'var(--textcolor3)', fontSize: '0.875rem' }}>
-              Upload bank statements or CSV files to track your spending
-            </p>
-          </Link>
-
-          {/* Statements */}
-          <Link href="/statements" className="bw-card p-6 hover:shadow-lg transition-shadow" style={{ boxShadow: '0 0 20px rgba(91, 75, 138, 0.15)' }}>
-            <div className="flex items-start justify-between mb-3">
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--textcolor1)' }}>Statements</h2>
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: 'var(--buttoncolor1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>≡</div>
-            </div>
-            <p style={{ color: 'var(--textcolor3)', fontSize: '0.875rem' }}>
-              View and manage all your uploaded statements
-            </p>
-          </Link>
-
-          {/* Transactions */}
-          <Link href="/transactions" className="bw-card p-6 hover:shadow-lg transition-shadow" style={{ boxShadow: '0 0 20px rgba(91, 75, 138, 0.15)' }}>
-            <div className="flex items-start justify-between mb-3">
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--textcolor1)' }}>Transactions</h2>
-              <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--buttoncolor2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'white' }}>$</div>
-            </div>
-            <p style={{ color: 'var(--textcolor3)', fontSize: '0.875rem' }}>
-              Browse and categorize all your transactions
-            </p>
-          </Link>
-
-          {/* Categories */}
-          <Link href="/categories" className="bw-card p-6 hover:shadow-lg transition-shadow" style={{ boxShadow: '0 0 20px rgba(61, 125, 107, 0.15)' }}>
-            <div className="flex items-start justify-between mb-3">
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--textcolor1)' }}>Categories</h2>
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: 'var(--buttoncolor3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>#</div>
-            </div>
-            <p style={{ color: 'var(--textcolor3)', fontSize: '0.875rem' }}>
-              Organize spending into custom categories
-            </p>
-          </Link>
-
-          {/* Budgets */}
-          <Link href="/budgets" className="bw-card p-6 hover:shadow-lg transition-shadow" style={{ boxShadow: '0 0 20px rgba(61, 125, 107, 0.15)' }}>
-            <div className="flex items-start justify-between mb-3">
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--textcolor1)' }}>Budgets</h2>
-              <div style={{ width: '24px', height: '24px', borderRadius: '6px', background: 'var(--status-success)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'white', fontWeight: 'bold' }}>%</div>
-            </div>
-            <p style={{ color: 'var(--textcolor3)', fontSize: '0.875rem' }}>
-              Set spending limits and track your progress
-            </p>
-          </Link>
-
-          {/* AI Assistant - Coming Soon */}
-          <div className="bw-card p-6 opacity-60" style={{ boxShadow: '0 0 20px rgba(91, 75, 138, 0.1)' }}>
-            <div className="flex items-start justify-between mb-3">
-              <h2 className="text-lg font-semibold" style={{ color: 'var(--textcolor2)' }}>AI Assistant</h2>
-              <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--surface-raised)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', color: 'var(--textcolor3)', fontWeight: 'bold' }}>AI</div>
-            </div>
-            <p style={{ color: 'var(--textcolor3)', fontSize: '0.875rem' }}>
-              Get personalized insights and advice (Coming Soon)
-            </p>
-          </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+          {dashboardCards.map((item) => (
+            <CardLink key={item.label} item={item} />
+          ))}
         </div>
 
-        {/* Quick Stats */}
-        <div className="bw-card p-6" style={{ background: 'var(--surface-raised)' }}>
-          <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--textcolor2)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Quick Access
-          </h3>
-          <div className="flex gap-3 flex-wrap">
-            <Link href="/dashboard" className="bw-btn bw-btn-primary">
-              Dashboard
-            </Link>
-            <Link href="/upload" className="bw-btn bw-btn-accent">
-              Upload Statement
-            </Link>
-            <Link href="/profile" className="bw-btn bw-btn-neutral">
-              Profile Settings
-            </Link>
-          </div>
-        </div>
+        <QuickAccess links={quickLinks} />
       </div>
     );
   }
@@ -149,35 +75,9 @@ export default function HomePage() {
       {/* Features Grid */}
       <div className="bw-container py-12">
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
-          <div className="bw-card p-8 text-center" style={{ boxShadow: '0 0 30px rgba(91, 75, 138, 0.2)' }}>
-            <div className="mb-4 text-4xl">📊</div>
-            <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--textcolor1)' }}>
-              Smart Categorization
-            </h3>
-            <p style={{ color: 'var(--textcolor3)' }}>
-              Automatically organize transactions into meaningful categories
-            </p>
-          </div>
-
-          <div className="bw-card p-8 text-center" style={{ boxShadow: '0 0 30px rgba(61, 125, 107, 0.2)' }}>
-            <div className="mb-4 text-4xl">🔒</div>
-            <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--textcolor1)' }}>
-              Privacy First
-            </h3>
-            <p style={{ color: 'var(--textcolor3)' }}>
-              Your data stays private. No bank linking, just simple uploads
-            </p>
-          </div>
-
-          <div className="bw-card p-8 text-center" style={{ boxShadow: '0 0 30px rgba(182, 139, 60, 0.2)' }}>
-            <div className="mb-4 text-4xl">💡</div>
-            <h3 className="text-xl font-semibold mb-3" style={{ color: 'var(--textcolor1)' }}>
-              Clear Insights
-            </h3>
-            <p style={{ color: 'var(--textcolor3)' }}>
-              Understand your spending patterns with visual dashboards
-            </p>
-          </div>
+          {featureCards.map((f) => (
+            <FeatureCard key={f.title} emoji={f.emoji} title={f.title} description={f.description} shadow={f.shadow} />
+          ))}
         </div>
       </div>
     </div>

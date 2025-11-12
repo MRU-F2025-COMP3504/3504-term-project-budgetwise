@@ -1,19 +1,30 @@
 "use client";
 import { useState } from "react";
 
-function Progress({ value, target }) {
-  const pct = target > 0 ? Math.min(100, Math.round(Math.abs(value) / target * 100)) : 0;
-  const over = Math.abs(value) > target;
+/**
+ * Progress bar component for budget visualization
+ */
+function BudgetProgress({ spent, limit }) {
+  const percentage = limit > 0 ? Math.min(100, Math.round(Math.abs(spent) / limit * 100)) : 0;
+  const isOverBudget = Math.abs(spent) > limit;
+  
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: 'CAD'
+    }).format(amount);
+  };
+
   return (
     <div className="space-y-1">
       <div className="h-2 rounded bg-white/10 overflow-hidden">
         <div
-          style={{ width: `${pct}%` }}
-          className={`h-full ${over ? 'bg-[var(--color-danger)]' : 'bg-[var(--color-accent-2)]'}`}
+          style={{ width: `${percentage}%` }}
+          className={`h-full ${isOverBudget ? 'bg-[var(--color-danger)]' : 'bg-[var(--color-accent-2)]'}`}
         />
       </div>
       <p className="text-[10px] font-mono">
-        {new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD'}).format(value)} / {new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD'}).format(target)} ({pct}%)
+        {formatCurrency(spent)} / {formatCurrency(limit)} ({percentage}%)
       </p>
     </div>
   );
@@ -21,54 +32,69 @@ function Progress({ value, target }) {
 
 export default function BudgetsPage() {
   const [budgets, setBudgets] = useState([]);
+  const [newBudget, setNewBudget] = useState({ category: "", limit: "" });
 
-  const [form, setForm] = useState({ category: "", limit: "" });
-
-  const add = e => {
+  const handleAddBudget = (e) => {
     e.preventDefault();
-    if (!form.category.trim()) return;
-    setBudgets(b => [...b, {
+    
+    if (!newBudget.category.trim()) return;
+    
+    const budget = {
       id: String(Date.now()),
-      category: form.category.trim(),
-      limit: Number(form.limit) || 0,
+      category: newBudget.category.trim(),
+      limit: Number(newBudget.limit) || 0,
       spent: 0
-    }]);
-    setForm({ category: "", limit: "" });
+    };
+    
+    setBudgets(prev => [...prev, budget]);
+    setNewBudget({ category: "", limit: "" });
+  };
+
+  const updateField = (field, value) => {
+    setNewBudget(prev => ({ ...prev, [field]: value }));
   };
 
   return (
     <div className="bw-container">
       <h1 className="text-2xl font-semibold mb-4">Budgets</h1>
-      <form onSubmit={add} className="bw-card p-4 mb-6 flex gap-2 flex-wrap">
+      
+      <form onSubmit={handleAddBudget} className="bw-card p-4 mb-6 flex gap-2 flex-wrap">
         <input
           className="bw-input flex-1"
           placeholder="Category"
-          value={form.category}
-          onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+          value={newBudget.category}
+          onChange={(e) => updateField("category", e.target.value)}
         />
         <input
           className="bw-input w-40"
           type="number"
           placeholder="Monthly Limit"
-          value={form.limit}
-          onChange={e => setForm(f => ({ ...f, limit: e.target.value }))}
+          value={newBudget.limit}
+          onChange={(e) => updateField("limit", e.target.value)}
         />
         <button className="bw-btn bw-btn-accent">
           Add Budget
         </button>
       </form>
+      
       <div className="grid gap-4 md:grid-cols-3">
-        {budgets.map(b => {
-          const over = Math.abs(b.spent) > b.limit;
+        {budgets.map(budget => {
+          const isOverBudget = Math.abs(budget.spent) > budget.limit;
+          
           return (
-            <div key={b.id} className="bw-card p-4 space-y-2">
-              <h2 className="font-medium">{b.category}</h2>
-              <Progress value={b.spent} target={b.limit} />
-              {over && <p className="text-[10px] text-[var(--color-danger)]">Over limit!</p>}
+            <div key={budget.id} className="bw-card p-4 space-y-2">
+              <h2 className="font-medium">{budget.category}</h2>
+              <BudgetProgress spent={budget.spent} limit={budget.limit} />
+              {isOverBudget && (
+                <p className="text-[10px] text-[var(--color-danger)]">Over limit!</p>
+              )}
             </div>
           );
         })}
-        {budgets.length === 0 && <p className="text-[var(--color-text-muted)]">No budgets yet.</p>}
+        
+        {budgets.length === 0 && (
+          <p className="text-[var(--color-text-muted)]">No budgets yet. Add one to get started!</p>
+        )}
       </div>
     </div>
   );
