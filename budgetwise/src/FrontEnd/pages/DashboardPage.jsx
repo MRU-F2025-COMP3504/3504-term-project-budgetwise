@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import StatSummary from "../components/StatSummary";
 import Table from "../components/Table";
+import CategoryChart from "../components/CategoryChart"; 
 
 export default function DashboardPage() {
   const [transactions, setTransactions] = useState([]);
@@ -53,6 +54,18 @@ export default function DashboardPage() {
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         <div className="bw-card p-4">
           <h2 className="font-medium mb-2">Top Categories</h2>
+          <CategoryChart data={topCats} />   {/* 👈 add this */}
+          <ul className="text-sm space-y-1">
+            {topCats.map(([c, amt]) => (
+              <li key={c} className="flex justify-between">
+                <span>{c}</span>
+                <span className={amt < 0 ? "text-[var(--color-danger)] font-mono" : "font-mono"}>
+                  {fmt(amt)}
+                </span>
+              </li>
+            ))}
+            {topCats.length === 0 && <li className="text-[var(--color-text-muted)]">No data</li>}
+          </ul>
           <ul className="text-sm space-y-1">
             {topCats.map(([c, amt]) => (
               <li key={c} className="flex justify-between">
