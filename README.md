@@ -1,106 +1,86 @@
-## Group
+# BudgetWise – User Manual
 
-Hosting Link: https://tourmaline-truffle-00bde1.netlify.app/
+## 1. High-Level Description
 
-Communication: 
+**BudgetWise** is a web-based personal finance assistant designed to help users better understand their spending habits and financial behavior. The platform allows users to:
 
-Whatsapp Group: Contact Member for invite
+- Upload and **scan bank statements** to automatically categorize spending (Operational)
+- Complete an **interactive financial quiz** to evaluate budgeting habits (Operational)
+- View spending insights (WIP)
+- Plan budgets and track goals (WIP)
+- Receive AI-powered financial recommendations (WIP)
 
-Shared Google Drive: https://drive.google.com/drive/folders/0AFkzdUwo_lwOUk9PVA
+**Who would use this?**
+- Everyday users who want an easier way to understand their finances  
+- Students or young adults learning to budget  
+- Anyone wanting quick categorization of spending habits using AI  
 
-Members: <br>
-Jasraj Dhaliwal <br>
-Ben Harris-Eze Jr <br> 
-Laurence Hono <br>
-Sebastian Samaco <br>
-Anmol Verma <br>
-
-- SHARE WHICH USE CASE(S)/FEATURES ARE OPERATIONAL
-- CLEAR INSTRUCTIONS ON HOW TO BUILD, TEST, AND RUN THE SYSTEM
-    (APOORVE SHOULD BE ABLE TO BUILD OUR PROJECT)
-# Build & Run Instructions
-
-This project uses **Next.js** with a **Supabase backend** and is deployed through **Netlify**.  
-Follow these instructions to build, run, and deploy the system.
+BudgetWise reduces the manual effort of analyzing statements and provides simple, informative feedback.
 
 ---
 
-## System Requirements
+## 2. Installation Requirements
+
+### System Requirements
 
 | Requirement | Version |
-|------------|--------|
-Node.js | v18+  
-npm | Latest  
-Supabase account | Required  
-Netlify account | Required for deployment |
+|------------|---------|
+| **Node.js** | v18+ |
+| **npm** | Latest |
+| **Supabase account** | Required |
+| **Netlify account** | Required for deployment |
+| **OpenAI API Key** | Required for AI features |
 
 ---
 
-## 1. Clone the Repository
+## 3. Installation & Setup
 
+### Step 1 — Clone the Repository
 ```bash
 git clone <repo-url>
 cd budgetwise
 ```
 
----
-
-## 2. Install Dependencies
-
+### Step 2 — Install Dependencies
 ```bash
 npm install
 ```
 
 ---
 
-## 3. Environment Variables (Required)
+### Step 3 — Environment Variables (Required)
 
-This project requires Supabase environment variables.
+BudgetWise requires both **Supabase** and **OpenAI** keys to run locally or in production.
 
-### Local Setup - Supabase
-
-Create `.env.local` in the project root:
-
-```env
+#### Create `.env.local` in the project root (Supabase config):
+```
 # Supabase Config
 SUPABASE_URL=YOUR_SUPABASE_URL
 SUPABASE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
 
 NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_KEY=YOUR_SUPABASE_ANON_KEY
-```
 
-### Local Setup - AI
-
-Create `.env` in the project root:
-
-```env
 # OpenAI API Key Config
 OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 ```
 
-If you do not have access to either key or URL, contact the team members in the **Members** section.
-
-**Do not commit this file.**
+> ⚠️ **Do NOT commit these files.**  
+> If you need access to these values, contact a team member listed in this document.
 
 ---
 
-## 4. Run Locally
+## 4. Running the Software
 
-### Development
-
+### Development Mode
 ```bash
 npm run dev
 ```
+Then open:
 
-Visit:
+➡️ **http://localhost:3000**
 
-```
-http://localhost:3000
-```
-
-### Production Simulation
-
+### Production Build (Local Simulation)
 ```bash
 npm run build
 npm start
@@ -108,38 +88,25 @@ npm start
 
 ---
 
-## Deployment (Netlify)
+## 5. Deployment Instructions (Netlify)
 
-Deployment is automatic when pushing to the `main` branch.
+Netlify automatically deploys whenever you push to the **main** branch.
 
-However, Netlify must be configured with the same Supabase environment variables.
+### Required Netlify Environment Variables
+Go to:
 
-### Netlify Setup Steps
-
-1. Login to Netlify and select project
-2. Go to:
-
-```
-Site Settings → Environment Variables
-```
-
-3. Add these keys:
+**Site Settings → Environment Variables**  
+Add:
 
 | Variable | Value |
-|--------|-------|
-SUPABASE_URL | Your Supabase URL |
-SUPABASE_KEY | Your Supabase Service Key |
-NEXT_PUBLIC_SUPABASE_URL | Your Supabase URL |
-NEXT_PUBLIC_SUPABASE_KEY | Your Supabase Public Key |
-OPENAI_API_KEY | Your OpenAI API Key |
+|----------|--------|
+| SUPABASE_URL | Your Supabase URL |
+| SUPABASE_KEY | Supabase service key |
+| NEXT_PUBLIC_SUPABASE_URL | Your Supabase URL |
+| NEXT_PUBLIC_SUPABASE_KEY | Supabase anon/public key |
+| OPENAI_API_KEY | Your OpenAI API key |
 
-4. Save changes and redeploy
-
----
-
-## Netlify Build Configuration
-
-`netlify.toml`:
+### `netlify.toml` configuration:
 
 ```toml
 [build]
@@ -151,79 +118,144 @@ OPENAI_API_KEY | Your OpenAI API Key |
   package = "@netlify/plugin-nextjs"
 ```
 
-Netlify will handle:
-
-- Installing dependencies
-- Running `npm run build`
-- Deploying your application
-
----
-
-## Summary
-
-| Action | Command |
-|--------|--------|
-Install dependencies | `npm install` |
-Start local dev | `npm run dev` |
-Build production | `npm run build` |
-Run production | `npm start` |
-Deploy on Netlify | Automatic on push |
-Netlify env setup | Must match `.env.local` |
+Netlify handles:
+- Dependency installation  
+- Running `npm run build`  
+- Deployment  
 
 ---
 
-This ensures the system can be built and run locally and in production.
+## 6. How to Use the Software
 
-# Testing Guide
+### 6.1 Accessing BudgetWise
+Hosted version:  
+➡️ **https://tourmaline-truffle-00bde1.netlify.app/**
 
-This project uses Jest for automated testing. Follow the steps below to run tests successfully.
+Supported environments:
+- Modern browsers (Chrome, Firefox, Edge, Safari)
+- Desktop or mobile devices
 
 ---
+
+### 6.2 Main Features
+
+#### ✅ Use Case 3: Scanning Bank Statements (Operational)
+
+**Steps:**
+1. Navigate to **Bank Statement Upload**
+2. Click **Upload Statement**
+3. Select a PDF or CSV bank statement
+4. The system automatically:
+   - Extracts transactions
+   - Categorizes spending using AI
+   - Displays summarized spending patterns
+
+If extraction fails:
+- Try a clearer PDF  
+- Use a CSV export if your bank supports it  
+
+#### ✅ Use Case 5: Taking the User Quiz (Operational)
+
+Steps:
+1. Open the **Financial Quiz** from the navigation  
+2. Answer each question on spending habits and budgeting  
+3. Submit to receive:
+   - Budgeting score
+   - Personalized feedback (AI-powered)
+
+---
+
+### 6.3 Features Marked as WIP
+These features are acknowledged but not fully implemented:
+
+- Spending insights dashboard  
+- Budget planning tools  
+- Saving goals & monthly overview  
+- Full AI financial advisor  
+- Multi-user account management  
+
+These will appear in the UI but labelled **“Work in Progress”**.
+
+---
+
+## 7. Testing the System
+
+This project uses **Jest** for automated tests.
 
 ### Prerequisites
-Before running tests:
-- Ensure your in the budgetwise directory
-- Ensure your `.env` file is configured  
-- Install project dependencies
-```bash
-npm install
-```
-> If you do not have the required environment variables, contact the members listed in the **Members** section of the README to get set up.
----
-### Test Location
-Place all test files inside the `__test__/` folder:
-```
-__test__/
- └── authenticateUser.test.js
-```
----
-### Running Tests
-Run all tests:
+- Be inside the `budgetwise` directory  
+- `.env` and `.env.local` files must be configured  
+
+### Run All Tests
 ```bash
 npm test
 ```
 
----
-### Running a Specific Test File
+### Run a Specific Test File
 ```bash
-npm test -- __test__/yourTestFile.test.js
+npm test -- __test__/fileName.test.js
 ```
-Example:
-```bash
-npm test -- __test__/authenticateUser.test.js
-```
----
-### Running a Specific Test by Name
+
+### Run a Specific Test by Name
 ```bash
 npm test -- -t "test name"
 ```
-Example:
-```bash
-npm test -- -t "authenticateUser returns user"
+
+### Test Folder Structure
+```
+__test__/
+ └── authenticateUser.test.js
 ```
 
-# Operational Use cases
-### Use case 3: Scanning bank statements
+---
 
-### Use Case 5: Taking the User Quiz
+## 8. How to Report a Bug
 
+We encourage clear, detailed bug reports. A good bug report includes:
+
+### What to Include
+- **Title**: Short, clear summary  
+- **Steps to Reproduce**
+- **Expected behavior**
+- **Actual behavior**
+- **Screenshots (if applicable)**
+- **Browser/device used**
+- **Environment**: local / production  
+- **Log output (if available)**
+
+### Bug Reporting Location
+Submit issues through:
+
+➡️ **GitHub Issues (Your Repository Issue Tracker)**
+
+Guides for writing effective bugs:
+- *How To Write A Good Bug Report (marker.io)*  
+- *Bug Writing Guidelines (Mozilla)*  
+
+---
+
+## 9. Known Bugs & Limitations
+
+All known bugs should be listed in the **project’s issue tracker**.
+
+Current known limitations (summary):
+- AI-powered features require valid API keys  
+- Some dashboard pages still show placeholder content (WIP)  
+- Bank statement scanner accuracy varies based on PDF clarity  
+- Multi-currency support not implemented (WIP)
+
+---
+
+## 10. Team & Communication
+
+**Members**
+- Jasraj Dhaliwal  
+- Ben Harris-Eze Jr  
+- Laurence Hono  
+- Sebastian Samaco  
+- Anmol Verma  
+
+**Communication Channels**
+- **WhatsApp Group** (contact a member for invite)
+- **Shared Google Drive:**  
+  https://drive.google.com/drive/folders/0AFkzdUwo_lwOUk9PVA
