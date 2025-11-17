@@ -1,4 +1,4 @@
-# BudgetWise – User Manual version 0.8
+# BudgetWise version 0.8 – User Manual
 
 ## 1. High-Level Description
 
