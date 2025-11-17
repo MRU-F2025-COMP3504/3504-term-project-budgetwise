@@ -257,4 +257,5 @@ Current known limitations (summary):
 
 **Communication Channels**
 - **WhatsApp Group** (contact a member for invite)
-- **Shared Google Drive:** contact the group to be invited
+- **Shared Google Drive:**  
+  https://drive.google.com/drive/folders/0AFkzdUwo_lwOUk9PVA
