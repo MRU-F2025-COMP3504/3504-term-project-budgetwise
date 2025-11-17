@@ -157,7 +157,7 @@ If extraction fails:
 #### ✅ Use Case 5: Taking the User Quiz (Operational)
 
 Steps:
-1. Open the **Financial Quiz** from the navigation  
+1. Register an account and login, you will be prompted to take the user quiz 
 2. Answer each question on spending habits and budgeting  
 3. Submit to receive:
    - Budgeting score
