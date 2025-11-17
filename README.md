@@ -286,3 +286,111 @@ Current known limitations (summary):
 
 - **WhatsApp Group** (contact a member for invite)
 - **Shared Google Drive:** contact the group to be added
+
+
+# BudgetWise Developer Guide
+
+## 1. Getting the Source Code
+
+```bash
+git clone https://github.com/MRU-F2025-COMP3504/3504-term-project-budgetwise.git
+cd 3504-term-project-budgetwise/budgetwise
+npm install
+```
+
+**Branches:** `main` (production), `develop` (integration), `feature/*`, `bugfix/*`
+
+## 2. Directory Structure
+
+```
+budgetwise/
+├── src/            # App source
+│   ├── app/        # Next.js routes & API
+│   └── FrontEnd/   # React components & UI
+├── lib/helpers/    # Utility functions
+├── __test__/           # Tests
+├── public/         # Static assets
+```
+
+## 3. Building the Software
+
+**Requirements:** Node.js 18+, npm, `.env.local` with Supabase + OpenAI keys.
+
+```bash
+cp .env.example .env.local
+npm run dev        # Dev server
+npm run build      # Production build
+npm start          # Run production build
+```
+
+## 4. Testing the Software
+
+```
+npm test                 # Run all tests
+npm test -- file.test.js # Run specific test
+npm run test:watch       # Watch mode
+npm run test:coverage    # Coverage report
+```
+
+## 5. Adding New Tests
+
+* Naming: `featureName.test.js`
+* Folder: all tests in `/test/`
+* Basic template:
+
+```javascript
+describe('Feature', () => {
+  it('should work', () => {
+    expect(func()).toBe(true);
+  });
+});
+```
+
+## 6. Building a Release
+
+1. Update `version` in `package.json` and docs.
+2. Run all tests + linter:
+
+```bash
+npm test
+npm run lint
+```
+
+3. Build + verify:
+
+```bash
+npm run build
+npm start
+```
+
+4. Update CHANGELOG.
+5. Merge `develop` → `main` and create GitHub Release.
+6. Netlify auto‑deploys.
+
+## Quick Commands
+
+```
+npm run dev
+npm run build
+npm test
+npm run lint
+```
+
+## Troubleshooting
+
+* Reinstall deps:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+* Environment issues: ensure file is `.env.local`.
+* Port 3000 busy:
+
+```bash
+lsof -ti:3000 | xargs kill -9
+```
+
+For more help, contact the team or refer to the User Manual.
+
