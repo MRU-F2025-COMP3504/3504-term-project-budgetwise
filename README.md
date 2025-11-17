@@ -54,6 +54,7 @@ npm install
 ### Step 3 — Environment Variables (Required)
 
 BudgetWise requires both **Supabase** and **OpenAI** keys to run locally or in production.
+requst a key from the developers
 
 #### Create `.env.local` in the project root (Supabase config):
 
