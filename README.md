@@ -1,3 +1,39 @@
+# BudgetWise Documentation
+
+## Table of Contents
+
+### User Manual
+- [1. High-Level Description](#1-high-level-description)
+- [2. Installation Requirements](#2-installation-requirements)
+- [3. Installation & Setup](#3-installation--setup)
+  - [Step 1 — Clone the Repository](#step-1--clone-the-repository)
+  - [Step 2 — Install Dependencies](#step-2--install-dependencies)
+  - [Step 3 — Environment Variables](#step-3--environment-variables-required)
+- [4. Running the Software](#4-running-the-software)
+  - [Development Mode](#development-mode)
+  - [Production Build](#production-build-local-simulation)
+- [5. Deployment Instructions (Netlify)](#5-deployment-instructions-netlify)
+- [6. How to Use the Software](#6-how-to-use-the-software)
+  - [6.1 Accessing BudgetWise](#61-accessing-budgetwise)
+  - [6.2 Main Features](#62-main-features)
+  - [6.3 Features Marked as WIP](#63-features-marked-as-wip)
+- [7. Testing the System](#7-testing-the-system)
+- [8. How to Report a Bug](#8-how-to-report-a-bug)
+- [9. Known Bugs & Limitations](#9-known-bugs--limitations)
+- [10. Team & Communication](#10-team--communication)
+
+### Developer Guide
+- [1. Getting the Source Code](#dev-1-getting-the-source-code)
+- [2. Directory Structure](#dev-2-directory-structure)
+- [3. Building the Software](#dev-3-building-the-software)
+- [4. Testing the Software](#dev-4-testing-the-software)
+- [5. Adding New Tests](#dev-5-adding-new-tests)
+- [6. Building a Release](#dev-6-building-a-release)
+- [Quick Commands](#quick-commands)
+- [Troubleshooting](#troubleshooting)
+
+---
+
 # BudgetWise version 0.9.0 – User Manual
 
 ## 1. High-Level Description
@@ -11,7 +47,6 @@
 - Receive AI-powered financial recommendations (WIP)
 
 **Who would use this?**
-
 - Everyday users who want an easier way to understand their finances  
 - Students or young adults learning to budget  
 - Anyone wanting quick categorization of spending habits using AI  
@@ -37,14 +72,12 @@ BudgetWise reduces the manual effort of analyzing statements and provides simple
 ## 3. Installation & Setup
 
 ### Step 1 — Clone the Repository
-
 ```bash
 git clone <repo-url>
 cd budgetwise
 ```
 
 ### Step 2 — Install Dependencies
-
 ```bash
 npm install
 ```
@@ -54,10 +87,10 @@ npm install
 ### Step 3 — Environment Variables (Required)
 
 BudgetWise requires both **Supabase** and **OpenAI** keys to run locally or in production.
-requst a key from the developers
+
+Request a key from the developers
 
 #### Create `.env` in the budget_wise root
-
 ```
 # Supabase Config
 SUPABASE_URL=YOUR_SUPABASE_URL
@@ -77,7 +110,6 @@ OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 ## 4. Running the Software
 
 ### Development Mode
-
 ```bash
 npm run dev
 ```
@@ -86,7 +118,6 @@ Then open:
 ➡️ **http://localhost:3000**
 
 ### Production Build (Local Simulation)
-
 ```bash
 npm run build
 npm start
@@ -102,6 +133,7 @@ Netlify automatically deploys whenever you push to the **main** branch.
 
 Go to:
 **Site Settings → Environment Variables**  
+
 Add:
 
 | Variable | Value |
@@ -113,7 +145,6 @@ Add:
 | OPENAI_API_KEY | Your OpenAI API key |
 
 ### `netlify.toml` configuration:
-
 ```toml
 [build]
   base = "budgetwise"
@@ -125,7 +156,6 @@ Add:
 ```
 
 Netlify handles:
-
 - Dependency installation  
 - Running `npm run build`  
 - Deployment  
@@ -140,7 +170,6 @@ Hosted version:
 ➡️ **https://tourmaline-truffle-00bde1.netlify.app/**
 
 Supported environments:
-
 - Modern browsers (Chrome, Firefox, Edge, Safari)
 - Desktop or mobile devices
 
@@ -151,7 +180,6 @@ Supported environments:
 #### ✅ Use Case 3: Scanning Bank Statements (Operational)
 
 **Steps:**
-
 1. Navigate to **Bank Statement Upload**
 2. Click **Upload Statement**
 3. Select a CSV bank statement
@@ -161,14 +189,12 @@ Supported environments:
    - Displays summarized spending patterns
 
 If extraction fails:
-
 - Use a CSV export if your bank supports it
 - Report the issue using GitHub bug report (check section 8 for more details)
 
 #### ✅ Use Case 5: Taking the User Quiz (Operational)
 
 Steps:
-
 1. Register an account and confirm your email
 2. Log in to BudgetWise to be sent to the quiz page  
 3. Answer each question on spending habits and budgeting  
@@ -177,7 +203,6 @@ Steps:
    - Personalized feedback (AI-powered)
 
 If quiz does not start:
-
 - Log out and log in
 - Send a bug report to the developers
 
@@ -207,25 +232,21 @@ This project uses **Jest** for automated tests.
 - `.env` and `.env.local` files must be configured  
 
 ### Run All Tests
-
 ```bash
 npm test
 ```
 
 ### Run a Specific Test File
-
 ```bash
 npm test -- __test__/fileName.test.js
 ```
 
 ### Run a Specific Test by Name
-
 ```bash
 npm test -- -t "test name"
 ```
 
 ### Test Folder Structure
-
 ```
 __test__/
  └── authenticateUser.test.js
@@ -254,7 +275,6 @@ Submit issues through:
 ➡️ **GitHub Issues (Your Repository Issue Tracker)**
 
 Guides for writing effective bugs:
-
 - [How To Write A Good Bug Report (marker.io)](https://marker.io/blog/how-to-write-bug-report)
 - [Bug Writing Guidelines (Mozilla)](https://bugzilla.mozilla.org/page.cgi?id=bug-writing.html)
 
@@ -276,7 +296,6 @@ Current known limitations (summary):
 ## 10. Team & Communication
 
 **Members**
-
 - Jasraj Dhaliwal  
 - Ben Harris-Eze Jr  
 - Laurence Hono  
@@ -284,15 +303,14 @@ Current known limitations (summary):
 - Anmol Verma  
 
 **Communication Channels**
-
 - **WhatsApp Group** (contact a member for invite)
 - **Shared Google Drive:** contact the group to be added
 
+---
 
 # BudgetWise Developer Guide
 
-## 1. Getting the Source Code
-
+## Dev 1. Getting the Source Code
 ```bash
 git clone https://github.com/MRU-F2025-COMP3504/3504-term-project-budgetwise.git
 cd 3504-term-project-budgetwise/budgetwise
@@ -301,22 +319,20 @@ npm install
 
 **Branches:** `main` (production), `develop` (integration), `feature/*`, `bugfix/*`
 
-## 2. Directory Structure
-
+## Dev 2. Directory Structure
 ```
 budgetwise/
 ├── src/            # App source
 │   ├── app/        # Next.js routes & API
 │   └── FrontEnd/   # React components & UI
 ├── lib/helpers/    # Utility functions
-├── __test__/           # Tests
+├── __test__/       # Tests
 ├── public/         # Static assets
 ```
 
-## 3. Building the Software
+## Dev 3. Building the Software
 
 **Requirements:** Node.js 18+, npm, `.env.local` with Supabase + OpenAI keys.
-
 ```bash
 cp .env.example .env.local
 npm run dev        # Dev server
@@ -324,21 +340,19 @@ npm run build      # Production build
 npm start          # Run production build
 ```
 
-## 4. Testing the Software
-
-```
+## Dev 4. Testing the Software
+```bash
 npm test                 # Run all tests
 npm test -- file.test.js # Run specific test
 npm run test:watch       # Watch mode
 npm run test:coverage    # Coverage report
 ```
 
-## 5. Adding New Tests
+## Dev 5. Adding New Tests
 
 * Naming: `featureName.test.js`
 * Folder: all tests in `/test/`
 * Basic template:
-
 ```javascript
 describe('Feature', () => {
   it('should work', () => {
@@ -347,18 +361,16 @@ describe('Feature', () => {
 });
 ```
 
-## 6. Building a Release
+## Dev 6. Building a Release
 
 1. Update `version` in `package.json` and docs.
 2. Run all tests + linter:
-
 ```bash
 npm test
 npm run lint
 ```
 
 3. Build + verify:
-
 ```bash
 npm run build
 npm start
@@ -369,8 +381,7 @@ npm start
 6. Netlify auto‑deploys.
 
 ## Quick Commands
-
-```
+```bash
 npm run dev
 npm run build
 npm test
@@ -380,7 +391,6 @@ npm run lint
 ## Troubleshooting
 
 * Reinstall deps:
-
 ```bash
 rm -rf node_modules package-lock.json
 npm install
@@ -388,10 +398,8 @@ npm install
 
 * Environment issues: ensure file is `.env.local`.
 * Port 3000 busy:
-
 ```bash
 lsof -ti:3000 | xargs kill -9
 ```
 
 For more help, contact the team or refer to the User Manual.
-
