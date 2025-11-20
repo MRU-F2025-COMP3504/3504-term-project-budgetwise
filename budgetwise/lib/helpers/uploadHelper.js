@@ -1,6 +1,4 @@
-import supabase from "./DatabaseConnector";
 import { parseTransactionsCSV } from "./CsvParser";
-import { getCurrentUser } from "./AuthHelper";
 import { get } from "http";
 
 // Get file from the form data
@@ -18,16 +16,14 @@ export async function parseCSVFile(file) {
 }
 
 // Authenticate Supabase user
-export async function authenticateUser() {
-  return await getCurrentUser();
-}
+// Authentication is handled in API route via per-request Supabase client
 
 // Upload file to Supabase Storage
-export async function uploadFileToStorage(file, userId) {
+export async function uploadFileToStorage(supabaseClient, file, userId) {
   const fileName = file.name.replace(/\s+/g, "_");
   const filePath = `${userId}/${fileName}`;
 
-  const { error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabaseClient.storage
     .from("BankStatements")
     .upload(filePath, file, {
       contentType: "text/csv",
@@ -36,7 +32,7 @@ export async function uploadFileToStorage(file, userId) {
 
   if (uploadError) throw new Error(uploadError.message);
 
-  const { data: publicUrlData } = await supabase.storage
+  const { data: publicUrlData } = await supabaseClient.storage
     .from("BankStatements")
     .getPublicUrl(filePath);
 
@@ -48,10 +44,10 @@ export async function uploadFileToStorage(file, userId) {
 }
 
 // Insert record into "Statements" table
-export async function insertStatementRecord(fileData, userId) {
+export async function insertStatementRecord(supabaseClient, fileData, userId) {
   const { fileName, filePath, publicUrl } = fileData;
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from("Statements")
     .insert([
       {
@@ -68,7 +64,7 @@ export async function insertStatementRecord(fileData, userId) {
 }
 
 // Insert parsed transactions into "Transactions" table
-export async function insertTransactions(transactions, userId, statementId) {
+export async function insertTransactions(supabaseClient, transactions, userId, statementId) {
   const formatted = transactions.map((tx) => ({
     transaction_date: tx.transaction_date,
     description: tx.description,
@@ -79,6 +75,6 @@ export async function insertTransactions(transactions, userId, statementId) {
     statement_id: statementId,
   }));
 
-  const { error } = await supabase.from("Transactions").insert(formatted);
+  const { error } = await supabaseClient.from("Transactions").insert(formatted);
   if (error) throw new Error(error.message);
 }

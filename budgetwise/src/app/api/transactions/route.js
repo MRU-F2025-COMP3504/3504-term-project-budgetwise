@@ -1,21 +1,33 @@
 import { NextResponse } from 'next/server';
-import supabase from '../../../../lib/helpers/DatabaseConnector';
-import { getCurrentUser } from '../../../../lib/helpers/AuthHelper';
+import { createServerSupabaseClient } from '../../../../lib/helpers/SupabaseServerClient';
 
+/**
+ * GET /api/transactions
+ * Returns all transactions for the authenticated user.
+ * Response shape: { transactions: Transaction[] }
+ */
 // GET /api/transactions
-export async function GET() {
+export async function GET(req) {
   try {
-    const userData = await getCurrentUser();
-    const { data: Transactions, error } = await supabase
+    const authHeader = req.headers.get('authorization') || '';
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    const s = createServerSupabaseClient(token);
+
+    const { data: { user }, error: userErr } = await s.auth.getUser();
+    if (userErr || !user) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+    }
+
+    const { data: transactions, error } = await s
       .from('Transactions')
       .select('*')
-      .eq('user_id', userData.id);
+      .eq('user_id', user.id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ Transactions });
+    return NextResponse.json({ transactions });
   } catch (err) {
     console.error('❌ Error fetching transactions:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });

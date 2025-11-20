@@ -15,7 +15,7 @@ export default function DashboardPage() {
       try {
         const { data } = await api.transactions.list();
         if (isMounted) {
-          setTransactions(data.Transactions || []);
+          setTransactions(data.transactions || []);
           setLoading(false);
         }
       } catch (error) {

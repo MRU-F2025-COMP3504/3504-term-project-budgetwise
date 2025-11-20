@@ -1,5 +1,4 @@
 import StatementsPage from '../../FrontEnd/pages/StatementsPage'
-import TransactionsPage from '../../FrontEnd/pages/TransactionsPage'
 import ClientPageWrapper from './ClientPageWrapper'
 
 export const dynamic = 'force-dynamic'
@@ -7,7 +6,7 @@ export const dynamic = 'force-dynamic'
 // List of client-side pages
 const clientPages = [
   'ai', 'budgets', 'categories', 'dashboard', 
-  'login', 'profile', 'quiz', 'register', 'upload'
+  'login', 'profile', 'quiz', 'register', 'upload', 'transactions', 'statements'
 ]
 
 export default async function Page(props) {
@@ -15,25 +14,9 @@ export default async function Page(props) {
   const pageName = params.page
   
   // Handle server-side data fetching pages
-  if (pageName === 'statements') {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-      || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
-    
-    const res = await fetch(`${baseUrl}/api/statements`, { cache: 'no-store' })
-    const data = res.ok ? await res.json() : { Transactions: [] }
-    
-    return <StatementsPage statements={data?.Transactions ?? []} />
-  }
+  // 'statements' now handled as a client page
   
-  if (pageName === 'transactions') {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-      || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
-    
-    const res = await fetch(`${baseUrl}/api/transactions`, { cache: 'no-store' })
-    const data = res.ok ? await res.json() : { Transactions: [] }
-    
-    return <TransactionsPage transactions={data?.Transactions ?? []} />
-  }
+  // 'transactions' is handled as a client page via ClientPageWrapper
   
   // Handle client-side pages
   if (clientPages.includes(pageName)) {

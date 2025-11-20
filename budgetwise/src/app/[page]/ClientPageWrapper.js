@@ -9,6 +9,8 @@ import ProfilePage from '../../FrontEnd/pages/ProfilePage'
 import QuizPage from '../../FrontEnd/pages/QuizPage'
 import RegisterPage from '../../FrontEnd/pages/RegisterPage'
 import UploadPage from '../../FrontEnd/pages/UploadPage'
+import TransactionsPage from '../../FrontEnd/pages/TransactionsPage'
+import StatementsPage from '../../FrontEnd/pages/StatementsPage'
 
 const clientPages = {
   ai: AIPage,
@@ -20,6 +22,8 @@ const clientPages = {
   quiz: QuizPage,
   register: RegisterPage,
   upload: UploadPage,
+  transactions: TransactionsPage,
+  statements: StatementsPage,
 }
 
 export default function ClientPageWrapper({ pageName }) {

@@ -1,45 +1,53 @@
 import 'dotenv/config';
-import supabase from "./DatabaseConnector.js";
-import { getCurrentUser } from "./AuthHelper.js";
+import supabase from './DatabaseConnector.js';
+import { getCurrentUser } from './AuthHelper.js';
 
-
-export async function GetUserProfile() {
+/**
+ * Fetch the current user's profile row(s) from User_Profile table.
+ * @returns {Promise<object[]|null>} Array of profile rows or null on error.
+ */
+export async function getUserProfile() {
   try {
     const user = await getCurrentUser();
-
-    const { data: UserProfile, error } = await supabase
-      .from("User_Profile")
-      .select("*")
+    const { data, error } = await supabase
+      .from('User_Profile')
+      .select('*')
       .eq('user_id', user.id);
 
     if (error) {
-      console.error(" Supabase error fetching user profile:", error);
+      console.error('[userProfile] fetch error:', error);
       return null;
     }
-
-    return UserProfile;
-
-  } catch (error) {
-    console.error(" JS execution error:", error);
+    return data;
+  } catch (err) {
+    console.error('[userProfile] execution error:', err);
     return null;
   }
 }
-export async function CreateUserProfile(upload_data) {
+
+/**
+ * Upsert the user's profile data.
+ * @param {object} payload Raw profile data from quiz/onboarding.
+ * @returns {Promise<object|null>} Upserted row or null on failure.
+ */
+export async function upsertUserProfile(payload) {
   const user = await getCurrentUser();
+  if (!user) throw new Error('User not logged in');
 
-  if (!user) throw new Error("User not logged in");
-
-  const userdata = {
+  const row = {
     user_id: user.id,
-    name: upload_data.name || " ",
-    profile_data: upload_data || {}
+    name: payload?.name || ' ',
+    profile_data: payload || {},
   };
 
   const { data, error } = await supabase
-    .from("User_Profile")
-    .upsert(userdata, { onConflict: "user_id" })
+    .from('User_Profile')
+    .upsert(row, { onConflict: 'user_id' })
     .select();
 
-  if (error) throw error;
-  console.log(" Profile created:", data);
+  if (error) {
+    console.error('[userProfile] upsert error:', error);
+    throw error;
+  }
+  return data?.[0] || null;
 }

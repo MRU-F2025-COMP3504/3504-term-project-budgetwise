@@ -1,10 +1,29 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Table from "../components/Table";
+import api from "../services/api";
 
 export default function TransactionsPage({ transactions }) {
-  const rows = Array.isArray(transactions) ? transactions : [];
+  const [rows, setRows] = useState(Array.isArray(transactions) ? transactions : []);
+  const [loading, setLoading] = useState(!Array.isArray(transactions));
+
+  useEffect(() => {
+    // If no transactions were provided via props, fetch client-side
+    if (transactions === undefined) {
+      (async () => {
+        try {
+          const { data } = await api.transactions.list();
+          setRows(data?.transactions || []);
+        } catch (e) {
+          console.error('Failed to load transactions:', e);
+          setRows([]);
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [transactions]);
 
   // Key detection helpers to work with any schema
   const keyHints = useMemo(() => {

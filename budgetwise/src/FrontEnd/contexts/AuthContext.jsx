@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import supabase from "../../../lib/helpers/DatabaseConnector";
+import api from "../services/api";
 
 // Creating the context, checking the authentication context
 const AuthContext = createContext({});
@@ -33,6 +34,12 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             (event, session) => {
+                if (event === 'SIGNED_OUT') {
+                    api.cache.clear(); // clear user-specific cached data
+                }
+                if (event === 'SIGNED_IN') {
+                    api.cache.clear(); // start fresh for new user
+                }
                 if (session?.user) {
                     setUser(session.user);
                 } else {
@@ -69,6 +76,7 @@ export function AuthProvider({ children }) {
     // Logout function
     const logout = async () => {
         const { error } = await supabase.auth.signOut();
+        api.cache.clear();
         setUser(null);
         return { error };
     };
@@ -84,6 +92,8 @@ export function AuthProvider({ children }) {
         }
         
         if (session?.user) {
+            // new user context: invalidate cache if mismatch
+            api.cache.clear();
             setUser(session.user);
             setLoading(false);
             return session.user;

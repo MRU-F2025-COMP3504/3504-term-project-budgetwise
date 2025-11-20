@@ -37,14 +37,15 @@ function saveCacheToStorage(cache) {
 
 const cache = loadCacheFromStorage();
 
-function getCacheKey(url, options = {}) {
-  // Create unique key from URL and method
+function getCacheKey(url, options = {}, userId) {
+  // Create unique key from URL, method, and user context
   const method = options.method || 'GET';
-  return `${method}:${url}`;
+  const userSegment = userId ? `:user:${userId}` : ':anon';
+  return `${method}:${url}${userSegment}`;
 }
 
-function getCachedData(url, options = {}) {
-  const key = getCacheKey(url, options);
+function getCachedData(url, options = {}, userId) {
+  const key = getCacheKey(url, options, userId);
   const cached = cache.get(key);
   
   if (!cached) return null;
@@ -60,8 +61,8 @@ function getCachedData(url, options = {}) {
   return null;
 }
 
-function setCachedData(url, options, data) {
-  const key = getCacheKey(url, options);
+function setCachedData(url, options, data, userId) {
+  const key = getCacheKey(url, options, userId);
   cache.set(key, {
     data,
     timestamp: Date.now(),
@@ -90,23 +91,39 @@ function invalidateCache(pattern) {
 // ============================================================================
 
 async function request(url, options = {}) {
-  // Only cache GET requests
+  // Determine session/user before attempting cache lookup so cache is user-specific
+  let token = null;
+  let userId = null;
+  try {
+    const { default: supabaseEarly } = await import('../../../lib/helpers/DatabaseConnector');
+    const { data: { session } } = await supabaseEarly.auth.getSession();
+    token = session?.access_token || null;
+    userId = session?.user?.id || null;
+  } catch (_) {
+    // ignore if not available
+  }
+
   const shouldCache = !options.method || options.method === 'GET';
-  
-  // Try to return cached data immediately for GET requests
   if (shouldCache) {
-    const cachedData = getCachedData(url, options);
-    if (cachedData) {
-      return cachedData;
-    }
+    const cachedData = getCachedData(url, options, userId);
+    if (cachedData) return cachedData;
   }
   
   try {
+    // Build headers and attach Supabase access token if present
+    const isFormData = options.body instanceof FormData;
+    const headers = {
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(options.headers || {}),
+    };
+
+    // Attempt to fetch the current session to include Authorization header
+    if (token && !headers.Authorization) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     const response = await fetch(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
+      headers,
       ...options,
     });
 
@@ -134,7 +151,7 @@ async function request(url, options = {}) {
     
     // Cache successful GET requests
     if (shouldCache) {
-      setCachedData(url, options, result);
+      setCachedData(url, options, result, userId);
     }
     
     // Invalidate related caches for mutating operations
@@ -220,9 +237,9 @@ export const profile = {
 
 export const statements = {
   /**
-   * Upload bank statement file(s)
+  * Upload a bank statement CSV file
    * @param {FormData} formData - File upload form data
-   * @returns {Promise<{data}>}
+  * @returns {Promise<{data: {statement}}>} Upload summary
    */
   async upload(formData) {
     // Don't set Content-Type for FormData - browser sets it with boundary
@@ -235,7 +252,7 @@ export const statements = {
 
   /**
    * Get all statements for current user
-   * @returns {Promise<{data: {statements: Array}}>}
+   * @returns {Promise<{data: {statements: Array}}>} Array of statement rows
    */
   async list() {
     return request('/api/statements');
@@ -259,7 +276,7 @@ export const statements = {
 export const transactions = {
   /**
    * Get all transactions for current user
-   * @returns {Promise<{data: {transactions: Array}}>}
+   * @returns {Promise<{data: {transactions: Array}}>} Array of transaction rows
    */
   async list() {
     return request('/api/transactions');
