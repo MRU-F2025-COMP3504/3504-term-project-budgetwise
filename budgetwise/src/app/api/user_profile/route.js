@@ -59,7 +59,6 @@ export async function POST(req) {
       user_id: user.id,
       name: body?.name || ' ',
       profile_data: body || {},
-      updated_at: new Date().toISOString(),
     };
 
     const { data, error } = await s
