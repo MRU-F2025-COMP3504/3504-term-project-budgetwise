@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../contexts/AuthContext";
-import useQuiz from "../hooks/useQuiz";
-import QuizQuestion from "../components/QuizQuestion";
-import api from "../services/api";
+import { useAuth } from "@/contexts/AuthContext";
+import useQuiz from "@/hooks/useQuiz";
+import QuizQuestion from "@/components/QuizQuestion";
+import api from "@/services/api";
 
 // QuizPage is a thin client around the AI-driven quiz.
 // It keeps a chat-like `history`, renders the current question,

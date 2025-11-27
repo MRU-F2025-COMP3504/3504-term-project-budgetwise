@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import api from "../services/api";
+import api from "@/services/api";
 
 export default function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]); // File[]

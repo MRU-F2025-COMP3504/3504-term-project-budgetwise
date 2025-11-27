@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import Table from "../components/Table";
-import api from "../services/api";
+import Table from "@/components/Table";
+import api from "@/services/api";
 
 export default function StatementsPage({ statements }) {
   const [rows, setRows] = useState(Array.isArray(statements) ? statements : []);

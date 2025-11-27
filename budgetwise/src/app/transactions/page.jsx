@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Table from "../components/Table";
-import api from "../services/api";
+import Table from "@/components/Table";
+import api from "@/services/api";
 
 export default function TransactionsPage({ transactions }) {
   const [rows, setRows] = useState(Array.isArray(transactions) ? transactions : []);

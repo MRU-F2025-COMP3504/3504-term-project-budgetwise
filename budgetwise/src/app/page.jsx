@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
-import { useAuth } from "../contexts/AuthContext";
-import CardLink from "../components/CardLink";
-import FeatureCard from "../components/FeatureCard";
-import QuickAccess from "../components/QuickAccess";
-import { dashboardCards, featureCards, quickLinks } from "../components/config/homeData";
+import { useAuth } from "@/contexts/AuthContext";
+import CardLink from "@/components/CardLink";
+import FeatureCard from "@/components/FeatureCard";
+import QuickAccess from "@/components/QuickAccess";
+import { dashboardCards, featureCards, quickLinks } from "@/components/config/homeData";
 
 export default function HomePage() {
   const { user, loading } = useAuth();

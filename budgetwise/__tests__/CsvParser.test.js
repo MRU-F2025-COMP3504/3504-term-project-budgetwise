@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { parseTransactionsCSV } from "../lib/helpers/CsvParser.js";
+import { parseTransactionsCSV } from "@/lib/helpers/CsvParser.js";
 
 /**
  * Integration tests for the parseTransactionsCSV function

@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "../FrontEnd/styles/theme.css";
+@import "../styles/theme.css";
 
 :root {
   /* Back-compat mapping to new theme variables */

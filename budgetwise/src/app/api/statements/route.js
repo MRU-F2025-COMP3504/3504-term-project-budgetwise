@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseServerClient } from '../../../../lib/helpers/supabaseSSRClient';
+import { getSupabaseServerClient } from '@/lib/helpers/supabaseSSRClient';
 
 /**
  * GET /api/statements
@@ -12,7 +12,7 @@ import {
   uploadFileToStorage,
   insertStatementRecord,
   insertTransactions,
-} from '../../../../lib/helpers/uploadHelper';
+} from '@/lib/helpers/uploadHelper';
 
 // GET /api/statements
 export async function GET(req) {

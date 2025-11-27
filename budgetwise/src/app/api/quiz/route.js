@@ -2,10 +2,10 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
-import { getAIHelper } from "../../../../lib/helpers/AIHelper";
-import { quizSystemPrompt, quizResponseContract } from "../../../../lib/helpers/QuizPrompts";
+import { getAIHelper } from "@/lib/helpers/AIHelper";
+import { quizSystemPrompt, quizResponseContract } from "@/lib/helpers/QuizPrompts";
 // Dev-only optional file save
-// import { saveQuizSummaryToFile } from "../../../../lib/helpers/QuizFileSaver";
+// import { saveQuizSummaryToFile } from "@/lib/helpers/QuizFileSaver";
 
 function buildMessages(history = []) {
   // history is an array of { role: 'user'|'assistant', content: string }

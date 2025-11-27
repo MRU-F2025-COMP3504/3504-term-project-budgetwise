@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../contexts/AuthContext";
-import Alert from "../components/Alert";
+import { useAuth } from "@/contexts/AuthContext";
+import Alert from "@/components/Alert";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -37,13 +37,9 @@ export default function RegisterPage() {
       
       if (error) throw error;
       
-      // Note: We are not passing 'name' to register because Supabase Auth doesn't take it directly
-      // unless using metadata. We should ideally update the profile with the name after registration.
-      // For now, we'll assume the user will set it up in the profile quiz or we can add a profile update call here.
-      
-      // Update profile with name if possible, or just proceed
+      // Update profile with name if possible
       try {
-         const { createSupabaseBrowserClient } = await import('../../../lib/helpers/supabaseBrowserClient');
+         const { createSupabaseBrowserClient } = await import('@/lib/helpers/supabaseBrowserClient');
          const supabase = createSupabaseBrowserClient();
          await supabase.auth.updateUser({
            data: { display_name: formData.name }

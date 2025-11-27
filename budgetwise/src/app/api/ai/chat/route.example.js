@@ -9,7 +9,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { getAIHelper } from '../../../../lib/helpers/AIHelper';
+import { getAIHelper } from '@/lib/helpers/AIHelper';
 
 export async function POST(req) {
   try {

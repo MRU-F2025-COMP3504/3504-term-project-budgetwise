@@ -1,10 +1,11 @@
 'use client';
 
-import { useAuth } from '../FrontEnd/contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Menu } from '@headlessui/react';
-import { signedInNavLinks } from '../FrontEnd/components/config/navLinks';
+import { useState } from 'react';
+import { signedInNavLinks } from '@/components/config/navLinks';
 
 export default function Navbar() {
   const { user, loading, logout } = useAuth();

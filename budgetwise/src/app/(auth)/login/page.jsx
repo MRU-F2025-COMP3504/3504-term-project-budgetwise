@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "../contexts/AuthContext";
-import Alert from "../components/Alert";
-import api from "../services/api";
+import { useAuth } from "@/contexts/AuthContext";
+import Alert from "@/components/Alert";
+import api from "@/services/api";
 
 export default function LoginPage() {
 	const router = useRouter();
@@ -84,15 +84,15 @@ export default function LoginPage() {
 				>
 					{loading ? "Logging in..." : "Login"}
 				</button>
-										{msg && (
-											<div className="mt-2">
-												<Alert type={msg.type} onClose={() => setMsg(null)}>
-													{msg.text}
-												</Alert>
-											</div>
-										)}
+								{msg && (
+									<div className="mt-2">
+										<Alert type={msg.type} onClose={() => setMsg(null)}>
+											{msg.text}
+										</Alert>
+									</div>
+								)}
 				<p className="text-xs text-[var(--color-text-muted)]">
-					Don’t have an account? <a href="/register" className="underline">Register</a>
+					Don't have an account? <a href="/register" className="underline">Register</a>
 				</p>
 					</form>
 				</div>

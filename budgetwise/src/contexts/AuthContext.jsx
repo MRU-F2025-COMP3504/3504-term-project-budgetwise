@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { createSupabaseBrowserClient } from "../../../lib/helpers/supabaseBrowserClient";
+import { createSupabaseBrowserClient } from "@/lib/helpers/supabaseBrowserClient";
 
 const supabase = createSupabaseBrowserClient();
-import api from "../services/api";
+import api from "@/services/api";
 
 // Creating the context, checking the authentication context
 const AuthContext = createContext({});

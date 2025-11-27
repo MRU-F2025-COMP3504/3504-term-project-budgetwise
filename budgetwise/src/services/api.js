@@ -96,7 +96,7 @@ async function request(url, options = {}) {
   // Determine session/user before attempting cache lookup so cache is user-specific
   let userId = null;
   try {
-    const { createSupabaseBrowserClient } = await import('../../../lib/helpers/supabaseBrowserClient');
+    const { createSupabaseBrowserClient } = await import('@/lib/helpers/supabaseBrowserClient');
     const supabase = createSupabaseBrowserClient();
     const { data: { session } } = await supabase.auth.getSession();
     userId = session?.user?.id || null;

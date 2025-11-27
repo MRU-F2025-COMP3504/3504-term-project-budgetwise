@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import StatSummary from "../components/StatSummary";
-import Table from "../components/Table";
-import api from "../services/api";
+import StatSummary from "@/components/StatSummary";
+import Table from "@/components/Table";
+import api from "@/services/api";
 
 export default function DashboardPage() {
   const [transactions, setTransactions] = useState([]);

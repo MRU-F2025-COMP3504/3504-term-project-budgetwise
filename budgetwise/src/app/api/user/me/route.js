@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getSupabaseServerClient } from '../../../../../lib/helpers/supabaseSSRClient';
+import { getSupabaseServerClient } from '@/lib/helpers/supabaseSSRClient';
 
 /**
  * GET /api/user/me

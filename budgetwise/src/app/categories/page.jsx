@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import Table from "../components/Table";
+import Table from "@/components/Table";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
