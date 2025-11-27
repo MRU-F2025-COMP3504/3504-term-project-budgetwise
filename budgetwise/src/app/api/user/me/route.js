@@ -8,7 +8,7 @@ import { getSupabaseServerClient } from '../../../../../lib/helpers/supabaseSSRC
  */
 export async function GET(req) {
   try {
-    const s = getSupabaseServerClient();
+    const s = await getSupabaseServerClient();
 
     const { data: { user }, error } = await s.auth.getUser();
     if (error || !user) {

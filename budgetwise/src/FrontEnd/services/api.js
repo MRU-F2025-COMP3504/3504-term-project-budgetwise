@@ -13,6 +13,7 @@ const CACHE_DURATION = 30000; // 30 seconds default
 
 // Load cache from localStorage on initialization
 function loadCacheFromStorage() {
+  if (typeof window === 'undefined') return new Map(); // SSR safety
   try {
     const stored = localStorage.getItem(CACHE_KEY);
     if (stored) {
@@ -27,6 +28,7 @@ function loadCacheFromStorage() {
 
 // Save cache to localStorage
 function saveCacheToStorage(cache) {
+  if (typeof window === 'undefined') return; // SSR safety
   try {
     const obj = Object.fromEntries(cache.entries());
     localStorage.setItem(CACHE_KEY, JSON.stringify(obj));
