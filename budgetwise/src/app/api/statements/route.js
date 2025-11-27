@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '../../../../lib/helpers/SupabaseServerClient';
+import { getSupabaseServerClient } from '../../../../lib/helpers/supabaseSSRClient';
 
 /**
  * GET /api/statements
@@ -17,9 +17,7 @@ import {
 // GET /api/statements
 export async function GET(req) {
   try {
-    const authHeader = req.headers.get('authorization') || '';
-    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-    const s = createServerSupabaseClient(token);
+    const s = await getSupabaseServerClient();
 
     const { data: { user }, error: userErr } = await s.auth.getUser();
     if (userErr || !user) {
@@ -43,9 +41,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const authHeader = req.headers.get('authorization') || '';
-    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-    const s = createServerSupabaseClient(token);
+    const s = await getSupabaseServerClient();
 
     const { data: { user }, error: userErr } = await s.auth.getUser();
     if (userErr || !user) {

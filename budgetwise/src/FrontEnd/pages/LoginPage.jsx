@@ -2,13 +2,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
-import supabase from "../../../lib/helpers/DatabaseConnector";
 import Alert from "../components/Alert";
 import api from "../services/api";
 
 export default function LoginPage() {
 	const router = useRouter();
-	const { user } = useAuth();
+	const { user, login } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 		const [loading, setLoading] = useState(false);
@@ -20,26 +19,10 @@ export default function LoginPage() {
 		setLoading(true);
 		setMsg(null);
 		try {
-			// Use backend API to establish server-side session
-			const response = await api.auth.login(email, password);
+			// Use AuthContext login which handles Supabase auth and cookies
+			const { error } = await login(email, password);
 			
-			// Backend returns { data: { data: { session, user } } }
-			// because Supabase returns { data: { session, user } }
-			const session = response.data?.data?.session || response.data?.session;
-			
-			if (!session) {
-				throw new Error("No session returned from login");
-			}
-			
-			// CRITICAL: Set the client-side session to match server
-			const { error: sessionError } = await supabase.auth.setSession({
-				access_token: session.access_token,
-				refresh_token: session.refresh_token
-			});
-			
-			if (sessionError) {
-				console.error('Session sync error:', sessionError);
-			}
+			if (error) throw error;
 			
 			// Check if user has a profile to determine redirect destination
 			let redirectTo = "/dashboard";
@@ -64,8 +47,8 @@ export default function LoginPage() {
 			// Wait 1 second so user can see the success message
 			await new Promise(resolve => setTimeout(resolve, 1000));
 			
-			// Force a page reload to ensure all contexts pick up the new session
-			window.location.href = redirectTo;
+			router.push(redirectTo);
+			router.refresh(); // Refresh server components
 			
 		} catch (err) {
 			setMsg({ type: "error", text: err.message || "Login failed" });

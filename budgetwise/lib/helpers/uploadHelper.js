@@ -1,5 +1,5 @@
 import { parseTransactionsCSV } from "./CsvParser";
-import { get } from "http";
+
 
 // Get file from the form data
 export async function getFileFromRequest(req) {
@@ -60,6 +60,9 @@ export async function insertStatementRecord(supabaseClient, fileData, userId) {
     .select();
 
   if (error) throw new Error(error.message);
+  if (!data || data.length === 0) {
+    throw new Error("Statement record created but no data returned. Check RLS policies.");
+  }
   return data[0];
 }
 

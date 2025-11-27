@@ -1,15 +1,21 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '../../../../lib/helpers/SupabaseServerClient';
+import { getSupabaseServerClient } from '../../../../lib/helpers/supabaseSSRClient';
 
 export async function GET(req) {
   try {
-    const authHeader = req.headers.get('authorization') || '';
-    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-    const s = createServerSupabaseClient(token);
+    const s = await getSupabaseServerClient();
 
     const { data: { user }, error: userErr } = await s.auth.getUser();
+    
     if (userErr || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+      console.error("Profile API Auth Failed:", userErr);
+      console.log("User:", user);
+      // Debug cookies
+      const { cookies } = await import('next/headers');
+      const cookieStore = cookies();
+      console.log("Cookies available:", cookieStore.getAll().map(c => c.name));
+      
+      return NextResponse.json({ error: 'Not authenticated', details: userErr?.message }, { status: 401 });
     }
 
     const { data, error } = await s
@@ -40,9 +46,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    const authHeader = req.headers.get('authorization') || '';
-    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-    const s = createServerSupabaseClient(token);
+    const s = await getSupabaseServerClient();
 
     const body = await req.json();
 

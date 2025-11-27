@@ -2,13 +2,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
-import supabase from "../../../lib/helpers/DatabaseConnector";
 import Alert from "../components/Alert";
-import api from "../services/api";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, register } = useAuth();
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
@@ -34,32 +32,24 @@ export default function RegisterPage() {
  
     setLoading(true);
     try {
-      // Use backend API to establish server-side session
-      const response = await api.auth.register(
-        formData.name, 
-        formData.email, 
-        formData.password
-      );
+      // Use AuthContext register which handles Supabase auth and cookies
+      const { error } = await register(formData.email, formData.password);
       
-      // Backend returns { data: { data: { session, user } } }
-      // because Supabase returns { data: { session, user } }
-      const session = response.data?.data?.session || response.data?.session;
+      if (error) throw error;
       
-      if (!session) {
-        // Some Supabase configurations require email confirmation
-        setMsg({ type: "info", text: "Please check your email to confirm your account" });
-        setLoading(false);
-        return;
-      }
+      // Note: We are not passing 'name' to register because Supabase Auth doesn't take it directly
+      // unless using metadata. We should ideally update the profile with the name after registration.
+      // For now, we'll assume the user will set it up in the profile quiz or we can add a profile update call here.
       
-      // Sync client-side session to match server
-      const { error: sessionError } = await supabase.auth.setSession({
-        access_token: session.access_token,
-        refresh_token: session.refresh_token
-      });
-      
-      if (sessionError) {
-        console.error('Session sync error:', sessionError);
+      // Update profile with name if possible, or just proceed
+      try {
+         const { createSupabaseBrowserClient } = await import('../../../lib/helpers/supabaseBrowserClient');
+         const supabase = createSupabaseBrowserClient();
+         await supabase.auth.updateUser({
+           data: { display_name: formData.name }
+         });
+      } catch (err) {
+        console.warn("Failed to update display name", err);
       }
       
       setMsg({ type: "success", text: "Account created successfully! Setting up your profile..." });
@@ -67,8 +57,8 @@ export default function RegisterPage() {
       // Wait 1.5 seconds to ensure session is fully synced
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Force a page reload to ensure all contexts pick up the new session
-      window.location.href = "/quiz";
+      router.push("/quiz");
+      router.refresh();
       
     } catch (err) {
       setMsg({ type: "error", text: err.message || "Registration failed" });

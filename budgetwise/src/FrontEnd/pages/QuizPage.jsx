@@ -27,7 +27,10 @@ export default function QuizPage() {
           summary: summary || "",
           created_at: new Date().toISOString(),
         });
-      } catch (_) {}
+      } catch (err) {
+        console.error("Failed to save profile:", err);
+        // Optional: notify user via toast/alert if critical
+      }
     },
   });
 

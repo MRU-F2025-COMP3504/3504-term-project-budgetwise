@@ -92,12 +92,11 @@ function invalidateCache(pattern) {
 
 async function request(url, options = {}) {
   // Determine session/user before attempting cache lookup so cache is user-specific
-  let token = null;
   let userId = null;
   try {
-    const { default: supabaseEarly } = await import('../../../lib/helpers/DatabaseConnector');
-    const { data: { session } } = await supabaseEarly.auth.getSession();
-    token = session?.access_token || null;
+    const { createSupabaseBrowserClient } = await import('../../../lib/helpers/supabaseBrowserClient');
+    const supabase = createSupabaseBrowserClient();
+    const { data: { session } } = await supabase.auth.getSession();
     userId = session?.user?.id || null;
   } catch (_) {
     // ignore if not available
@@ -110,20 +109,18 @@ async function request(url, options = {}) {
   }
   
   try {
-    // Build headers and attach Supabase access token if present
+    // Build headers
     const isFormData = options.body instanceof FormData;
     const headers = {
       ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       ...(options.headers || {}),
     };
 
-    // Attempt to fetch the current session to include Authorization header
-    if (token && !headers.Authorization) {
-      headers.Authorization = `Bearer ${token}`;
-    }
+    // Cookies are automatically sent by the browser, no need for manual Authorization header
 
     const response = await fetch(url, {
       headers,
+      credentials: 'include', // Ensure cookies are sent
       ...options,
     });
 
