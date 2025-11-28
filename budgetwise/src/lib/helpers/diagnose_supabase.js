@@ -1,10 +1,21 @@
+/**
+ * @fileoverview Diagnostic script to check Supabase connection and table accessibility.
+ * 
+ * This script loads environment variables from .env.local and attempts to connect
+ * to the Supabase instance. It then checks for the existence and accessibility
+ * of key tables used in the application.
+ * 
+ * Usage: node src/lib/helpers/diagnose_supabase.js
+ */
+
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');
 const { createClient } = require('@supabase/supabase-js');
 
 // Load .env.local manually
-const envPath = path.resolve(__dirname, '../.env.local');
+// Resolving path from src/lib/helpers/ to root
+const envPath = path.resolve(__dirname, '../../../.env.local');
 console.log("Loading env from:", envPath);
 const result = dotenv.config({ path: envPath });
 if (result.error) {
