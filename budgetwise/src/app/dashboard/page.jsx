@@ -1,12 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import StatSummary from "@/components/StatSummary";
 import Table from "@/components/Table";
 import api from "@/services/api";
 
 export default function DashboardPage() {
+  const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Get user name
+  const fullName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'there';
+  const firstName = fullName.split(' ')[0];
 
   useEffect(() => {
     let isMounted = true;
@@ -71,11 +77,18 @@ export default function DashboardPage() {
 
   return (
     <div className="bw-container">
-      <h1 className="text-2xl font-semibold mb-4">Dashboard</h1>
-      
+      <header className="mb-8">
+        <h1 className="text-3xl font-semibold text-[var(--color-text)]">
+          Hi, {firstName}!
+        </h1>
+        <p className="mt-1 text-[var(--color-text-muted)]">
+          Your financial command center
+        </p>
+      </header>
+
       <StatSummary stats={stats} />
       
-      <div className="mt-6 grid gap-6 md:grid-cols-2">
+      <div className="mt-6 grid gap-6 md:grid-cols-2 mb-8">
         {/* Top Categories Card */}
         <div className="bw-card p-4">
           <h2 className="font-medium mb-2">Top Categories</h2>
@@ -109,6 +122,8 @@ export default function DashboardPage() {
           />
         </div>
       </div>
+
+      {/* Quick Access Links Removed */}
       
       {loading && (
         <p className="text-xs mt-4 text-[var(--color-text-muted)]">Loading transactions...</p>
