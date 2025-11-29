@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
 
 const formatCurrency = (amount) => {
@@ -12,11 +13,14 @@ const formatCurrency = (amount) => {
 };
 
 export default function ProfilePage() {
+  const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!user) return;
+
     let isMounted = true;
     
     const fetchProfile = async () => {

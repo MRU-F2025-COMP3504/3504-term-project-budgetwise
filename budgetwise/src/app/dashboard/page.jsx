@@ -15,6 +15,8 @@ export default function DashboardPage() {
   const firstName = fullName.split(' ')[0];
 
   useEffect(() => {
+    if (!user) return;
+    
     let isMounted = true;
     
     const fetchTransactions = async () => {

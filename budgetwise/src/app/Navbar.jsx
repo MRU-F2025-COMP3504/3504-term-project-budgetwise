@@ -80,8 +80,7 @@ export default function Navbar() {
           ) : (
             <>
               {/* Show only Login and Register when not signed in */}
-              <Link href="/login" className="hover:underline">Login</Link>
-              <Link href="/register" className="hover:underline">Register</Link>
+              {/* Links removed to avoid redundancy with Hero section */}
             </>
           )}
         </div>
