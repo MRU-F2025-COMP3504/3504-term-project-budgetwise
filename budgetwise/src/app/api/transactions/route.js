@@ -19,7 +19,8 @@ export async function GET(req) {
     const { data: transactions, error } = await s
       .from('Transactions')
       .select('*')
-      .eq('user_id', user.id);
+      .eq('user_id', user.id)
+      .order('transaction_date', { ascending: false });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

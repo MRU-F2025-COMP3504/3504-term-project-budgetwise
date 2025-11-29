@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import api from "@/services/api";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function AIPage() {
   const [messages, setMessages] = useState([
@@ -52,11 +54,15 @@ export default function AIPage() {
                 message.role === "user"
                   ? "bg-[var(--buttoncolor1)] text-white ml-auto max-w-[75%]"
                   : message.role === "assistant"
-                  ? "bg-[var(--surface-raised)] max-w-[75%]"
+                  ? "bg-[var(--surface-raised)] max-w-[75%] markdown-content"
                   : "text-[var(--textcolor3)] text-xs italic"
               }`}
             >
-              {message.content}
+              {message.role === "assistant" ? (
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+              ) : (
+                message.content
+              )}
             </div>
           ))}
           {loading && (
