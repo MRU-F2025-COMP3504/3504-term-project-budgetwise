@@ -56,6 +56,10 @@ export default function HomePage() {
       
       {/* Hero Section */}
       <div className="bw-container py-20 md:py-32 text-center relative z-10">
+        <div className="flex justify-center mb-8">
+           <img src="/BudgetWiseLogo.png" alt="BudgetWise Logo" className="h-20 w-auto" />
+        </div>
+
         <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full bg-[var(--surface-raised)] border border-[var(--color-border)] text-sm font-medium text-[var(--color-primary)] shadow-sm">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>

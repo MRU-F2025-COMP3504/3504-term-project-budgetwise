@@ -1,7 +1,6 @@
 'use client';
 
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import Navbar from './Navbar';
 import Sidebar from '@/components/Sidebar';
 
 function LayoutContent({ children }) {
@@ -27,7 +26,6 @@ function LayoutContent({ children }) {
   // If not logged in, show standard Navbar layout (Landing Page)
   return (
     <div className="min-h-screen bg-[var(--background)]">
-      <Navbar />
       {children}
     </div>
   );
