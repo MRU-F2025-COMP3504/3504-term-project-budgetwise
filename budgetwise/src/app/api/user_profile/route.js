@@ -20,7 +20,7 @@ export async function GET(req) {
 
     const { data, error } = await s
       .from('User_Profile')
-      .select('profile_data')
+      .select('profile_data, name')
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -28,16 +28,29 @@ export async function GET(req) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const profile = data?.profile_data?.profile;
-    if (!profile) {
+    if (!data) {
       return NextResponse.json(
-        { error: 'Failed to fetch user profiles' },
+        { error: 'Profile not found' },
         { status: 404 }
       );
     }
 
-    const cleanProfile = JSON.parse(JSON.stringify(profile));
-    return NextResponse.json({ profile: cleanProfile }, { status: 200 });
+    // Construct a rich profile object
+    // 1. Get the inner 'profile' object which has the metrics
+    const innerProfile = data.profile_data?.profile || {};
+    
+    // 2. Get the summary from the root of profile_data
+    const summary = data.profile_data?.summary;
+
+    // 3. Merge everything
+    const fullProfile = {
+      ...innerProfile,
+      summary,
+      name: data.name, // Ensure name from DB column is included
+      raw: data.profile_data?.raw // Include raw answers if needed
+    };
+
+    return NextResponse.json({ profile: fullProfile }, { status: 200 });
   } catch (error) {
     console.error('❌ Error fetching user profile:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
