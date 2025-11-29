@@ -8,7 +8,7 @@ export const dashboardCards = [
   { href: "/transactions", label: "Transactions", icon: "$", shape: "circle", bgColor: "var(--buttoncolor2)", shadow: "rgba(91, 75, 138, 0.15)", description: "Browse and categorize all your transactions" },
   { href: "/categories", label: "Categories", icon: "#", shape: "rounded", bgColor: "var(--buttoncolor3)", shadow: "rgba(61, 125, 107, 0.15)", description: "Organize spending into custom categories" },
   { href: "/budgets", label: "Budgets", icon: "%", shape: "rounded", bgColor: "var(--status-success)", shadow: "rgba(61, 125, 107, 0.15)", description: "Set spending limits and track your progress" },
-  { label: "AI Assistant", icon: "AI", comingSoon: true, shape: "circle", bgColor: "var(--surface-raised)", shadow: "rgba(91, 75, 138, 0.1)", description: "Get personalized insights and advice (Coming Soon)" },
+  { href: "/ai", label: "AI Assistant", icon: "AI", shape: "circle", bgColor: "var(--buttoncolor1)", shadow: "rgba(91, 75, 138, 0.1)", description: "Get personalized insights and advice" },
 ];
 
 export const featureCards = [
