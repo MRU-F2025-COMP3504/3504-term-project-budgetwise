@@ -1,15 +1,37 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import api from "@/services/api";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function AIPage() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     { role: "system", content: "Ask me about affordability or spending insights." }
   ]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [quizProfile, setQuizProfile] = useState(null);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user) {
+        setQuizProfile(null);
+        return;
+      }
+      try {
+        const { data } = await api.profile.get();
+        setQuizProfile(data?.profile || null);
+      } catch (err) {
+        console.error("AIPage quiz profile error", err);
+        setQuizProfile(null);
+      }
+    };
+  
+    loadProfile();
+  }, [user]);
 
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
@@ -20,7 +42,7 @@ export default function AIPage() {
     setLoading(true);
     
     try {
-      const { data } = await api.ai.chat(userInput.trim(), { messages });
+      const { data } = await api.ai.chat(userInput.trim(), { messages, profile: quizProfile });
       const assistantReply = data.reply || "This is a stub response until /api/ai is implemented.";
       setMessages(prev => [...prev, { role: "assistant", content: assistantReply }]);
     } catch (err) {
@@ -42,7 +64,12 @@ export default function AIPage() {
 
   return (
     <div className="bw-container max-w-2xl">
-      <h1 className="text-2xl font-semibold mb-4">AI Assistant</h1>
+      <h1 className="text-2xl font-semibold mb-1">AI Assistant</h1>
+      {quizProfile && (
+        <p className="text-xs text-[var(--color-text-muted)] mb-3">
+          Answers are tailored using your BudgetWise quiz profile.
+        </p>
+      )}
       
       <div className="bw-card p-4 space-y-3 h-[480px] flex flex-col">
         {/* Messages Container */}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import CardLink from "@/components/CardLink";
 import FeatureCard from "@/components/FeatureCard";
-import QuickAccess from "@/components/QuickAccess";
+import QuickAccess, { PersonalizedForYouPanel } from "@/components/QuickAccess";
 import { dashboardCards, featureCards, quickLinks } from "@/components/config/homeData";
 
 export default function HomePage() {
@@ -44,6 +44,7 @@ export default function HomePage() {
         </div>
 
         <QuickAccess links={quickLinks} />
+        <PersonalizedForYouPanel />
       </div>
     );
   }
