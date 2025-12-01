@@ -2,6 +2,7 @@
 
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import Sidebar from '@/components/Sidebar';
+import AICompanion from '@/components/AICompanion';
 
 function LayoutContent({ children }) {
   const { user, loading } = useAuth();
@@ -19,6 +20,7 @@ function LayoutContent({ children }) {
         <main className="flex-1 ml-64 p-8 transition-all duration-300">
           {children}
         </main>
+        <AICompanion />
       </div>
     );
   }

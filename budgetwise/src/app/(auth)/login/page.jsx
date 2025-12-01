@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Alert from "@/components/Alert";
@@ -7,23 +7,44 @@ import api from "@/services/api";
 
 export default function LoginPage() {
 	const router = useRouter();
-	const { user, login } = useAuth();
+	const { user, login, loading: authLoading } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-		const [loading, setLoading] = useState(false);
-		// msg: { type: 'info'|'success'|'error'|'loading', text: string }
-		const [msg, setMsg] = useState(null);
+	const [loading, setLoading] = useState(false);
+	const [msg, setMsg] = useState(null);
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (user) {
+            router.push('/dashboard');
+        }
+    }, [user, router]);
+
+    // Show loading state while checking auth or redirecting
+    if (authLoading || user) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-[var(--color-text-muted)] animate-pulse">Loading...</div>
+            </div>
+        );
+    }
 
 	async function submit(e) {
 		e.preventDefault();
 		setLoading(true);
 		setMsg(null);
 		try {
-			// Use AuthContext login which handles Supabase auth and cookies
 			const { error } = await login(email, password);
-			
 			if (error) throw error;
 			
+            // Success handling is now managed by the useEffect redirect
+            // via the user state update, but we can keep a success message if needed
+            // or just let the redirect happen.
+            // However, login() might not update 'user' immediately in this scope?
+            // Usually AuthContext updates state.
+            // Let's rely on the router.push in submit() for the immediate login flow,
+            // and the useEffect for the "already logged in" flow.
+            
 			// Check if user has a profile to determine redirect destination
 			let redirectTo = "/dashboard";
 			try {
@@ -33,22 +54,16 @@ export default function LoginPage() {
 				
 				if (!hasProfile) {
 					redirectTo = "/quiz";
-					setMsg({ type: "success", text: "Logged in successfully! Let's set up your profile..." });
-				} else {
-					setMsg({ type: "success", text: "Logged in successfully! Redirecting..." });
 				}
 			} catch (profileErr) {
-				// If profile check fails, assume no profile and redirect to quiz
-				console.log('No profile found, redirecting to quiz');
 				redirectTo = "/quiz";
-				setMsg({ type: "success", text: "Logged in successfully! Let's set up your profile..." });
 			}
 			
-			// Wait 1 second so user can see the success message
-			await new Promise(resolve => setTimeout(resolve, 1000));
+			setMsg({ type: "success", text: "Logged in successfully!" });
+			await new Promise(resolve => setTimeout(resolve, 500));
 			
 			router.push(redirectTo);
-			router.refresh(); // Refresh server components
+			router.refresh();
 			
 		} catch (err) {
 			setMsg({ type: "error", text: err.message || "Login failed" });
