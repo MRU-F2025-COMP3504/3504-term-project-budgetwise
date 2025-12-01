@@ -191,6 +191,16 @@ Supported environments:
 If extraction fails:
 - Use a CSV export if your bank supports it
 - Report the issue using GitHub bug report (check section 8 for more details)
+#### ✅ Use Case 4: AI Assistance (Operational)
+
+**Steps:**
+1. Login to your account.
+2. On the bottom right corner, you’ll see a purple icon.
+3. Click on it; the AI chat interface will open.
+4. Type your prompt or question; the AI responds using your account data, including budgets, expenses, and analytics.
+
+
+
 
 #### ✅ Use Case 5: Taking the User Quiz (Operational)
 
@@ -332,13 +342,26 @@ budgetwise/
 
 ## Dev 3. Building the Software
 
-**Requirements:** Node.js 18+, npm, `.env.local` with Supabase + OpenAI keys.
+# Requirements
+
+- Node.js 18+
+- npm
+- A `.env` file with your Supabase and OpenAI keys
+
+> ⚠️ **Important:** You must create a `.env` file in the project root. 
+
 ```bash
-cp .env.example .env.local
-npm run dev        # Dev server
-npm run build      # Production build
-npm start          # Run production build
-```
+# Copy the example env file to create your own
+cp .env.example .env
+
+# Start the development server
+npm run dev        
+
+# Build for production
+npm run build      
+
+# Run the production build
+npm start     
 
 ## Dev 4. Testing the Software
 ```bash
@@ -351,7 +374,7 @@ npm run test:coverage    # Coverage report
 ## Dev 5. Adding New Tests
 
 * Naming: `featureName.test.js`
-* Folder: all tests in `/test/`
+* Folder: all tests in `/__test__/`
 * Basic template:
 ```javascript
 describe('Feature', () => {

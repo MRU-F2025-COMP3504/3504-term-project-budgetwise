@@ -1,4 +1,6 @@
 "use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import CardLink from "@/components/CardLink";
@@ -7,6 +9,7 @@ import QuickAccess, { PersonalizedForYouPanel } from "@/components/QuickAccess";
 import { dashboardCards, featureCards, quickLinks } from "@/components/config/homeData";
 
 export default function HomePage() {
+  const router = useRouter();
   const { user, loading } = useAuth();
 
   // Loading state
@@ -18,14 +21,14 @@ export default function HomePage() {
     );
   }
 
-  // Signed in - utility dashboard
+  // Signed in - redirect to dashboard
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
+
   if (user) {
-    // Get the user's name from user_metadata (set during registration)
-    // If display_name exists, extract just the first name
-    // Otherwise fall back to first part of email or 'there'
-    const fullName = user.user_metadata?.display_name || user.email?.split('@')[0] || 'there';
-    const firstName = fullName.split(' ')[0];
-    
     return (
       <div className="bw-container">
         <header className="mb-8">

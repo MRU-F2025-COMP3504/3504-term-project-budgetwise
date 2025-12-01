@@ -1,12 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Alert from "@/components/Alert";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { user, register } = useAuth();
+  const { user, register, loading: authLoading } = useAuth();
   const [formData, setFormData] = useState({ 
     name: "", 
     email: "", 
@@ -16,6 +16,22 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   // msg object: { type: 'success'|'error'|'info'|'loading', text }
   const [msg, setMsg] = useState(null);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+        router.push('/dashboard');
+    }
+  }, [user, router]);
+
+  // Show loading state while checking auth or redirecting
+  if (authLoading || user) {
+      return (
+          <div className="flex items-center justify-center min-h-[60vh]">
+              <div className="text-[var(--color-text-muted)] animate-pulse">Loading...</div>
+          </div>
+      );
+  }
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));

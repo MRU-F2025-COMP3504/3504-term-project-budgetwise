@@ -21,7 +21,6 @@ const navItems = [
   { href: "/transactions", label: "Transactions", icon: DollarSign },
   { href: "/categories", label: "Categories", icon: Tags },
   { href: "/budgets", label: "Budgets", icon: PieChart },
-  { href: "/ai", label: "AI Assistant", icon: Bot },
 ];
 
 export default function Sidebar() {
@@ -41,12 +40,12 @@ export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-[var(--card-bg)] border-r border-[var(--color-border)] flex flex-col z-50 backdrop-blur-xl bg-opacity-95 shadow-xl">
       {/* Logo */}
-      <div className="p-6 flex items-center gap-3">
+      <Link href="/dashboard" className="p-6 flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer">
         <div className="w-8 h-8 bg-[var(--buttoncolor1)] rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30">
           <DollarSign size={20} />
         </div>
         <span className="font-bold text-xl tracking-tight text-[var(--color-text)]">BudgetWise</span>
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-1 overflow-y-auto py-4">
