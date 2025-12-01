@@ -191,6 +191,16 @@ Supported environments:
 If extraction fails:
 - Use a CSV export if your bank supports it
 - Report the issue using GitHub bug report (check section 8 for more details)
+#### ✅ Use Case 4: AI Assistance (Operational)
+
+**Steps:**
+1. Login to your account.
+2. On the bottom right corner, you’ll see a purple icon.
+3. Click on it; the AI chat interface will open.
+4. Type your prompt or question; the AI responds using your account data, including budgets, expenses, and analytics.
+
+
+
 
 #### ✅ Use Case 5: Taking the User Quiz (Operational)
 
