@@ -351,7 +351,7 @@ npm run test:coverage    # Coverage report
 ## Dev 5. Adding New Tests
 
 * Naming: `featureName.test.js`
-* Folder: all tests in `/test/`
+* Folder: all tests in `/__test__/`
 * Basic template:
 ```javascript
 describe('Feature', () => {
