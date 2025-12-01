@@ -332,13 +332,26 @@ budgetwise/
 
 ## Dev 3. Building the Software
 
-**Requirements:** Node.js 18+, npm, `.env.local` with Supabase + OpenAI keys.
+# Requirements
+
+- Node.js 18+
+- npm
+- A `.env` file with your Supabase and OpenAI keys
+
+> ⚠️ **Important:** You must create a `.env` file in the project root. 
+
 ```bash
-cp .env.example .env.local
-npm run dev        # Dev server
-npm run build      # Production build
-npm start          # Run production build
-```
+# Copy the example env file to create your own
+cp .env.example .env
+
+# Start the development server
+npm run dev        
+
+# Build for production
+npm run build      
+
+# Run the production build
+npm start     
 
 ## Dev 4. Testing the Software
 ```bash
