@@ -1,40 +1,37 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import api from "@/services/api";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function AIPage() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState([
     { role: "system", content: "Ask me about affordability or spending insights." }
   ]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [quizProfile, setQuizProfile] = useState(null);
 
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("bw_ai_chat_history");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setMessages(parsed);
-        }
-      } catch (e) {
-        console.error("Failed to parse chat history", e);
+    const loadProfile = async () => {
+      if (!user) {
+        setQuizProfile(null);
+        return;
       }
-    }
-    setIsLoaded(true);
-  }, []);
-
-  // Save to localStorage whenever messages change
-  useEffect(() => {
-    if (isLoaded && messages.length > 0) {
-      localStorage.setItem("bw_ai_chat_history", JSON.stringify(messages));
-    }
-  }, [messages, isLoaded]);
+      try {
+        const { data } = await api.profile.get();
+        setQuizProfile(data?.profile || null);
+      } catch (err) {
+        console.error("AIPage quiz profile error", err);
+        setQuizProfile(null);
+      }
+    };
+  
+    loadProfile();
+  }, [user]);
 
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
@@ -45,7 +42,7 @@ export default function AIPage() {
     setLoading(true);
     
     try {
-      const { data } = await api.ai.chat(userInput.trim(), { messages });
+      const { data } = await api.ai.chat(userInput.trim(), { messages, profile: quizProfile });
       const assistantReply = data.reply || "This is a stub response until /api/ai is implemented.";
       setMessages(prev => [...prev, { role: "assistant", content: assistantReply }]);
     } catch (err) {
@@ -58,12 +55,6 @@ export default function AIPage() {
     }
   };
 
-  const handleClearChat = () => {
-    const initialMsg = [{ role: "system", content: "Ask me about affordability or spending insights." }];
-    setMessages(initialMsg);
-    localStorage.removeItem("bw_ai_chat_history");
-  };
-
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -73,16 +64,12 @@ export default function AIPage() {
 
   return (
     <div className="bw-container max-w-2xl">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold">AI Assistant</h1>
-        <button 
-          onClick={handleClearChat}
-          className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-danger)] transition-colors px-3 py-1 rounded border border-[var(--color-border)] hover:border-[var(--color-danger)]"
-          title="Clear conversation history"
-        >
-          Clear Chat
-        </button>
-      </div>
+      <h1 className="text-2xl font-semibold mb-1">AI Assistant</h1>
+      {quizProfile && (
+        <p className="text-xs text-[var(--color-text-muted)] mb-3">
+          Answers are tailored using your BudgetWise quiz profile.
+        </p>
+      )}
       
       <div className="bw-card p-4 space-y-3 h-[480px] flex flex-col">
         {/* Messages Container */}

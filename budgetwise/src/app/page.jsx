@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import CardLink from "@/components/CardLink";
 import FeatureCard from "@/components/FeatureCard";
-import QuickAccess from "@/components/QuickAccess";
+import QuickAccess, { PersonalizedForYouPanel } from "@/components/QuickAccess";
 import { dashboardCards, featureCards, quickLinks } from "@/components/config/homeData";
 
 export default function HomePage() {
@@ -30,8 +30,24 @@ export default function HomePage() {
 
   if (user) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-[var(--color-text-muted)] animate-pulse">Redirecting to Dashboard...</div>
+      <div className="bw-container">
+        <header className="mb-8">
+          <h1 className="text-3xl font-semibold" style={{ color: 'var(--textcolor1)' }}>
+            Hi, {firstName}!
+          </h1>
+          <p className="mt-2" style={{ color: 'var(--textcolor3)' }}>
+            Your financial command center
+          </p>
+        </header>
+
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+          {dashboardCards.map((item) => (
+            <CardLink key={item.label} item={item} />
+          ))}
+        </div>
+
+        <QuickAccess links={quickLinks} />
+        <PersonalizedForYouPanel />
       </div>
     );
   }

@@ -1,4 +1,6 @@
 "use client";
+"use client";
+import { PersonalizedForYouPanel } from "@/components/QuickAccess";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import StatSummary from "@/components/StatSummary";
@@ -124,8 +126,7 @@ export default function DashboardPage() {
           />
         </div>
       </div>
-
-      {/* Quick Access Links Removed */}
+      <PersonalizedForYouPanel />
       
       {loading && (
         <p className="text-xs mt-4 text-[var(--color-text-muted)]">Loading transactions...</p>
