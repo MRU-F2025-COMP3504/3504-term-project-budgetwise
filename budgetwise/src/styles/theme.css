@@ -1,0 +1,304 @@
+/* Centralized CSS variables for theming */
+:root {
+  /* Deep Dark & Vibrant Palette */
+  --app-bg: #121212; /* Slightly Lighter Dark */
+  --card-bg: rgba(255, 255, 255, 0.04); /* Adjusted Glassy Surface */
+  --surface-raised: rgba(255, 255, 255, 0.09); /* Adjusted Lighter Glass */
+
+  /* Button / interactive colors */
+  --buttoncolor1: #9333ea; /* Vibrant Purple */
+  --buttoncolor2: #10b981; /* Vibrant Emerald */
+  --buttoncolor3: #f59e0b; /* Warm Amber */
+  --hovercolor1: #a855f7; /* Lighter Purple */
+  --hovercolor2: #34d399; /* Lighter Emerald */
+  --hovercolor3: #fbbf24; /* Lighter Amber */
+
+  /* Status colors */
+  --status-danger: #ef4444;
+  --status-warning: #f59e0b;
+  --status-success: #10b981;
+
+  /* Text tiers */
+  --textcolor1: #ffffff; /* Pure White */
+  --textcolor2: #e5e7eb; /* Light Gray */
+  --textcolor3: #9ca3af; /* Muted Gray */
+  --secondarytext1: #9ca3af;
+  --secondarytext2: #6b7280;
+  --secondarytext3: #4b5563;
+
+  /* Back-compat mapping */
+  --color-bg: var(--app-bg);
+  --color-surface: var(--card-bg);
+  --color-surface-2: var(--surface-raised);
+  --color-text: var(--textcolor1);
+  --color-text-muted: var(--textcolor3);
+  --color-accent: var(--buttoncolor2);
+  --color-accent-2: var(--buttoncolor1);
+  --color-danger: var(--status-danger);
+  --color-warning: var(--status-warning);
+  --color-success: var(--status-success);
+
+  --radius: 16px; /* Slightly rounder */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4); /* Deep diffused shadow */
+
+  /* Focus ring + input tokens */
+  --focus-ring-color: rgba(147, 51, 234, 0.5);
+  --input-bg: var(--surface-raised);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-border-hover: rgba(255, 255, 255, 0.2);
+  --input-text: var(--textcolor1);
+  --input-placeholder: var(--secondarytext2);
+  --input-ring: 0 0 0 3px var(--focus-ring-color);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Light theme counterparts (soft, cozy) */
+    --app-bg: #f5f6f8;
+    --card-bg: #ffffff;
+    --surface-raised: #eef1f5;
+    --buttoncolor1: #5b4b8a; /* keep brand hue */
+    --buttoncolor2: #3d7d6b;
+    --buttoncolor3: #b68b3c;
+    --hovercolor1: color-mix(in srgb, var(--buttoncolor1) 82%, white 18%);
+    --hovercolor2: color-mix(in srgb, var(--buttoncolor2) 82%, white 18%);
+    --hovercolor3: color-mix(in srgb, var(--buttoncolor3) 82%, white 18%);
+    --status-danger: #d64747;
+    --status-warning: #dca645;
+    --status-success: #2e966e;
+    --textcolor1: #101721;
+    --textcolor2: #2e3742;
+    --textcolor3: #4b5663;
+    --secondarytext1: #4b5663;
+    --secondarytext2: #5d6875;
+    --secondarytext3: #6e7a87;
+
+    /* Back-compat mapping in light mode */
+    --color-bg: var(--app-bg);
+    --color-surface: var(--card-bg);
+    --color-surface-2: var(--surface-raised);
+    --color-text: var(--textcolor1);
+    --color-text-muted: var(--textcolor3);
+    --color-accent: var(--buttoncolor2);
+    --color-accent-2: var(--buttoncolor1);
+    --color-danger: var(--status-danger);
+    --color-warning: var(--status-warning);
+    --color-success: var(--status-success);
+  }
+}
+
+/* Basic utility classes that work with Tailwind if desired */
+.bw-container {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 1.25rem;
+}
+.bw-card {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+.bw-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+.bw-card-muted {
+  background: var(--color-surface-2);
+}
+.bw-text-muted {
+  color: var(--color-text-muted);
+}
+.bw-accent {
+  color: var(--color-accent);
+}
+.bw-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+}
+
+/* Table niceties */
+.bw-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+.bw-table th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-raised);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--textcolor3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.bw-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--textcolor1);
+}
+.bw-table tr:last-child td {
+  border-bottom: none;
+}
+.bw-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* -------------------------------------------------- */
+/* Buttons                                             */
+/* -------------------------------------------------- */
+/* Base button class using CSS variables so it themes */
+.bw-btn {
+  --btn-bg: var(--color-surface-2);
+  --btn-bg-hover: var(--color-surface);
+  --btn-bg-active: var(--color-surface-2);
+  --btn-color: var(--color-text);
+  --btn-border: rgba(255, 255, 255, 0.1);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius);
+  background: var(--btn-bg);
+  color: var(--btn-color);
+  border: 1px solid var(--btn-border);
+  cursor: pointer;
+  position: relative;
+  transition:
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.bw-btn:hover:not([disabled]) {
+  background: var(--btn-bg-hover);
+}
+.bw-btn:active:not([disabled]) {
+  transform: translateY(1px);
+  background: var(--btn-bg-active);
+}
+.bw-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--input-ring);
+}
+.bw-btn[disabled],
+.bw-btn.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.bw-btn-block {
+  width: 100%;
+}
+
+/* Primary / Accent variants */
+.bw-btn-primary {
+  --btn-bg: var(--buttoncolor1);
+  --btn-bg-hover: var(--hovercolor1);
+  --btn-bg-active: color-mix(in srgb, var(--buttoncolor1) 70%, black 30%);
+  --btn-color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.bw-btn-primary:hover:not([disabled]) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.bw-btn-accent {
+  --btn-bg: var(--buttoncolor2);
+  --btn-bg-hover: var(--hovercolor2);
+  --btn-bg-active: color-mix(in srgb, var(--buttoncolor2) 70%, black 30%);
+  --btn-color: #fff;
+}
+
+/* Danger variant */
+.bw-btn-danger {
+  --btn-bg: var(--status-danger);
+  --btn-bg-hover: color-mix(in srgb, var(--status-danger) 88%, white 12%);
+  --btn-bg-active: color-mix(in srgb, var(--status-danger) 72%, black 28%);
+  --btn-color: #fff;
+}
+
+/* Neutral surface button variant */
+.bw-btn-neutral {
+  --btn-bg: var(--surface-raised);
+  --btn-bg-hover: color-mix(in srgb, var(--surface-raised) 88%, white 12%);
+  --btn-bg-active: color-mix(in srgb, var(--surface-raised) 70%, black 30%);
+  --btn-color: var(--textcolor2);
+}
+
+@media (hover: none) {
+  .bw-btn:hover:not([disabled]) {
+    background: var(--btn-bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bw-btn {
+    transition: none;
+  }
+  .bw-btn:active:not([disabled]) {
+    transform: none;
+  }
+}
+
+/* -------------------------------------------------- */
+/* Inputs                                             */
+/* -------------------------------------------------- */
+.bw-input {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  outline: none;
+  box-shadow: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+.bw-input::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+.bw-input:hover {
+  border-color: var(--input-border-hover);
+}
+.bw-input:focus {
+  border-color: var(--input-border-hover);
+  box-shadow: var(--input-ring);
+}
+.bw-input:focus-visible {
+  border-color: var(--input-border-hover);
+  box-shadow: var(--input-ring);
+}
+.bw-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Remove default glow on some browsers */
+input.bw-input,
+textarea.bw-input,
+select.bw-input {
+  -webkit-tap-highlight-color: transparent;
+}
