@@ -145,14 +145,7 @@ export default function DashboardPage() {
           />
         </div>
       </div>
-<<<<<<< HEAD
       <PersonalizedForYouPanel />
-      
-=======
-
-      {/* Quick Access Links Removed */}
-
->>>>>>> 1192b86 (refactor: Consolidate Budgets/Categories and cleanup codebase)
       {loading && (
         <p className="text-xs mt-4 text-[var(--color-text-muted)]">
           Loading transactions...
