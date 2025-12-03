@@ -15,17 +15,6 @@ export default function QuizQuestion({ question, value, onChange, disabled }) {
       <p className="text-lg font-medium text-center">{text}</p>
 
       <div className="max-w-sm w-full mx-auto">
-        {inputType === 'number' && (
-          <input
-            type="number"
-            className="bw-input w-full"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="Enter amount"
-            disabled={disabled}
-          />
-        )}
-
         {inputType === 'select' && Array.isArray(options) && (
           <select
             className="bw-input w-full"
@@ -39,8 +28,8 @@ export default function QuizQuestion({ question, value, onChange, disabled }) {
             ))}
           </select>
         )}
-
-        {(inputType === 'text' || !inputType) && (
+        {/* Default to text input for 'text' and 'number' types */}
+        {inputType !== 'select' && (
           <input
             type="text"
             className="bw-input w-full"
