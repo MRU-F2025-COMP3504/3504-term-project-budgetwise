@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import api from "@/services/api";
+import { FileText, Wallet, CreditCard, Target, Lightbulb } from "lucide-react";
 
 const formatCurrency = (amount) => {
   if (!amount && amount !== 0) return "N/A";
@@ -106,7 +107,7 @@ export default function ProfilePage() {
       {summary && (
         <div className="bw-card p-6 mb-8 border-l-4 border-l-[var(--color-primary)]">
           <h2 className="text-lg font-semibold mb-2 flex items-center gap-2">
-            <span>📝</span> Executive Summary
+            <FileText className="text-[var(--color-primary)]" size={20} /> Executive Summary
           </h2>
           <p className="text-[var(--color-text-secondary)] leading-relaxed">
             {summary}
@@ -119,19 +120,19 @@ export default function ProfilePage() {
         <MetricCard 
           label="Monthly Income" 
           value={formatCurrency(monthlyIncome)} 
-          icon="💰" 
+          icon={<Wallet size={24} className="text-emerald-400" />} 
           color="text-emerald-400"
         />
         <MetricCard 
           label="Monthly Budget" 
           value={formatCurrency(monthlyBudget)} 
-          icon="📉" 
+          icon={<CreditCard size={24} className="text-blue-400" />} 
           color="text-blue-400"
         />
         <MetricCard 
           label="Savings Goal" 
           value={formatCurrency(savingsGoal)} 
-          icon="🎯" 
+          icon={<Target size={24} className="text-purple-400" />} 
           color="text-purple-400"
         />
       </div>
@@ -142,7 +143,7 @@ export default function ProfilePage() {
           {insights && insights.length > 0 && (
             <div>
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <span>💡</span> AI Insights
+                <Lightbulb className="text-yellow-400" size={20} /> AI Insights
               </h2>
               <div className="space-y-3">
                 {insights.map((insight, i) => (
@@ -186,7 +187,7 @@ export default function ProfilePage() {
 function MetricCard({ label, value, icon, color }) {
   return (
     <div className="bw-card p-5 flex items-center gap-4 hover:-translate-y-1 transition-transform duration-200">
-      <div className="text-3xl bg-[var(--surface-raised)] w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm">
+      <div className="bg-[var(--surface-raised)] w-14 h-14 flex items-center justify-center rounded-2xl shadow-sm border border-white/5">
         {icon}
       </div>
       <div>

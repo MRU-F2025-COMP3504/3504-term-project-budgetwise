@@ -39,13 +39,15 @@ export async function GET(req) {
     // 1. Get the inner 'profile' object which has the metrics
     const innerProfile = data.profile_data?.profile || {};
     
-    // 2. Get the summary from the root of profile_data
+    // 2. Get the summary and insights from the root of profile_data
     const summary = data.profile_data?.summary;
+    const rootInsights = data.profile_data?.insights;
 
     // 3. Merge everything
     const fullProfile = {
       ...innerProfile,
       summary,
+      insights: rootInsights || innerProfile.insights || [],
       name: data.name, // Ensure name from DB column is included
       raw: data.profile_data?.raw // Include raw answers if needed
     };

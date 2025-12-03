@@ -18,7 +18,7 @@ export async function GET(req) {
 
     const { data: transactions, error } = await s
       .from('Transactions')
-      .select('*')
+      .select('*, Statements(file_name)')
       .eq('user_id', user.id)
       .order('transaction_date', { ascending: false });
 

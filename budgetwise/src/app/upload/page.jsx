@@ -1,12 +1,27 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import api from "@/services/api";
+import Table from "@/components/Table";
 
 export default function UploadPage() {
   const [selectedFiles, setSelectedFiles] = useState([]); // File[]
   const [uploadResults, setUploadResults] = useState({}); // { [fileName]: { status, message } }
   const [isUploading, setIsUploading] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
+  const [statements, setStatements] = useState([]);
+
+  const fetchStatements = async () => {
+    try {
+      const { data } = await api.statements.list();
+      setStatements(data?.statements || []);
+    } catch (e) {
+      console.error("Failed to load statements", e);
+    }
+  };
+
+  useEffect(() => {
+    fetchStatements();
+  }, []);
 
   const handleFileSelection = (e) => {
     const files = Array.from(e.target.files || []);
@@ -61,6 +76,11 @@ export default function UploadPage() {
         ? `✅ All ${filesToUpload.length} file(s) uploaded successfully.` 
         : `ℹ️ Upload finished. Review results below.`
     );
+
+    if (allSuccessful) {
+      fetchStatements();
+      // Optional: clear selection after success? User didn't ask, keeping as is.
+    }
   };
 
   const uploadSingleFile = async (file) => {
@@ -71,6 +91,24 @@ export default function UploadPage() {
     return (bytes / 1024).toFixed(1) + ' KB';
   };
 
+  const columns = [
+    { 
+      key: "created_at", 
+      label: "Created At",
+      render: (val) => {
+        if (!val) return "-";
+        return new Date(val).toLocaleString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric', 
+          hour: 'numeric', 
+          minute: '2-digit' 
+        });
+      }
+    },
+    { key: "file_name", label: "File Name" }
+  ];
+
   return (
     <div className="bw-container py-8">
       <h1 className="text-2xl font-semibold mb-2">Upload CSV Files</h1>
@@ -78,7 +116,7 @@ export default function UploadPage() {
         Choose one or multiple bank statement CSV files. Each file will be processed and categorized automatically.
       </p>
       
-      <div className="bw-card p-6 flex flex-col">
+      <div className="bw-card p-6 flex flex-col mb-8">
         <h2 className="font-medium mb-3">Choose Files</h2>
         
         <div className="border-2 border-dashed border-[rgba(255,255,255,0.1)] rounded-xl p-5 w-full flex flex-col gap-4">
@@ -188,6 +226,14 @@ export default function UploadPage() {
           </p>
         )}
       </div>
+
+      {/* Statements Table */}
+      <h2 className="text-lg font-semibold mb-3">Uploaded Statements</h2>
+      <Table 
+        rows={statements} 
+        columns={columns} 
+        emptyText="No statements uploaded yet." 
+      />
     </div>
   );
 }

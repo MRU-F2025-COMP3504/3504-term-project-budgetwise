@@ -80,8 +80,8 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="bw-container">
-      <header className="mb-8">
+    <div className="bw-container py-8 px-0 md:px-5">
+      <header className="mb-8 px-4 md:px-0">
         <h1 className="text-3xl font-semibold text-[var(--color-text)]">
           Hi, {firstName}!
         </h1>
@@ -90,11 +90,13 @@ export default function DashboardPage() {
         </p>
       </header>
 
-      <StatSummary stats={stats} />
+      <div className="px-4 md:px-0">
+        <StatSummary stats={stats} />
+      </div>
       
-      <div className="mt-6 grid gap-6 md:grid-cols-2 mb-8">
+      <div className="mt-6 grid gap-6 md:grid-cols-2 mb-8 px-4 md:px-0">
         {/* Top Categories Card */}
-        <div className="bw-card p-4">
+        <div className="bw-card p-4 min-w-0">
           <h2 className="font-medium mb-2">Top Categories</h2>
           <ul className="text-sm space-y-1">
             {topCategories.map(([category, amount]) => (

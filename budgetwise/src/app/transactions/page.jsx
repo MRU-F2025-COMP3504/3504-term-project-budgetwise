@@ -3,10 +3,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Table from "@/components/Table";
 import api from "@/services/api";
+import { Filter } from "lucide-react";
 
 export default function TransactionsPage({ transactions }) {
   const [rows, setRows] = useState(Array.isArray(transactions) ? transactions : []);
   const [loading, setLoading] = useState(!Array.isArray(transactions));
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     // If no transactions were provided via props, fetch client-side
@@ -122,14 +124,28 @@ export default function TransactionsPage({ transactions }) {
   };
 
   return (
-    <div className="bw-container">
+    <div className="bw-container px-0 md:px-5">
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">Transactions</h1>
         <p className="bw-text-muted">All your parsed and categorized transactions.</p>
       </header>
 
+      {/* Mobile Filter Toggle */}
+      <button 
+        className="md:hidden w-full mb-4 p-3 bg-[var(--card-bg)] border border-[var(--color-border)] rounded-lg flex items-center justify-between text-[var(--color-text)]"
+        onClick={() => setShowFilters(!showFilters)}
+      >
+        <span className="font-medium flex items-center gap-2">
+          <Filter size={16} />
+          Filters
+        </span>
+        <span className="text-xs text-[var(--color-text-muted)]">
+          {showFilters ? 'Hide' : 'Show'}
+        </span>
+      </button>
+
       {/* Filters */}
-      <div className="bw-card p-4 mb-4">
+      <div className={`bw-card p-4 mb-4 ${showFilters ? 'block' : 'hidden md:block'}`}>
         <div className="grid md:grid-cols-3 gap-3">
           <div className="space-y-3">
             <div>
@@ -308,8 +324,39 @@ export default function TransactionsPage({ transactions }) {
         </div>
       </div>
 
-      {/* Table renders ALL fields dynamically */}
-      <Table rows={filtered} emptyText="No transactions found." />
+      {/* Table renders specific fields */}
+      <Table 
+        rows={filtered} 
+        columns={[
+          { key: "description", label: "Description" },
+          { key: "amount", label: "Amount" },
+          { 
+            key: "type", 
+            label: "Type",
+            className: "hidden md:table-cell",
+            render: (val, row) => {
+              // Fallback if type is missing but amount exists
+              if (val) return val.toUpperCase();
+              const amt = Number(row.amount);
+              if (!isNaN(amt)) return amt < 0 ? "DEBIT" : "CREDIT";
+              return "-";
+            }
+          },
+          { 
+            key: "statement_name", 
+            label: "Statement Name",
+            className: "hidden md:table-cell",
+            render: (_, row) => row.Statements?.file_name || "-"
+          },
+          { 
+            key: "transaction_date", 
+            label: "Transaction Date",
+            render: (val) => val ? new Date(val).toISOString().split('T')[0] : "-"
+          },
+          { key: "category", label: "Category", className: "hidden md:table-cell" }
+        ]}
+        emptyText="No transactions found." 
+      />
     </div>
   );
 }

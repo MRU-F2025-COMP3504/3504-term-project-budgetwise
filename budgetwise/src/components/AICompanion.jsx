@@ -114,11 +114,11 @@ export default function AICompanion() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end pointer-events-none">
+    <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-end pointer-events-none">
       
       {/* Chat Window */}
       {isOpen && (
-        <div className="mb-4 w-[350px] md:w-[400px] h-[500px] bg-[var(--card-bg)] border border-[var(--color-border)] rounded-2xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-200">
+        <div className="mb-4 w-[calc(100vw-2rem)] md:w-[400px] h-[500px] max-h-[70vh] md:max-h-[500px] bg-[var(--card-bg)] border border-[var(--color-border)] rounded-2xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-200">
           {/* Header */}
           <div className="p-4 border-b border-[var(--color-border)] bg-[var(--surface-raised)] flex items-center justify-between">
             <div className="flex items-center gap-2">

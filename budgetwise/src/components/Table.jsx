@@ -59,7 +59,7 @@ export default function Table({ columns, rows, keyField = 'id', emptyText = 'No 
           <thead>
             <tr className="bg-[var(--color-surface-2)] text-left">
               {colDefs.map((col) => (
-                <th key={col.key} className="px-4 py-3 font-medium text-[var(--color-text-muted)] whitespace-nowrap">
+                <th key={col.key} className={`px-4 py-3 font-medium text-[var(--color-text-muted)] whitespace-nowrap ${col.className || ''}`}>
                   {col.label}
                 </th>
               ))}
@@ -77,7 +77,7 @@ export default function Table({ columns, rows, keyField = 'id', emptyText = 'No 
                     return (
                       <td
                         key={col.key}
-                        className={`px-4 py-3 ${rightAlign ? 'text-right font-mono' : ''} ${negative ? 'text-[var(--color-danger)]' : ''}`}
+                        className={`px-4 py-3 ${rightAlign ? 'text-right font-mono' : ''} ${negative ? 'text-[var(--color-danger)]' : ''} ${col.className || ''}`}
                         title={typeof text === 'string' ? text : undefined}
                       >
                         {text}
