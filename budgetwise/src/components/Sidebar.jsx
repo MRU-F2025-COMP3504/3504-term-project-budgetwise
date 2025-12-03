@@ -40,7 +40,7 @@ export default function Sidebar({
 
   const handleLogout = async () => {
     await logout();
-    router.push("/");
+    // Redirect is handled by ClientLayout when user becomes null
   };
 
   const handleLinkClick = () => {

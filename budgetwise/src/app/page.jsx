@@ -56,14 +56,12 @@ export default function HomePage() {
           Financial clarity, simplified.
         </p>
 
-        {/* Initial Buttons - Slide out directionally */}
+        {/* Initial Buttons - Soft Vanish */}
         <div
           className={`flex gap-4 mt-12 transition-all duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
             view === "landing"
-              ? "opacity-100 translate-x-0 delay-300"
-              : view === "login"
-                ? "opacity-0 translate-x-[60px] pointer-events-none"
-                : "opacity-0 -translate-x-[60px] pointer-events-none"
+              ? "opacity-100 translate-y-0 delay-300"
+              : "opacity-0 translate-y-4 pointer-events-none"
           }`}
         >
           <button
@@ -86,7 +84,7 @@ export default function HomePage() {
         className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-4 transition-all duration-[800ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] delay-100 will-change-transform ${
           view !== "landing"
             ? "opacity-100 translate-y-[40px] z-10"
-            : "opacity-0 translate-y-[100px] pointer-events-none"
+            : "opacity-0 translate-y-[40px] pointer-events-none"
         }`}
       >
         {view === "login" && (

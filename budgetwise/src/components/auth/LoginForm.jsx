@@ -72,6 +72,7 @@ export default function LoginForm({ onSwitch }) {
           onChange={(e) => setPassword(e.target.value)}
           className="bw-input w-full bg-[var(--surface-raised)] border-white/10 focus:border-purple-500 focus:ring-purple-500/20"
         />
+
         <button
           disabled={loading}
           className="w-full py-2.5 rounded-md bg-purple-600 hover:bg-purple-700 text-white font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-purple-900/20"

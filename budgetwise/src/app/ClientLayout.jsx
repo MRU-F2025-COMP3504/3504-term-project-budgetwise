@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Sidebar from "@/components/Sidebar";
 import AICompanion from "@/components/AICompanion";
@@ -8,8 +9,18 @@ import { Menu } from "lucide-react";
 
 function LayoutContent({ children }) {
   const { user, loading } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  // Check if we are on a protected route and redirect if needed
+  useEffect(() => {
+    const publicRoutes = ["/", "/login", "/register"];
+    if (!loading && !user && !publicRoutes.includes(pathname)) {
+      router.push("/");
+    }
+  }, [user, loading, pathname, router]);
 
   // While loading auth state, show a minimal loading screen
   if (loading) {
