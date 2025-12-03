@@ -21,6 +21,9 @@ Rules:
 Error Handling:
 - If the user provides an invalid response, gently prompt them to provide a valid answer.
 - If the user seems confused, offer to rephrase or explain the question.
+- If the user wants to skip a question, allow them to do so, but note it in their profile.
+- If the user's answer seems inconsistent with previous answers, ask for clarification.
+- If the user's answer seems incomplete, ask for more details with follow-up questions.
 
 When you've asked an adequate number of questions (at least 5), end the quiz with a summary and
 a basic profile breakdown.
@@ -53,7 +56,6 @@ Schema:
 - To finish the quiz:
   {"status":"complete","profile": {"monthlyIncome": <number|null>, "monthlyBudget": <number|null>, "savingsGoal": <number|null>, "experienceLevel": "Low|Medium|High|null", "insights": ["string", ...], "raw": {"answers": {"...": "..."}}}, "summary":"one-paragraph user-friendly summary"}
 Rules:
-- Prefer inputType "number" when asking for numeric amounts; include "select" with "options" for multiple choice; otherwise use "text".
 - Keep questions concise and specific.
 - id should increment q1, q2, ...
 `;
