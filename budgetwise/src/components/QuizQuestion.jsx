@@ -1,10 +1,14 @@
 /**
- * QuizQuestion - Renders a single quiz question and input based on provided metadata.
+ * QuizQuestion Component
+ *
+ * Renders a single question for the quiz.
+ * It handles different input types (like text boxes or dropdown menus).
+ *
  * Props:
- * - question: { id, text, inputType, options? }
- * - value: current answer string
- * - onChange: (newValue) => void
- * - disabled: boolean (loading state)
+ * - question: The question object (id, text, type, options)
+ * - value: The current answer the user has typed/selected
+ * - onChange: Function to update the answer
+ * - disabled: Whether the input should be locked (e.g., while loading)
  */
 export default function QuizQuestion({ question, value, onChange, disabled }) {
   if (!question) return null;
@@ -15,7 +19,7 @@ export default function QuizQuestion({ question, value, onChange, disabled }) {
       <p className="text-lg font-medium text-center">{text}</p>
 
       <div className="max-w-sm w-full mx-auto">
-        {inputType === 'select' && Array.isArray(options) && (
+        {inputType === "select" && Array.isArray(options) && (
           <select
             className="bw-input w-full"
             value={value}
@@ -24,12 +28,14 @@ export default function QuizQuestion({ question, value, onChange, disabled }) {
           >
             <option value="">Select...</option>
             {options.map((o) => (
-              <option key={o} value={o}>{o}</option>
+              <option key={o} value={o}>
+                {o}
+              </option>
             ))}
           </select>
         )}
         {/* Default to text input for 'text' and 'number' types */}
-        {inputType !== 'select' && (
+        {inputType !== "select" && (
           <input
             type="text"
             className="bw-input w-full"

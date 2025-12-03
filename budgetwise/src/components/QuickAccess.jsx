@@ -217,19 +217,34 @@ function buildRecommendationsFromProfile(profile) {
   return scored.slice(0, 4).map((x) => x.resource);
 }
 
+// QuickAccess Component
+// Displays a row of buttons for common actions.
 export default function QuickAccess({ links = [] }) {
   const variantClass = (v) => {
     switch (v) {
-      case 'primary': return 'bw-btn bw-btn-primary';
-      case 'accent': return 'bw-btn bw-btn-accent';
-      case 'neutral':
-      default: return 'bw-btn bw-btn-neutral';
+      case "primary":
+        return "bw-btn bw-btn-primary";
+      case "accent":
+        return "bw-btn bw-btn-accent";
+      case "neutral":
+      default:
+        return "bw-btn bw-btn-neutral";
     }
   };
 
   return (
-    <div className="bw-card p-6" style={{ background: 'var(--surface-raised)' }}>
-      <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--textcolor2)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+    <div
+      className="bw-card p-6"
+      style={{ background: "var(--surface-raised)" }}
+    >
+      <h3
+        className="text-sm font-semibold mb-3"
+        style={{
+          color: "var(--textcolor2)",
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+        }}
+      >
         Quick Access
       </h3>
       <div className="flex gap-3 flex-wrap">

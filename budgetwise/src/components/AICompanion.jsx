@@ -1,6 +1,14 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Bot, X, Send, MessageCircle, Edit2, Check, Sparkles } from "lucide-react";
+import {
+  Bot,
+  X,
+  Send,
+  MessageCircle,
+  Edit2,
+  Check,
+  Sparkles,
+} from "lucide-react";
 import api from "@/services/api";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -8,13 +16,17 @@ import remarkGfm from "remark-gfm";
 export default function AICompanion() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: "system", content: "Ask me about affordability or spending insights." }
+    {
+      role: "system",
+      content: "Ask me about affordability or spending insights.",
+    },
   ]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  
-  // Companion Name State
+
+  // 1. Companion Name
+  // We let the user name their AI buddy.
   const [buddyName, setBuddyName] = useState("BudgetBuddy");
   const [isNaming, setIsNaming] = useState(false);
   const [tempName, setTempName] = useState("");
@@ -68,21 +80,28 @@ export default function AICompanion() {
 
   const handleSendMessage = async () => {
     if (!userInput.trim()) return;
-    
+
     const userMessage = { role: "user", content: userInput.trim() };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setUserInput("");
     setLoading(true);
-    
+
     try {
       const { data } = await api.ai.chat(userInput.trim(), { messages });
-      const assistantReply = data.reply || "I'm having trouble connecting right now.";
-      setMessages(prev => [...prev, { role: "assistant", content: assistantReply }]);
+      const assistantReply =
+        data.reply || "I'm having trouble connecting right now.";
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: assistantReply },
+      ]);
     } catch (err) {
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: `Error: ${err.message}` 
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `Error: ${err.message}`,
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -108,14 +127,18 @@ export default function AICompanion() {
   };
 
   const handleClearChat = () => {
-    const initialMsg = [{ role: "system", content: "Ask me about affordability or spending insights." }];
+    const initialMsg = [
+      {
+        role: "system",
+        content: "Ask me about affordability or spending insights.",
+      },
+    ];
     setMessages(initialMsg);
     localStorage.removeItem("bw_ai_chat_history");
   };
 
   return (
     <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex flex-col items-end pointer-events-none">
-      
       {/* Chat Window */}
       {isOpen && (
         <div className="mb-4 w-[calc(100vw-2rem)] md:w-[400px] h-[500px] max-h-[70vh] md:max-h-[500px] bg-[var(--card-bg)] border border-[var(--color-border)] rounded-2xl shadow-2xl flex flex-col overflow-hidden pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-200">
@@ -125,36 +148,48 @@ export default function AICompanion() {
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-lg">
                 <Bot size={18} />
               </div>
-              
+
               {isNaming ? (
                 <div className="flex items-center gap-1">
-                  <input 
+                  <input
                     className="bw-input py-1 px-2 text-sm w-32"
                     value={tempName}
                     onChange={(e) => setTempName(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleNameSave()}
+                    onKeyDown={(e) => e.key === "Enter" && handleNameSave()}
                     autoFocus
                   />
-                  <button onClick={handleNameSave} className="p-1 hover:text-green-400 text-[var(--color-text-muted)]">
+                  <button
+                    onClick={handleNameSave}
+                    className="p-1 hover:text-green-400 text-[var(--color-text-muted)]"
+                  >
                     <Check size={14} />
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 group cursor-pointer" onClick={startNaming} title="Click to rename">
-                  <h3 className="font-semibold text-[var(--color-text)]">{buddyName}</h3>
-                  <Edit2 size={12} className="opacity-0 group-hover:opacity-100 text-[var(--color-text-muted)] transition-opacity" />
+                <div
+                  className="flex items-center gap-2 group cursor-pointer"
+                  onClick={startNaming}
+                  title="Click to rename"
+                >
+                  <h3 className="font-semibold text-[var(--color-text)]">
+                    {buddyName}
+                  </h3>
+                  <Edit2
+                    size={12}
+                    className="opacity-0 group-hover:opacity-100 text-[var(--color-text-muted)] transition-opacity"
+                  />
                 </div>
               )}
             </div>
             <div className="flex items-center gap-2">
-               <button 
+              <button
                 onClick={handleClearChat}
                 className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-danger)] transition-colors"
                 title="Clear History"
               >
                 Clear
               </button>
-              <button 
+              <button
                 onClick={() => setIsOpen(false)}
                 className="text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors p-1"
               >
@@ -175,12 +210,14 @@ export default function AICompanion() {
                     message.role === "user"
                       ? "bg-[var(--buttoncolor1)] text-white rounded-tr-none"
                       : message.role === "assistant"
-                      ? "bg-[var(--surface-raised)] text-[var(--color-text)] rounded-tl-none border border-[var(--color-border)] markdown-content"
-                      : "hidden" // Hide system messages
+                        ? "bg-[var(--surface-raised)] text-[var(--color-text)] rounded-tl-none border border-[var(--color-border)] markdown-content"
+                        : "hidden" // Hide system messages
                   }`}
                 >
                   {message.role === "assistant" ? (
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {message.content}
+                    </ReactMarkdown>
                   ) : (
                     message.content
                   )}
@@ -190,9 +227,18 @@ export default function AICompanion() {
             {loading && (
               <div className="flex justify-start">
                 <div className="bg-[var(--surface-raised)] p-3 rounded-2xl rounded-tl-none border border-[var(--color-border)] flex gap-1 items-center">
-                  <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                  <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                  <span className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  <span
+                    className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  ></span>
                 </div>
               </div>
             )}
@@ -226,8 +272,8 @@ export default function AICompanion() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`pointer-events-auto w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 ${
-          isOpen 
-            ? "bg-[var(--surface-raised)] text-[var(--color-text)] border border-[var(--color-border)]" 
+          isOpen
+            ? "bg-[var(--surface-raised)] text-[var(--color-text)] border border-[var(--color-border)]"
             : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white animate-pulse-slow"
         }`}
       >

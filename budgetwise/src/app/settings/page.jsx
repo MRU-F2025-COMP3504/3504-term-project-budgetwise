@@ -14,9 +14,11 @@ export default function SettingsPage() {
     monthlyBudget: "",
     savingsGoal: "",
     financialGoals: "",
-    experienceLevel: "Medium"
+    experienceLevel: "Medium",
   });
 
+  // 1. Load Existing Profile
+  // We want to pre-fill the form with the user's current data so they don't have to type everything again.
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -27,12 +29,12 @@ export default function SettingsPage() {
             monthlyBudget: data.profile.monthlyBudget || "",
             savingsGoal: data.profile.savingsGoal || "",
             financialGoals: data.profile.financialGoals || "",
-            experienceLevel: data.profile.experienceLevel || "Medium"
+            experienceLevel: data.profile.experienceLevel || "Medium",
           });
         }
       } catch (err) {
         console.error("Failed to load profile:", err);
-        // Don't block the UI, just let them start fresh if needed
+        // If loading fails, we just let them start with a blank form.
       } finally {
         setLoading(false);
       }
@@ -47,20 +49,22 @@ export default function SettingsPage() {
     setSuccess(false);
 
     try {
-      // Call the new endpoint
-      const res = await fetch('/api/user_profile/update_insights', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ profile: formData })
+      // 2. Update Profile & Regenerate Insights
+      // We send the new data to our special API endpoint.
+      // This endpoint saves the data AND asks the AI to create new insights based on the changes.
+      const res = await fetch("/api/user_profile/update_insights", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ profile: formData }),
       });
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || 'Failed to update profile');
+        throw new Error(err.error || "Failed to update profile");
       }
 
       setSuccess(true);
-      // Clear success message after 3 seconds
+      // We hide the success message after a few seconds to keep the UI clean.
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
       setError(err.message);
@@ -71,7 +75,7 @@ export default function SettingsPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   if (loading) {
@@ -85,7 +89,9 @@ export default function SettingsPage() {
   return (
     <div className="bw-container py-8 px-0 md:px-5">
       <header className="mb-8 px-4 md:px-0">
-        <h1 className="text-3xl font-semibold text-[var(--color-text)]">Settings</h1>
+        <h1 className="text-3xl font-semibold text-[var(--color-text)]">
+          Settings
+        </h1>
         <p className="mt-1 text-[var(--color-text-muted)]">
           Update your financial data to regenerate your AI insights.
         </p>
@@ -93,7 +99,6 @@ export default function SettingsPage() {
 
       <div className="px-4 md:px-0 max-w-2xl">
         <form onSubmit={handleSubmit} className="bw-card p-6 space-y-6">
-          
           {/* Success/Error Messages */}
           {error && (
             <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2">
@@ -110,7 +115,9 @@ export default function SettingsPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">Monthly Income ($)</label>
+              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">
+                Monthly Income ($)
+              </label>
               <input
                 type="number"
                 name="monthlyIncome"
@@ -122,7 +129,9 @@ export default function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">Monthly Budget ($)</label>
+              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">
+                Monthly Budget ($)
+              </label>
               <input
                 type="number"
                 name="monthlyBudget"
@@ -137,7 +146,9 @@ export default function SettingsPage() {
 
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">Savings Goal ($)</label>
+              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">
+                Savings Goal ($)
+              </label>
               <input
                 type="number"
                 name="savingsGoal"
@@ -148,7 +159,9 @@ export default function SettingsPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">Experience Level</label>
+              <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">
+                Experience Level
+              </label>
               <select
                 name="experienceLevel"
                 value={formData.experienceLevel}
@@ -163,7 +176,9 @@ export default function SettingsPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">Financial Goals</label>
+            <label className="block text-sm font-medium mb-2 text-[var(--color-text-muted)]">
+              Financial Goals
+            </label>
             <textarea
               name="financialGoals"
               value={formData.financialGoals}
@@ -193,10 +208,10 @@ export default function SettingsPage() {
               )}
             </button>
             <p className="text-xs text-center md:text-left mt-3 text-[var(--color-text-muted)]">
-              This will use AI to analyze your new data and update your profile summary.
+              This will use AI to analyze your new data and update your profile
+              summary.
             </p>
           </div>
-
         </form>
       </div>
     </div>

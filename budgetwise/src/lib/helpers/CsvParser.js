@@ -1,5 +1,11 @@
 import { categorizeTransaction } from "./CategorizeTransactions";
 
+/**
+ * Parses a CSV string into a list of transaction objects.
+ * It handles different delimiters (comma, tab, semicolon) and tries to
+ * figure out which column is which.
+ */
+
 export function parseTransactionsCSV(csvText) {
   if (!csvText) return [];
 
@@ -7,7 +13,7 @@ export function parseTransactionsCSV(csvText) {
   const lines = csvText
     .trim()
     .split(/\r?\n/)
-    .filter(l => l.trim() !== "");
+    .filter((l) => l.trim() !== "");
 
   if (lines.length === 0) return [];
 
@@ -16,21 +22,23 @@ export function parseTransactionsCSV(csvText) {
   const delimiter = firstLine.includes("\t")
     ? "\t"
     : firstLine.includes(";")
-    ? ";"
-    : ",";
+      ? ";"
+      : ",";
 
   // --- Parse line ---
   function parseCSVLine(line) {
     // no quoted cells in your format, simple split works fine
-    return line.split(delimiter).map(x => x.trim());
+    return line.split(delimiter).map((x) => x.trim());
   }
 
   // --- Optional: if the first row looks like a header, skip it ---
   const firstRow = parseCSVLine(firstLine);
-  const hasHeader = /date|desc|withdraw|deposit|balance/i.test(firstRow.join(""));
+  const hasHeader = /date|desc|withdraw|deposit|balance/i.test(
+    firstRow.join("")
+  );
   const dataLines = hasHeader ? lines.slice(1) : lines;
 
-  const cleanNumber = str =>
+  const cleanNumber = (str) =>
     parseFloat((str || "").replace(/[^0-9.-]/g, "")) || 0;
 
   // --- Parse rows ---
@@ -63,7 +71,7 @@ export function parseTransactionsCSV(csvText) {
       iso_currency_code: "CAD",
       account_type: "depository",
       category,
-      balance: balanceAmt
+      balance: balanceAmt,
     };
   });
 }

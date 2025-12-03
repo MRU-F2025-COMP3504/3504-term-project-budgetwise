@@ -1,14 +1,14 @@
 /* Centralized CSS variables for theming */
 :root {
   /* Cozy, low-contrast dark palette (overhaul) */
-  --app-bg: #1e1f22;            /* app background */
-  --card-bg: #26282c;           /* card surface */
-  --surface-raised: #2f3237;    /* raised elements / inputs */
+  --app-bg: #1e1f22; /* app background */
+  --card-bg: #26282c; /* card surface */
+  --surface-raised: #2f3237; /* raised elements / inputs */
 
   /* Button / interactive colors */
-  --buttoncolor1: #5b4b8a;      /* primary (calm violet) */
-  --buttoncolor2: #3d7d6b;      /* accent (muted teal) */
-  --buttoncolor3: #b68b3c;      /* tertiary (warm amber) */
+  --buttoncolor1: #5b4b8a; /* primary (calm violet) */
+  --buttoncolor2: #3d7d6b; /* accent (muted teal) */
+  --buttoncolor3: #b68b3c; /* tertiary (warm amber) */
   --hovercolor1: color-mix(in srgb, var(--buttoncolor1) 88%, white 12%);
   --hovercolor2: color-mix(in srgb, var(--buttoncolor2) 88%, white 12%);
   --hovercolor3: color-mix(in srgb, var(--buttoncolor3) 88%, white 12%);
@@ -19,12 +19,12 @@
   --status-success: #4aa883;
 
   /* Text tiers */
-  --textcolor1: #eceef2;        /* primary text */
-  --textcolor2: #c9ced6;        /* secondary strong */
-  --textcolor3: #a3abb7;        /* secondary muted */
-  --secondarytext1: #a3abb7;    /* subtle 1 */
-  --secondarytext2: #8b929d;    /* subtle 2 */
-  --secondarytext3: #747b85;    /* subtle 3 */
+  --textcolor1: #eceef2; /* primary text */
+  --textcolor2: #c9ced6; /* secondary strong */
+  --textcolor3: #a3abb7; /* secondary muted */
+  --secondarytext1: #a3abb7; /* subtle 1 */
+  --secondarytext2: #8b929d; /* subtle 2 */
+  --secondarytext3: #747b85; /* subtle 3 */
 
   /* Back-compat mapping */
   --color-bg: var(--app-bg);
@@ -39,26 +39,34 @@
   --color-success: var(--status-success);
 
   --radius: 12px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.12);
-  --shadow-md: 0 6px 18px rgba(0,0,0,0.28);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.28);
 
   /* Focus ring + input tokens */
-  --focus-ring-color: color-mix(in oklab, var(--buttoncolor1) 38%, transparent 62%);
+  --focus-ring-color: color-mix(
+    in oklab,
+    var(--buttoncolor1) 38%,
+    transparent 62%
+  );
   --input-bg: var(--surface-raised);
-  --input-border: rgba(255,255,255,0.10);
-  --input-border-hover: rgba(255,255,255,0.16);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-border-hover: rgba(255, 255, 255, 0.16);
   --input-text: var(--textcolor1);
   --input-placeholder: var(--secondarytext2);
   --input-ring: 0 0 0 3px var(--focus-ring-color);
 
-    /* Focus ring + input tokens (dark mapping lives above; keep same here) */
-    --focus-ring-color: color-mix(in oklab, var(--buttoncolor1) 38%, transparent 62%);
-    --input-bg: var(--surface-raised);
-    --input-border: rgba(0,0,0,0.06);
-    --input-border-hover: rgba(0,0,0,0.12);
-    --input-text: var(--textcolor1);
-    --input-placeholder: var(--secondarytext2);
-    --input-ring: 0 0 0 3px var(--focus-ring-color);
+  /* Focus ring + input tokens (dark mapping lives above; keep same here) */
+  --focus-ring-color: color-mix(
+    in oklab,
+    var(--buttoncolor1) 38%,
+    transparent 62%
+  );
+  --input-bg: var(--surface-raised);
+  --input-border: rgba(0, 0, 0, 0.06);
+  --input-border-hover: rgba(0, 0, 0, 0.12);
+  --input-text: var(--textcolor1);
+  --input-placeholder: var(--secondarytext2);
+  --input-ring: 0 0 0 3px var(--focus-ring-color);
 }
 
 @media (prefers-color-scheme: light) {
@@ -98,24 +106,49 @@
 }
 
 /* Basic utility classes that work with Tailwind if desired */
-.bw-container { max-width: 1100px; margin-inline: auto; padding: 1.25rem; }
+.bw-container {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: 1.25rem;
+}
 .bw-card {
   background: var(--color-surface);
   color: var(--color-text);
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
-.bw-card-muted { background: var(--color-surface-2); }
-.bw-text-muted { color: var(--color-text-muted); }
-.bw-accent { color: var(--color-accent); }
-.bw-border { border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); }
+.bw-card-muted {
+  background: var(--color-surface-2);
+}
+.bw-text-muted {
+  color: var(--color-text-muted);
+}
+.bw-accent {
+  color: var(--color-accent);
+}
+.bw-border {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius);
+}
 
 /* Table niceties */
-.bw-table { border-collapse: separate; border-spacing: 0; }
-.bw-table th { position: sticky; top: 0; backdrop-filter: saturate(120%) blur(6px); }
-.bw-table td, .bw-table th { border-color: rgba(255,255,255,0.08); }
-.bw-table tr:nth-child(even) td { background: color-mix(in oklab, var(--color-surface) 92%, white 8%); }
+.bw-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.bw-table th {
+  position: sticky;
+  top: 0;
+  backdrop-filter: saturate(120%) blur(6px);
+}
+.bw-table td,
+.bw-table th {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.bw-table tr:nth-child(even) td {
+  background: color-mix(in oklab, var(--color-surface) 92%, white 8%);
+}
 
 /* -------------------------------------------------- */
 /* Buttons                                             */
@@ -126,30 +159,48 @@
   --btn-bg-hover: var(--color-surface);
   --btn-bg-active: var(--color-surface-2);
   --btn-color: var(--color-text);
-  --btn-border: rgba(255,255,255,0.10);
-  font-size: .875rem;
+  --btn-border: rgba(255, 255, 255, 0.1);
+  font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: .5rem;
-  padding: .65rem 1rem;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
   border-radius: var(--radius);
   background: var(--btn-bg);
   color: var(--btn-color);
   border: 1px solid var(--btn-border);
   cursor: pointer;
   position: relative;
-  transition: background .18s ease, box-shadow .18s ease, transform .12s ease;
+  transition:
+    background 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.12s ease;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
 }
-.bw-btn:hover:not([disabled]) { background: var(--btn-bg-hover); }
-.bw-btn:active:not([disabled]) { transform: translateY(1px); background: var(--btn-bg-active); }
-.bw-btn:focus-visible { outline: none; box-shadow: var(--input-ring); }
-.bw-btn[disabled], .bw-btn.is-disabled { opacity: .55; cursor: not-allowed; pointer-events: none; }
-.bw-btn-block { width: 100%; }
+.bw-btn:hover:not([disabled]) {
+  background: var(--btn-bg-hover);
+}
+.bw-btn:active:not([disabled]) {
+  transform: translateY(1px);
+  background: var(--btn-bg-active);
+}
+.bw-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--input-ring);
+}
+.bw-btn[disabled],
+.bw-btn.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.bw-btn-block {
+  width: 100%;
+}
 
 /* Primary / Accent variants */
 .bw-btn-primary {
@@ -159,7 +210,9 @@
   --btn-color: #fff;
   box-shadow: var(--shadow-sm);
 }
-.bw-btn-primary:hover:not([disabled]) { box-shadow: 0 4px 12px rgba(0,0,0,0.35); }
+.bw-btn-primary:hover:not([disabled]) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
 
 .bw-btn-accent {
   --btn-bg: var(--buttoncolor2);
@@ -185,12 +238,18 @@
 }
 
 @media (hover: none) {
-  .bw-btn:hover:not([disabled]) { background: var(--btn-bg); }
+  .bw-btn:hover:not([disabled]) {
+    background: var(--btn-bg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bw-btn { transition: none; }
-  .bw-btn:active:not([disabled]) { transform: none; }
+  .bw-btn {
+    transition: none;
+  }
+  .bw-btn:active:not([disabled]) {
+    transform: none;
+  }
 }
 
 /* -------------------------------------------------- */
@@ -199,22 +258,41 @@
 .bw-input {
   display: block;
   width: 100%;
-  padding: .65rem .8rem;
+  padding: 0.65rem 0.8rem;
   border-radius: var(--radius);
   background: var(--input-bg);
   color: var(--input-text);
   border: 1px solid var(--input-border);
   outline: none;
   box-shadow: none;
-  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
 }
-.bw-input::placeholder { color: var(--input-placeholder); opacity: 1; }
-.bw-input:hover { border-color: var(--input-border-hover); }
-.bw-input:focus { border-color: var(--input-border-hover); box-shadow: var(--input-ring); }
-.bw-input:focus-visible { border-color: var(--input-border-hover); box-shadow: var(--input-ring); }
-.bw-input:disabled { opacity: .6; cursor: not-allowed; }
+.bw-input::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+.bw-input:hover {
+  border-color: var(--input-border-hover);
+}
+.bw-input:focus {
+  border-color: var(--input-border-hover);
+  box-shadow: var(--input-ring);
+}
+.bw-input:focus-visible {
+  border-color: var(--input-border-hover);
+  box-shadow: var(--input-ring);
+}
+.bw-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
 /* Remove default glow on some browsers */
-input.bw-input, textarea.bw-input, select.bw-input {
+input.bw-input,
+textarea.bw-input,
+select.bw-input {
   -webkit-tap-highlight-color: transparent;
 }

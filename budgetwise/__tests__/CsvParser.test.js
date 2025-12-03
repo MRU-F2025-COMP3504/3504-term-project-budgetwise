@@ -14,8 +14,6 @@ import { parseTransactionsCSV } from "@/lib/helpers/CsvParser.js";
 describe("parseTransactionsCSV with real CSV files", () => {
   const testDataDir = path.join(__dirname, "testdata"); // folder containing test CSV files
 
-
-  
   /**
    * Test 1: Parse a well-structured CSV file
    * -----------------------------------------
@@ -23,7 +21,10 @@ describe("parseTransactionsCSV with real CSV files", () => {
    * Each record should have the required fields: transaction_date and amount.
    */
   test("parses good.csv correctly", () => {
-    const csvText = fs.readFileSync(path.join(testDataDir, "good.csv"), "utf-8");
+    const csvText = fs.readFileSync(
+      path.join(testDataDir, "good.csv"),
+      "utf-8"
+    );
     const result = parseTransactionsCSV(csvText);
 
     console.table(result); // optional: log table for debugging
@@ -41,11 +42,11 @@ describe("parseTransactionsCSV with real CSV files", () => {
    *  - Missing headers or columns
    *  - Invalid numbers or dates
    *  - Rows with mextra/missing filds
-   * 
+   *
    * The parser should still attempt to organize usable rows,
-   * while making it possible to detect (and later remove) 
+   * while making it possible to detect (and later remove)
    * invalid ones
-   * 
+   *
    */
 
   test("organizes bad.csv even if data is inconsistent", () => {
@@ -72,9 +73,7 @@ describe("parseTransactionsCSV with real CSV files", () => {
     expect(invalidRows.length).toBeGreaterThanOrEqual(0);
   });
 
-
-
-   /**
+  /**
    * Test 3: Detect duplicate records
    * --------------------------------
    * The file `duplicate.csv` contains duplicate transactions
@@ -84,7 +83,10 @@ describe("parseTransactionsCSV with real CSV files", () => {
    * to identify and remove duplicates later.
    */
   test("detects duplicates in duplicate.csv for future cleanup", () => {
-    const csvText = fs.readFileSync(path.join(testDataDir, "duplicate.csv"), "utf-8");
+    const csvText = fs.readFileSync(
+      path.join(testDataDir, "duplicate.csv"),
+      "utf-8"
+    );
     const result = parseTransactionsCSV(csvText);
 
     console.table(result);
@@ -102,7 +104,7 @@ describe("parseTransactionsCSV with real CSV files", () => {
     });
 
     // Confirm duplicates are detectable for later cleanup
-    console.log("current rows have duplicate keys",duplicates)
+    console.log("current rows have duplicate keys", duplicates);
     expect(duplicates.length).toBeGreaterThanOrEqual(0);
   });
 });

@@ -1,5 +1,5 @@
-export const CATEGORY_KEYWORDS  = {
-  "Utilities": [
+export const CATEGORY_KEYWORDS = {
+  Utilities: [
     "hydro",
     "water",
     "enmax",
@@ -75,7 +75,7 @@ export const CATEGORY_KEYWORDS  = {
     "utility connection",
     "phone plan",
     "data plan",
-    "5g service"
+    "5g service",
   ],
   "Food & Drink": [
     "tim hortons",
@@ -174,9 +174,9 @@ export const CATEGORY_KEYWORDS  = {
     "cowboys",
     "hudsons pub",
     "rosedale cafe",
-    "SAMRU"
+    "SAMRU",
   ],
-  "Transportation": [
+  Transportation: [
     "uber",
     "lyft",
     "transit",
@@ -242,7 +242,7 @@ export const CATEGORY_KEYWORDS  = {
     "car service",
     "vehicle repair",
     "autobody",
-    "fuel station"
+    "fuel station",
   ],
   "Shopping & Retail": [
     "walmart",
@@ -351,7 +351,7 @@ export const CATEGORY_KEYWORDS  = {
     "nordstrom",
     "simons",
     "united furniture",
-    "structube calgary"
+    "structube calgary",
   ],
   "Digital Services": [
     "apple",
@@ -469,9 +469,9 @@ export const CATEGORY_KEYWORDS  = {
     "notion ai",
     "dropbox plus",
     "onedrive",
-    "paypal canada"
+    "paypal canada",
   ],
-  "Entertainment": [
+  Entertainment: [
     "netflix",
     "spotify",
     "movie",
@@ -545,7 +545,7 @@ export const CATEGORY_KEYWORDS  = {
     "board game cafe",
     "escape hour",
     "vr arcade",
-    "axe throwing"
+    "axe throwing",
   ],
   "Other / Transfers": [
     "send e-tfr",
@@ -626,6 +626,6 @@ export const CATEGORY_KEYWORDS  = {
     "savings transfer",
     "direct deposit",
     "automatic payment",
-    "wire transfer"
-  ]
-}
+    "wire transfer",
+  ],
+};

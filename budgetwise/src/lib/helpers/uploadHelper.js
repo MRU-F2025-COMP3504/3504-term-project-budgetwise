@@ -1,6 +1,5 @@
 import { parseTransactionsCSV } from "./CsvParser";
 
-
 // Get file from the form data
 export async function getFileFromRequest(req) {
   const formData = await req.formData();
@@ -16,9 +15,11 @@ export async function parseCSVFile(file) {
 }
 
 // Authenticate Supabase user
-// Authentication is handled in API route via per-request Supabase client
+// Note: Authentication is handled in the API route, not here.
 
-// Upload file to Supabase Storage
+// 1. Upload File to Storage
+// We save the actual CSV file to Supabase Storage (like an S3 bucket).
+// We use the user's ID as a folder name to keep things organized.
 export async function uploadFileToStorage(supabaseClient, file, userId) {
   const fileName = file.name.replace(/\s+/g, "_");
   const filePath = `${userId}/${fileName}`;
@@ -61,13 +62,20 @@ export async function insertStatementRecord(supabaseClient, fileData, userId) {
 
   if (error) throw new Error(error.message);
   if (!data || data.length === 0) {
-    throw new Error("Statement record created but no data returned. Check RLS policies.");
+    throw new Error(
+      "Statement record created but no data returned. Check RLS policies."
+    );
   }
   return data[0];
 }
 
 // Insert parsed transactions into "Transactions" table
-export async function insertTransactions(supabaseClient, transactions, userId, statementId) {
+export async function insertTransactions(
+  supabaseClient,
+  transactions,
+  userId,
+  statementId
+) {
   const formatted = transactions.map((tx) => ({
     transaction_date: tx.transaction_date,
     description: tx.description,

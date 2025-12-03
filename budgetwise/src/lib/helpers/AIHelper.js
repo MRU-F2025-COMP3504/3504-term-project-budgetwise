@@ -1,19 +1,14 @@
 /**
  * AI Helper Class
- * 
- * Centralized AI service for the entire application.
- * Handles OpenAI API calls with token management and caching.
- * 
- * Features:
- * - Token usage tracking and limits
- * - Response caching to reduce API calls
- * - Configurable models and parameters
- * - Error handling and retry logic
- * 
+ *
+ * This is the brain of our AI features. It handles talking to OpenAI.
+ * It keeps track of how many tokens we use (to save money) and remembers
+ * answers (caching) so we don't ask the same thing twice.
+ *
  * Usage:
  * ```js
  * import AIHelper from '@/lib/helpers/AIHelper';
- * 
+ *
  * const ai = new AIHelper();
  * const response = await ai.chat([
  *   { role: 'user', content: 'What is my spending pattern?' }
@@ -21,7 +16,7 @@
  * ```
  */
 
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 class AIHelper {
   constructor(options = {}) {
@@ -32,7 +27,7 @@ class AIHelper {
 
     // Configuration
     this.config = {
-      model: options.model || 'gpt-4o-mini', // Use mini for cost efficiency
+      model: options.model || "gpt-4o-mini", // Use mini for cost efficiency
       maxTokens: options.maxTokens || 500,
       temperature: options.temperature || 0.7,
       enableCache: options.enableCache !== false, // Default to enabled
@@ -59,19 +54,19 @@ class AIHelper {
   async chat(messages, options = {}) {
     // Check token limit
     if (this.tokenUsage.session >= this.tokenUsage.limit) {
-      throw new Error('Token limit reached. Please try again later.');
+      throw new Error("Token limit reached. Please try again later.");
     }
 
     // Generate cache key if caching is enabled
-    const cacheKey = this.config.enableCache 
-      ? this._generateCacheKey(messages) 
+    const cacheKey = this.config.enableCache
+      ? this._generateCacheKey(messages)
       : null;
 
     // Check cache
     if (cacheKey && this.cache.has(cacheKey)) {
       const cached = this.cache.get(cacheKey);
       if (Date.now() - cached.timestamp < this.config.cacheExpiry) {
-        console.log('✅ Returning cached AI response');
+        console.log("✅ Returning cached AI response");
         return cached.response;
       } else {
         this.cache.delete(cacheKey);
@@ -100,9 +95,11 @@ class AIHelper {
       this.tokenUsage.session += tokensUsed;
       this.tokenUsage.total += tokensUsed;
 
-      console.log(`🤖 AI tokens used: ${tokensUsed} (session: ${this.tokenUsage.session}/${this.tokenUsage.limit})`);
+      console.log(
+        `🤖 AI tokens used: ${tokensUsed} (session: ${this.tokenUsage.session}/${this.tokenUsage.limit})`
+      );
 
-      const response = completion.choices[0]?.message?.content || '';
+      const response = completion.choices[0]?.message?.content || "";
 
       // Cache the response
       if (cacheKey) {
@@ -114,7 +111,7 @@ class AIHelper {
 
       return response;
     } catch (error) {
-      console.error('❌ AI Helper Error:', error);
+      console.error("❌ AI Helper Error:", error);
       throw new Error(`AI request failed: ${error.message}`);
     }
   }
@@ -127,13 +124,13 @@ class AIHelper {
    */
   async ask(prompt, systemPrompt = null) {
     const messages = [];
-    
+
     if (systemPrompt) {
-      messages.push({ role: 'system', content: systemPrompt });
+      messages.push({ role: "system", content: systemPrompt });
     }
-    
-    messages.push({ role: 'user', content: prompt });
-    
+
+    messages.push({ role: "user", content: prompt });
+
     return this.chat(messages);
   }
 
@@ -162,17 +159,18 @@ Context: ${JSON.stringify(context)}`;
 Generate ONE follow-up question based on the user's previous answers.
 Return JSON: { "question": "...", "type": "text|choice", "options": [] }`;
 
-    const prompt = previousAnswers.length > 0
-      ? `Previous answers: ${JSON.stringify(previousAnswers)}. Generate the next question.`
-      : 'Generate the first question about the user\'s financial goals.';
+    const prompt =
+      previousAnswers.length > 0
+        ? `Previous answers: ${JSON.stringify(previousAnswers)}. Generate the next question.`
+        : "Generate the first question about the user's financial goals.";
 
     const response = await this.ask(prompt, systemPrompt);
-    
+
     try {
       return JSON.parse(response);
     } catch {
       // Fallback if response isn't valid JSON
-      return { question: response, type: 'text', options: [] };
+      return { question: response, type: "text", options: [] };
     }
   }
 
@@ -193,7 +191,10 @@ Return JSON: { "question": "...", "type": "text|choice", "options": [] }`;
       total: this.tokenUsage.total,
       limit: this.tokenUsage.limit,
       remaining: this.tokenUsage.limit - this.tokenUsage.session,
-      percentUsed: ((this.tokenUsage.session / this.tokenUsage.limit) * 100).toFixed(1),
+      percentUsed: (
+        (this.tokenUsage.session / this.tokenUsage.limit) *
+        100
+      ).toFixed(1),
     };
   }
 
@@ -202,7 +203,7 @@ Return JSON: { "question": "...", "type": "text|choice", "options": [] }`;
    */
   resetSession() {
     this.tokenUsage.session = 0;
-    console.log('✅ AI session token counter reset');
+    console.log("✅ AI session token counter reset");
   }
 
   /**
@@ -210,7 +211,7 @@ Return JSON: { "question": "...", "type": "text|choice", "options": [] }`;
    */
   clearCache() {
     this.cache.clear();
-    console.log('✅ AI cache cleared');
+    console.log("✅ AI cache cleared");
   }
 }
 

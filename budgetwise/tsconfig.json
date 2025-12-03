@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -34,9 +30,11 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    ".next/dev/types/**/*.ts"
-, "lib/helpers/CsvParser.js", "lib/helpers/CalgarySpendingCategories.js", "lib/helpers/CategorizeTransactions.js", "lib/helpers/DatabaseConnector.js"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    ".next/dev/types/**/*.ts",
+    "lib/helpers/CsvParser.js",
+    "lib/helpers/CalgarySpendingCategories.js",
+    "lib/helpers/CategorizeTransactions.js",
+    "lib/helpers/DatabaseConnector.js"
+  ],
+  "exclude": ["node_modules"]
 }

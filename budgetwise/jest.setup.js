@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 
 // Mock Next.js router
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter() {
     return {
       push: jest.fn(),
@@ -12,19 +12,21 @@ jest.mock('next/navigation', () => ({
     };
   },
   usePathname() {
-    return '';
+    return "";
   },
 }));
 
 // Mock Supabase
-jest.mock('@/lib/helpers/supabaseBrowserClient', () => ({
+jest.mock("@/lib/helpers/supabaseBrowserClient", () => ({
   createSupabaseBrowserClient: jest.fn(() => ({
     auth: {
       getSession: jest.fn(() => Promise.resolve({ data: { session: null } })),
       signInWithPassword: jest.fn(),
       signUp: jest.fn(),
       signOut: jest.fn(),
-      onAuthStateChange: jest.fn(() => ({ data: { subscription: { unsubscribe: jest.fn() } } })),
+      onAuthStateChange: jest.fn(() => ({
+        data: { subscription: { unsubscribe: jest.fn() } },
+      })),
     },
     from: jest.fn(() => ({
       select: jest.fn().mockReturnThis(),

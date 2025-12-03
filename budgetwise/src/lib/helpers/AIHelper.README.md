@@ -7,16 +7,19 @@ The `AIHelper` class is a production-ready AI service that provides centralized 
 ## 🎯 Benefits
 
 ### Cost Savings
+
 - **Response Caching**: Identical prompts return cached results for 5 minutes (no API call = $0)
 - **Token Limits**: 100,000 token daily limit prevents runaway costs
 - **Smart Tracking**: Real-time token usage monitoring across all requests
 
 ### Better Performance
+
 - Cached responses are instant (no network delay)
 - Singleton pattern ensures consistent tracking
 - Automatic cache cleanup
 
 ### Easy to Use
+
 - Simple API: `ask()`, `chat()`, `getFinancialAdvice()`, `generateQuizQuestion()`
 - Works exactly like direct OpenAI calls
 - Drop-in replacement for existing code
@@ -26,7 +29,7 @@ The `AIHelper` class is a production-ready AI service that provides centralized 
 ### Basic Usage
 
 ```javascript
-import { getAIHelper } from '@/lib/helpers/AIHelper';
+import { getAIHelper } from "@/lib/helpers/AIHelper";
 
 // Get the singleton instance
 const aiHelper = getAIHelper();
@@ -41,15 +44,15 @@ console.log(response);
 ```javascript
 export async function POST(request) {
   const aiHelper = getAIHelper();
-  
+
   // Check if we have enough tokens
   const stats = aiHelper.getUsageStats();
   if (stats.remaining < 100) {
     return Response.json({ error: "Token limit reached" }, { status: 429 });
   }
-  
+
   const response = await aiHelper.ask("Your prompt here");
-  
+
   return Response.json({ response });
 }
 ```
@@ -63,7 +66,9 @@ export async function POST(request) {
 ## 🔧 Already Integrated
 
 ### ✅ Quiz API (`/api/quiz`)
+
 **What changed:**
+
 - Replaced direct `OpenAI` import with `getAIHelper()`
 - Added token limit checks (429 error if < 100 tokens remaining)
 - Added response caching (identical quiz flows are cached for 5 minutes)
@@ -72,6 +77,7 @@ export async function POST(request) {
 **Breaking changes:** None! The quiz works exactly the same, just more efficient.
 
 **New features:**
+
 - Token usage visible in response: `tokensUsed`, `tokensRemaining`
 - Automatic rate limiting at 100 tokens remaining
 - Faster responses for repeated questions (via caching)
@@ -79,6 +85,7 @@ export async function POST(request) {
 ## 🎨 Methods Available
 
 ### `ask(prompt, systemPrompt?)`
+
 Simple one-off questions without conversation history.
 
 ```javascript
@@ -88,29 +95,32 @@ const response = await aiHelper.ask(
 ```
 
 ### `chat(messages, options?)`
+
 For conversational features with message history.
 
 ```javascript
 const messages = [
   { role: "user", content: "What is a budget?" },
   { role: "assistant", content: "A budget is..." },
-  { role: "user", content: "How do I start one?" }
+  { role: "user", content: "How do I start one?" },
 ];
 
 const response = await aiHelper.chat(messages);
 ```
 
 ### `getFinancialAdvice(question, context?)`
+
 Specialized for financial/budgeting questions with system context.
 
 ```javascript
-const advice = await aiHelper.getFinancialAdvice(
-  "How can I save $500/month?",
-  { income: 3000, expenses: 2700 }
-);
+const advice = await aiHelper.getFinancialAdvice("How can I save $500/month?", {
+  income: 3000,
+  expenses: 2700,
+});
 ```
 
 ### `generateQuizQuestion(prompt)`
+
 Generate adaptive quiz questions (already used in `/api/quiz`).
 
 ```javascript
@@ -120,6 +130,7 @@ const question = await aiHelper.generateQuizQuestion(
 ```
 
 ### `getUsageStats()`
+
 Get current token usage metrics.
 
 ```javascript
@@ -151,6 +162,7 @@ Default settings (can be customized when creating instance):
 ## 📊 Token Management
 
 ### How It Works
+
 1. Every AI call tracks tokens used
 2. Tokens accumulate in session total
 3. When limit is reached (100k), requests are blocked
@@ -165,7 +177,7 @@ console.log(`Used: ${stats.percentUsed}%`);
 console.log(`Remaining: ${stats.remaining} tokens`);
 
 if (stats.remaining < 1000) {
-  console.warn('⚠️ Low on tokens!');
+  console.warn("⚠️ Low on tokens!");
 }
 ```
 
@@ -196,11 +208,13 @@ if (stats.remaining < 1000) {
 ## ⚠️ Important Notes
 
 ### Do NOT use AIHelper for:
+
 - Operations that don't need AI
 - Repeated identical calls (use cache instead)
 - Non-text generation tasks
 
 ### DO use AIHelper for:
+
 - Any OpenAI API calls
 - Text generation/analysis
 - Financial advice generation
@@ -218,27 +232,26 @@ try {
   return Response.json({ response });
 } catch (error) {
   console.error("AI Error:", error);
-  return Response.json(
-    { error: "AI service unavailable" },
-    { status: 503 }
-  );
+  return Response.json({ error: "AI service unavailable" }, { status: 503 });
 }
 ```
 
 ## 📈 Performance Tips
 
 1. **Cache-Friendly Prompts**: Use consistent formatting
+
    ```javascript
    // Good - will cache
    await aiHelper.ask("What is a budget?");
    await aiHelper.ask("What is a budget?"); // Cached!
-   
+
    // Bad - won't cache (different case)
    await aiHelper.ask("What is a budget?");
    await aiHelper.ask("what is a budget"); // Not cached
    ```
 
 2. **Check Limits First**: Avoid wasted API calls
+
    ```javascript
    if (aiHelper.getUsageStats().remaining < 100) {
      return error; // Don't attempt the call
@@ -246,10 +259,11 @@ try {
    ```
 
 3. **Reuse Instance**: Always use `getAIHelper()` singleton
+
    ```javascript
    // Good
    const ai = getAIHelper();
-   
+
    // Bad - creates new instance, loses tracking
    const ai = new AIHelper();
    ```
@@ -257,6 +271,7 @@ try {
 ## 🔄 Migration Guide
 
 ### Old Way (Direct OpenAI)
+
 ```javascript
 import OpenAI from "openai";
 
@@ -271,17 +286,17 @@ const text = response.choices[0].message.content;
 ```
 
 ### New Way (AIHelper)
+
 ```javascript
-import { getAIHelper } from '@/lib/helpers/AIHelper';
+import { getAIHelper } from "@/lib/helpers/AIHelper";
 
 const aiHelper = getAIHelper();
 
-const text = await aiHelper.chat([
-  { role: "user", content: "Hello" }
-]);
+const text = await aiHelper.chat([{ role: "user", content: "Hello" }]);
 ```
 
 **Benefits of migration:**
+
 - ✅ Automatic token tracking
 - ✅ Response caching
 - ✅ Simpler API (no need to extract content)

@@ -1,6 +1,6 @@
-// Quiz system prompt used by the AI-driven onboarding quiz
-// Adapted from prototypes/ai-quiz/prompts.js for server-side usage
-// Used by /api/quiz to instruct the model on tone, goals, and guardrails.
+// Quiz System Prompt
+// This tells the AI how to behave during the onboarding quiz.
+// It sets the rules for tone (friendly), goal (build a profile), and format (JSON).
 
 export const quizSystemPrompt = `
 You are a friendly financial advisor named BudgetWise helping a user understand their spending habits and give

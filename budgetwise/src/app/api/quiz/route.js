@@ -2,8 +2,12 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
+import { getSupabaseServerClient } from "@/lib/helpers/supabaseSSRClient";
 import { getAIHelper } from "@/lib/helpers/AIHelper";
-import { quizSystemPrompt, quizResponseContract } from "@/lib/helpers/QuizPrompts";
+import {
+  quizSystemPrompt,
+  quizResponseContract,
+} from "@/lib/helpers/QuizPrompts";
 // Dev-only optional file save
 // import { saveQuizSummaryToFile } from "@/lib/helpers/QuizFileSaver";
 
@@ -27,7 +31,11 @@ function tryParseJson(text) {
     const end = text.lastIndexOf("}");
     if (start !== -1 && end !== -1 && end > start) {
       const maybe = text.slice(start, end + 1);
-      try { return JSON.parse(maybe); } catch (_) { /* ignore */ }
+      try {
+        return JSON.parse(maybe);
+      } catch (_) {
+        /* ignore */
+      }
     }
   }
   return null;
@@ -35,15 +43,33 @@ function tryParseJson(text) {
 
 export async function POST(req) {
   try {
+    // 1. Authenticate the user
+    // We need to know who is taking the quiz to save their progress.
+    const s = await getSupabaseServerClient();
+    const {
+      data: { user },
+      error: userErr,
+    } = await s.auth.getUser();
+
+    if (userErr || !user) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
     const aiHelper = getAIHelper();
-    
-    // Check token limits before processing
+
+    // 2. Check Usage Limits
+    // We check if the user (or system) has enough "tokens" left to run this request.
+    // This prevents us from accidentally spending too much money on AI costs.
     const usage = aiHelper.getUsageStats();
     if (usage.remaining < 100) {
-      return NextResponse.json({ 
-        error: "Daily AI token limit nearly reached. Please try again tomorrow.",
-        tokensRemaining: usage.remaining 
-      }, { status: 429 });
+      return NextResponse.json(
+        {
+          error:
+            "Daily AI token limit nearly reached. Please try again tomorrow.",
+          tokensRemaining: usage.remaining,
+        },
+        { status: 429 }
+      );
     }
 
     const body = await req.json().catch(() => ({}));
@@ -51,15 +77,20 @@ export async function POST(req) {
 
     const messages = buildMessages(history);
 
-    // Use AIHelper's chat method with JSON mode enabled
-    const text = await aiHelper.chat(messages, { 
+    // 3. Ask the AI
+    // We send the chat history to the AI and ask for the next question (or the results).
+    // We force the AI to reply in JSON format so it's easy for our code to read.
+    const text = await aiHelper.chat(messages, {
       temperature: 0.4,
-      responseFormat: { type: "json_object" }
+      responseFormat: { type: "json_object" },
     });
 
-    // With response_format=json_object, content should already be valid JSON
+    // 4. Parse the Response
+    // The AI gives us a string that looks like JSON. We need to turn it into a real object.
     let data = tryParseJson(text);
-    // Fallback: if the model still returns something unexpected, try a minimal cleanup
+
+    // Fallback: Sometimes the AI adds extra text (like markdown code blocks).
+    // We try to clean it up if the first parse fails.
     if (!data) {
       const cleaned = text
         .replace(/^```json\s*/i, "")
@@ -68,13 +99,16 @@ export async function POST(req) {
       data = tryParseJson(cleaned);
     }
 
-    // Minimal validation to ensure we return something usable to the client
+    // 5. Validate Data
+    // We make sure the data has the fields we expect ('question' or 'complete').
     if (!data || (data.status !== "question" && data.status !== "complete")) {
-      return NextResponse.json({ raw: text, error: "Unparseable AI response" }, { status: 502 });
+      return NextResponse.json(
+        { raw: text, error: "Unparseable AI response" },
+        { status: 502 }
+      );
     }
 
-    // Optional: persist a local JSON artifact of the completed quiz.
-    // Uncomment to enable during development.
+    // Optional: You can uncomment this block to save quiz results to a local file for debugging.
     /*  
     if (data.status === 'complete') {
       try {
@@ -85,17 +119,24 @@ export async function POST(req) {
       }
     } 
     */
-    
-    // Include token usage stats in response for monitoring
+
+    // 6. Return Response
+    // We send the parsed data back to the frontend, along with usage stats.
     const finalUsage = aiHelper.getUsageStats();
-    return NextResponse.json({ 
-      data, 
-      raw: text,
-      tokensUsed: finalUsage.sessionUsed,
-      tokensRemaining: finalUsage.remaining
-    }, { status: 200 });
+    return NextResponse.json(
+      {
+        data,
+        raw: text,
+        tokensUsed: finalUsage.sessionUsed,
+        tokensRemaining: finalUsage.remaining,
+      },
+      { status: 200 }
+    );
   } catch (err) {
     console.error("/api/quiz error:", err);
-    return NextResponse.json({ error: err?.message || "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: err?.message || "Server error" },
+      { status: 500 }
+    );
   }
 }

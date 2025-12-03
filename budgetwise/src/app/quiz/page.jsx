@@ -17,9 +17,13 @@ export default function QuizPage() {
   const { user, loading: authLoading } = useAuth();
   const [answer, setAnswer] = useState("");
   const [redirecting, setRedirecting] = useState(false);
+
+  // 1. Initialize Quiz Hook
+  // We use a custom hook to handle all the complex quiz logic (fetching questions, submitting answers).
   const { currentQ, loading, error, done, summary, submitAnswer } = useQuiz({
     onComplete: async ({ profile, summary }) => {
-      // Persist profile (best-effort) when quiz finishes
+      // 2. Save Results
+      // When the quiz is done, we save the generated profile to the database.
       try {
         await api.profile.upsert({
           profile_type: "ai_quiz",
@@ -29,12 +33,12 @@ export default function QuizPage() {
         });
       } catch (err) {
         console.error("Failed to save profile:", err);
-        // Optional: notify user via toast/alert if critical
       }
     },
   });
 
-  // Auto-redirect to dashboard after quiz completion
+  // 3. Auto-Redirect
+  // Once the quiz is finished and saved, we send the user to their dashboard.
   useEffect(() => {
     if (done && !redirecting) {
       setRedirecting(true);
@@ -57,9 +61,13 @@ export default function QuizPage() {
       <div className="bw-container mt-8">
         <div className="flex justify-center">
           <div className="w-full max-w-[420px]">
-            <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
+            <h1 className="text-2xl font-semibold mb-4">
+              Spending Profile Quiz
+            </h1>
             <div className="bw-card p-6">
-              <p className="text-sm text-[var(--color-text-muted)]">Verifying your session...</p>
+              <p className="text-sm text-[var(--color-text-muted)]">
+                Verifying your session...
+              </p>
             </div>
           </div>
         </div>
@@ -73,12 +81,14 @@ export default function QuizPage() {
       <div className="bw-container mt-8">
         <div className="flex justify-center">
           <div className="w-full max-w-[420px]">
-            <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
+            <h1 className="text-2xl font-semibold mb-4">
+              Spending Profile Quiz
+            </h1>
             <div className="bw-card p-6">
               <p className="text-sm text-[var(--color-text-muted)] mb-4">
                 You need to be logged in to take the quiz.
               </p>
-              <button 
+              <button
                 onClick={() => router.push("/login")}
                 className="bw-btn bw-btn-primary"
               >
@@ -96,17 +106,22 @@ export default function QuizPage() {
       <div className="bw-container max-w-lg">
         <h1 className="text-2xl font-semibold mb-4">Quiz Complete! ✅</h1>
         <p className="text-[var(--color-text-muted)] mb-4">
-          Your profile has been saved. These insights will power personalized budgeting advice.
+          Your profile has been saved. These insights will power personalized
+          budgeting advice.
         </p>
         {summary?.summary && (
-          <div className="bw-card p-4 text-sm mb-3 whitespace-pre-wrap">{summary.summary}</div>
+          <div className="bw-card p-4 text-sm mb-3 whitespace-pre-wrap">
+            {summary.summary}
+          </div>
         )}
         <div className="bw-card p-4 bg-blue-900/20 border-blue-500/30 mb-4">
           <p className="text-sm text-blue-300">
-            {redirecting ? "Redirecting to dashboard in a moment..." : "Preparing your dashboard..."}
+            {redirecting
+              ? "Redirecting to dashboard in a moment..."
+              : "Preparing your dashboard..."}
           </p>
         </div>
-        <button 
+        <button
           onClick={() => router.push("/dashboard")}
           className="bw-btn bw-btn-primary"
         >
@@ -117,35 +132,39 @@ export default function QuizPage() {
   }
 
   return (
-  <div className="bw-container mt-8">
-    <div className="flex justify-center">
-      <div className="w-full max-w-[420px]">
-        <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
-        <div className="bw-card p-6 space-y-4">
-        {error && <div className="text-red-600 text-sm">{error}</div>}
-        {!currentQ && <p className="text-sm">{loading ? "Loading first question..." : "Preparing quiz..."}</p>}
-        {currentQ && (
-          <>
-            <QuizQuestion
-              question={currentQ}
-              value={answer}
-              onChange={setAnswer}
-              disabled={loading}
-            />
-            <div className="flex justify-end mt-2">
-              <button
-                disabled={loading || !answer}
-                onClick={handleSubmit}
-                className="bw-btn bw-btn-primary"
-              >
-                {loading ? "Thinking..." : "Next"}
-              </button>
-            </div>
-          </>
-        )}
+    <div className="bw-container mt-8">
+      <div className="flex justify-center">
+        <div className="w-full max-w-[420px]">
+          <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
+          <div className="bw-card p-6 space-y-4">
+            {error && <div className="text-red-600 text-sm">{error}</div>}
+            {!currentQ && (
+              <p className="text-sm">
+                {loading ? "Loading first question..." : "Preparing quiz..."}
+              </p>
+            )}
+            {currentQ && (
+              <>
+                <QuizQuestion
+                  question={currentQ}
+                  value={answer}
+                  onChange={setAnswer}
+                  disabled={loading}
+                />
+                <div className="flex justify-end mt-2">
+                  <button
+                    disabled={loading || !answer}
+                    onClick={handleSubmit}
+                    className="bw-btn bw-btn-primary"
+                  >
+                    {loading ? "Thinking..." : "Next"}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

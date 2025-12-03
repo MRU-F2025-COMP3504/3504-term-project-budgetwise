@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-const users = require('./testdata/test-users.json'); // Local test user data
+import { createClient } from "@supabase/supabase-js";
+const users = require("./testdata/test-users.json"); // Local test user data
 
 /**
  * Integration tests for Supabase setup and authentication.
@@ -19,7 +19,7 @@ describe("Supabase integration tests", () => {
     }
   });
 
-     /**
+  /**
    * Test 1: Create a Supabase client
    * -----------------------------------------
    * Ensures that environment variables for Supabase are set
@@ -27,8 +27,8 @@ describe("Supabase integration tests", () => {
    */
   test("creates a valid Supabase client", () => {
     // Read environment variables
-    const url =  process.env.SUPABASE_URL;
-    const key =  process.env.SUPABASE_KEY;
+    const url = process.env.SUPABASE_URL;
+    const key = process.env.SUPABASE_KEY;
 
     // Validate presence of environment variables
     expect(url).toBeTruthy();
@@ -41,8 +41,6 @@ describe("Supabase integration tests", () => {
     expect(client).toBeDefined();
     expect(typeof client.from).toBe("function");
   });
-
-
 
   /**
    * Test 2: Sign in test users
@@ -80,10 +78,10 @@ describe("Supabase integration tests", () => {
 
     for (const u of effectiveUsers) {
       const { email, password } = u;
-      
+
       if (!email || !password) {
-         console.warn("Skipping user auth test: Missing credentials");
-         continue;
+        console.warn("Skipping user auth test: Missing credentials");
+        continue;
       }
 
       // Ensure credentials are defined
@@ -101,5 +99,4 @@ describe("Supabase integration tests", () => {
       expect(data.user).toBeDefined();
     }
   });
-
 });

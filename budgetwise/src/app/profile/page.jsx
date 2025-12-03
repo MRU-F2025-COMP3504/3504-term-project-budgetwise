@@ -6,10 +6,10 @@ import { FileText, Wallet, CreditCard, Target, Lightbulb } from "lucide-react";
 
 const formatCurrency = (amount) => {
   if (!amount && amount !== 0) return "N/A";
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
   }).format(amount);
 };
 
@@ -19,36 +19,44 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // 1. Fetch Profile Data
+  // We need to load the user's financial profile from the server.
   useEffect(() => {
     if (!user) return;
 
     let isMounted = true;
-    
+
     const fetchProfile = async () => {
       try {
         const { data } = await api.profile.get();
         if (isMounted) {
+          // If we got data back, we save it to state so we can display it.
           setProfile(data.profile || null);
           setError(null);
           setLoading(false);
         }
       } catch (err) {
         if (isMounted) {
+          // If something went wrong, we clear the profile and show the error message.
           setProfile(null);
           setError(err.message);
           setLoading(false);
         }
       }
     };
-    
+
     fetchProfile();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) {
     return (
       <div className="bw-container flex justify-center items-center h-[50vh]">
-        <p className="text-[var(--color-text-muted)] animate-pulse">Loading profile...</p>
+        <p className="text-[var(--color-text-muted)] animate-pulse">
+          Loading profile...
+        </p>
       </div>
     );
   }
@@ -69,31 +77,38 @@ export default function ProfilePage() {
       <div className="bw-container">
         <h1 className="text-2xl font-semibold mb-4">Profile</h1>
         <div className="bw-card p-8 text-center">
-          <p className="text-[var(--color-text-muted)] mb-4">No profile data found.</p>
-          <a href="/quiz" className="bw-btn bw-btn-primary">Take the Quiz</a>
+          <p className="text-[var(--color-text-muted)] mb-4">
+            No profile data found.
+          </p>
+          <a href="/quiz" className="bw-btn bw-btn-primary">
+            Take the Quiz
+          </a>
         </div>
       </div>
     );
   }
 
-  const { 
-    name, 
-    monthlyIncome, 
-    monthlyBudget, 
-    savingsGoal, 
-    financialGoals, 
-    insights, 
-    experienceLevel, 
-    summary 
+  const {
+    name,
+    monthlyIncome,
+    monthlyBudget,
+    savingsGoal,
+    financialGoals,
+    insights,
+    experienceLevel,
+    summary,
   } = profile;
 
   return (
     <div className="bw-container max-w-5xl">
       <header className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-[var(--color-text)]">Financial Profile</h1>
+          <h1 className="text-3xl font-bold text-[var(--color-text)]">
+            Financial Profile
+          </h1>
           <p className="text-[var(--color-text-muted)] mt-1">
-            Overview for <span className="font-medium text-[var(--color-text)]">{name}</span>
+            Overview for{" "}
+            <span className="font-medium text-[var(--color-text)]">{name}</span>
           </p>
         </div>
         {experienceLevel && (
@@ -102,12 +117,13 @@ export default function ProfilePage() {
           </span>
         )}
       </header>
-      
+
       {/* Summary Section */}
       {summary && (
         <div className="bw-card p-6 mb-8 border-l-4 border-l-[var(--color-primary)]">
           <h2 className="text-lg font-semibold mb-2 flex items-center gap-2">
-            <FileText className="text-[var(--color-primary)]" size={20} /> Executive Summary
+            <FileText className="text-[var(--color-primary)]" size={20} />{" "}
+            Executive Summary
           </h2>
           <p className="text-[var(--color-text-secondary)] leading-relaxed">
             {summary}
@@ -117,22 +133,22 @@ export default function ProfilePage() {
 
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        <MetricCard 
-          label="Monthly Income" 
-          value={formatCurrency(monthlyIncome)} 
-          icon={<Wallet size={24} className="text-emerald-400" />} 
+        <MetricCard
+          label="Monthly Income"
+          value={formatCurrency(monthlyIncome)}
+          icon={<Wallet size={24} className="text-emerald-400" />}
           color="text-emerald-400"
         />
-        <MetricCard 
-          label="Monthly Budget" 
-          value={formatCurrency(monthlyBudget)} 
-          icon={<CreditCard size={24} className="text-blue-400" />} 
+        <MetricCard
+          label="Monthly Budget"
+          value={formatCurrency(monthlyBudget)}
+          icon={<CreditCard size={24} className="text-blue-400" />}
           color="text-blue-400"
         />
-        <MetricCard 
-          label="Savings Goal" 
-          value={formatCurrency(savingsGoal)} 
-          icon={<Target size={24} className="text-purple-400" />} 
+        <MetricCard
+          label="Savings Goal"
+          value={formatCurrency(savingsGoal)}
+          icon={<Target size={24} className="text-purple-400" />}
           color="text-purple-400"
         />
       </div>
@@ -147,9 +163,14 @@ export default function ProfilePage() {
               </h2>
               <div className="space-y-3">
                 {insights.map((insight, i) => (
-                  <div key={i} className="bw-card p-4 flex gap-4 items-start hover:bg-[var(--surface-raised)] transition-colors">
+                  <div
+                    key={i}
+                    className="bw-card p-4 flex gap-4 items-start hover:bg-[var(--surface-raised)] transition-colors"
+                  >
                     <div className="mt-1 w-2 h-2 rounded-full bg-[var(--color-primary)] shrink-0" />
-                    <p className="text-[var(--color-text-secondary)]">{insight}</p>
+                    <p className="text-[var(--color-text-secondary)]">
+                      {insight}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -169,7 +190,9 @@ export default function ProfilePage() {
           {/* Raw Data Toggle */}
           <details className="group">
             <summary className="cursor-pointer text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text)] flex items-center gap-2 select-none">
-              <span className="group-open:rotate-90 transition-transform">▶</span>
+              <span className="group-open:rotate-90 transition-transform">
+                ▶
+              </span>
               View Raw Data
             </summary>
             <div className="mt-2">
@@ -191,8 +214,14 @@ function MetricCard({ label, value, icon, color }) {
         {icon}
       </div>
       <div>
-        <p className="text-sm text-[var(--color-text-muted)] font-medium mb-0.5">{label}</p>
-        <p className={`text-2xl font-bold ${color || 'text-[var(--color-text)]'}`}>{value}</p>
+        <p className="text-sm text-[var(--color-text-muted)] font-medium mb-0.5">
+          {label}
+        </p>
+        <p
+          className={`text-2xl font-bold ${color || "text-[var(--color-text)]"}`}
+        >
+          {value}
+        </p>
       </div>
     </div>
   );

@@ -6,19 +6,23 @@ import api from "@/services/api";
 import { Filter } from "lucide-react";
 
 export default function TransactionsPage({ transactions }) {
-  const [rows, setRows] = useState(Array.isArray(transactions) ? transactions : []);
+  const [rows, setRows] = useState(
+    Array.isArray(transactions) ? transactions : []
+  );
   const [loading, setLoading] = useState(!Array.isArray(transactions));
   const [showFilters, setShowFilters] = useState(false);
 
+  // 1. Load Transactions
+  // If the parent component didn't pass any transactions down to us,
+  // we need to fetch them from the API ourselves.
   useEffect(() => {
-    // If no transactions were provided via props, fetch client-side
     if (transactions === undefined) {
       (async () => {
         try {
           const { data } = await api.transactions.list();
           setRows(data?.transactions || []);
         } catch (e) {
-          console.error('Failed to load transactions:', e);
+          console.error("Failed to load transactions:", e);
           setRows([]);
         } finally {
           setLoading(false);
@@ -27,7 +31,9 @@ export default function TransactionsPage({ transactions }) {
     }
   }, [transactions]);
 
-  // Key detection helpers to work with any schema
+  // 2. Identify Data Columns
+  // Since CSV files can have different column names (like "Amount" vs "Value"),
+  // we try to guess which column is which by looking at the keys.
   const keyHints = useMemo(() => {
     const allKeys = Array.from(
       rows.reduce((set, r) => {
@@ -39,10 +45,21 @@ export default function TransactionsPage({ transactions }) {
     const findKey = (regexList) =>
       allKeys.find((k) => regexList.some((re) => re.test(k))) || null;
 
-    const dateKey = findKey([/^(post(ed|ing)_)?date$/i, /transaction.*date/i, /date/i, /created_at/i]);
-    const amountKey = findKey([/^(amount|amt|value|total|balance)$/i, /(debit|credit)_?amount/i]);
+    const dateKey = findKey([
+      /^(post(ed|ing)_)?date$/i,
+      /transaction.*date/i,
+      /date/i,
+      /created_at/i,
+    ]);
+    const amountKey = findKey([
+      /^(amount|amt|value|total|balance)$/i,
+      /(debit|credit)_?amount/i,
+    ]);
     const typeKey = findKey([/^(type|transaction_?type)$/i, /(debit|credit)/i]);
-    const descKey = findKey([/^(description|memo|narrative|details?)$/i, /merchant|payee/i]);
+    const descKey = findKey([
+      /^(description|memo|narrative|details?)$/i,
+      /merchant|payee/i,
+    ]);
     const categoryKey = findKey([/^category$/i, /tag|group/i]);
 
     return { dateKey, amountKey, typeKey, descKey, categoryKey };
@@ -55,7 +72,8 @@ export default function TransactionsPage({ transactions }) {
   const [maxAmount, setMaxAmount] = useState("");
   const [type, setType] = useState("all"); // 'all' | 'debit' | 'credit'
 
-  // Utility parsers
+  // 3. Helper Functions
+  // These help us turn messy data (like strings with dollar signs) into clean numbers and dates.
   const parseDate = (v) => {
     if (!v) return null;
     const d = new Date(v);
@@ -73,11 +91,13 @@ export default function TransactionsPage({ transactions }) {
     return null;
   };
 
+  // 4. Apply Filters
+  // We go through every transaction and check if it matches the user's selected filters.
   const filtered = useMemo(() => {
     const sd = startDate ? new Date(startDate) : null;
     const ed = endDate ? new Date(endDate) : null;
     const minA = minAmount !== "" ? Number(minAmount) : null;
-    const maxA = maxAmount !== "" ? Number(maxAmount) : null; // dual-thumb range
+    const maxA = maxAmount !== "" ? Number(maxAmount) : null;
 
     return rows.filter((r) => {
       const { dateKey, amountKey, typeKey } = keyHints;
@@ -96,7 +116,7 @@ export default function TransactionsPage({ transactions }) {
         if (maxA != null && (a == null || a > maxA)) return false;
       }
 
-      // Type filter
+      // Type filter (Debit vs Credit)
       if (type !== "all") {
         let rowType = null;
         if (typeKey && r[typeKey] != null) {
@@ -127,11 +147,13 @@ export default function TransactionsPage({ transactions }) {
     <div className="bw-container px-0 md:px-5">
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">Transactions</h1>
-        <p className="bw-text-muted">All your parsed and categorized transactions.</p>
+        <p className="bw-text-muted">
+          All your parsed and categorized transactions.
+        </p>
       </header>
 
       {/* Mobile Filter Toggle */}
-      <button 
+      <button
         className="md:hidden w-full mb-4 p-3 bg-[var(--card-bg)] border border-[var(--color-border)] rounded-lg flex items-center justify-between text-[var(--color-text)]"
         onClick={() => setShowFilters(!showFilters)}
       >
@@ -140,12 +162,14 @@ export default function TransactionsPage({ transactions }) {
           Filters
         </span>
         <span className="text-xs text-[var(--color-text-muted)]">
-          {showFilters ? 'Hide' : 'Show'}
+          {showFilters ? "Hide" : "Show"}
         </span>
       </button>
 
       {/* Filters */}
-      <div className={`bw-card p-4 mb-4 ${showFilters ? 'block' : 'hidden md:block'}`}>
+      <div
+        className={`bw-card p-4 mb-4 ${showFilters ? "block" : "hidden md:block"}`}
+      >
         <div className="grid md:grid-cols-3 gap-3">
           <div className="space-y-3">
             <div>
@@ -161,7 +185,9 @@ export default function TransactionsPage({ transactions }) {
               </select>
             </div>
             <div>
-              <label className="block text-xs bw-text-muted mb-1">Start Date</label>
+              <label className="block text-xs bw-text-muted mb-1">
+                Start Date
+              </label>
               <input
                 type="date"
                 className="w-full px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-white/10"
@@ -170,7 +196,9 @@ export default function TransactionsPage({ transactions }) {
               />
             </div>
             <div>
-              <label className="block text-xs bw-text-muted mb-1">End Date</label>
+              <label className="block text-xs bw-text-muted mb-1">
+                End Date
+              </label>
               <input
                 type="date"
                 className="w-full px-3 py-2 rounded-md bg-[var(--color-surface-2)] border border-white/10"
@@ -208,16 +236,24 @@ export default function TransactionsPage({ transactions }) {
             const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 
             const toCAD = (n) =>
-              new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(n);
+              new Intl.NumberFormat("en-CA", {
+                style: "currency",
+                currency: "CAD",
+              }).format(n);
 
             const rangeSpan = domainMax - domainMin || 1;
-            const leftPct = ((Math.min(currMin, currMax) - domainMin) / rangeSpan) * 100;
-            const rightPct = 100 - ((Math.max(currMin, currMax) - domainMin) / rangeSpan) * 100;
+            const leftPct =
+              ((Math.min(currMin, currMax) - domainMin) / rangeSpan) * 100;
+            const rightPct =
+              100 -
+              ((Math.max(currMin, currMax) - domainMin) / rangeSpan) * 100;
 
             return (
               <>
                 <div className="md:col-span-2">
-                  <label className="block text-xs bw-text-muted mb-1">Amount Range (CAD)</label>
+                  <label className="block text-xs bw-text-muted mb-1">
+                    Amount Range (CAD)
+                  </label>
                   <div className="relative py-2">
                     {/* Highlighted selected range */}
                     <div
@@ -238,7 +274,11 @@ export default function TransactionsPage({ transactions }) {
                       value={currMin}
                       onChange={(e) => {
                         const v = Number(e.target.value);
-                        const next = clamp(Math.min(v, currMax), domainMin, domainMax);
+                        const next = clamp(
+                          Math.min(v, currMax),
+                          domainMin,
+                          domainMax
+                        );
                         setMinAmount(String(next));
                       }}
                       className="w-full cursor-pointer appearance-none bg-transparent relative z-10 accent-[var(--buttoncolor1)]"
@@ -251,7 +291,11 @@ export default function TransactionsPage({ transactions }) {
                       value={currMax}
                       onChange={(e) => {
                         const v = Number(e.target.value);
-                        const next = clamp(Math.max(v, currMin), domainMin, domainMax);
+                        const next = clamp(
+                          Math.max(v, currMin),
+                          domainMin,
+                          domainMax
+                        );
                         setMaxAmount(String(next));
                       }}
                       className="w-full cursor-pointer appearance-none bg-transparent relative -mt-6 z-20 accent-[var(--buttoncolor2)]"
@@ -271,14 +315,24 @@ export default function TransactionsPage({ transactions }) {
                           // Accept raw typing; only validate on blur
                           const v = e.target.value;
                           // Allow empty during typing
-                          if (v === "") { setMinAmount(""); return; }
+                          if (v === "") {
+                            setMinAmount("");
+                            return;
+                          }
                           setMinAmount(v);
                         }}
                         onBlur={(e) => {
                           const raw = e.target.value;
                           const num = Number(raw);
-                          if (isNaN(num)) { setMinAmount(String(domainMin)); return; }
-                          const next = clamp(Math.min(num, currMax), domainMin, domainMax);
+                          if (isNaN(num)) {
+                            setMinAmount(String(domainMin));
+                            return;
+                          }
+                          const next = clamp(
+                            Math.min(num, currMax),
+                            domainMin,
+                            domainMax
+                          );
                           setMinAmount(String(next));
                         }}
                         title="Min amount"
@@ -293,14 +347,24 @@ export default function TransactionsPage({ transactions }) {
                         value={String(Math.max(currMin, currMax))}
                         onChange={(e) => {
                           const v = e.target.value;
-                          if (v === "") { setMaxAmount(""); return; }
+                          if (v === "") {
+                            setMaxAmount("");
+                            return;
+                          }
                           setMaxAmount(v);
                         }}
                         onBlur={(e) => {
                           const raw = e.target.value;
                           const num = Number(raw);
-                          if (isNaN(num)) { setMaxAmount(String(domainMax)); return; }
-                          const next = clamp(Math.max(num, currMin), domainMin, domainMax);
+                          if (isNaN(num)) {
+                            setMaxAmount(String(domainMax));
+                            return;
+                          }
+                          const next = clamp(
+                            Math.max(num, currMin),
+                            domainMin,
+                            domainMax
+                          );
                           setMaxAmount(String(next));
                         }}
                         title="Max amount"
@@ -325,13 +389,13 @@ export default function TransactionsPage({ transactions }) {
       </div>
 
       {/* Table renders specific fields */}
-      <Table 
-        rows={filtered} 
+      <Table
+        rows={filtered}
         columns={[
           { key: "description", label: "Description" },
           { key: "amount", label: "Amount" },
-          { 
-            key: "type", 
+          {
+            key: "type",
             label: "Type",
             className: "hidden md:table-cell",
             render: (val, row) => {
@@ -340,22 +404,27 @@ export default function TransactionsPage({ transactions }) {
               const amt = Number(row.amount);
               if (!isNaN(amt)) return amt < 0 ? "DEBIT" : "CREDIT";
               return "-";
-            }
+            },
           },
-          { 
-            key: "statement_name", 
+          {
+            key: "statement_name",
             label: "Statement Name",
             className: "hidden md:table-cell",
-            render: (_, row) => row.Statements?.file_name || "-"
+            render: (_, row) => row.Statements?.file_name || "-",
           },
-          { 
-            key: "transaction_date", 
+          {
+            key: "transaction_date",
             label: "Transaction Date",
-            render: (val) => val ? new Date(val).toISOString().split('T')[0] : "-"
+            render: (val) =>
+              val ? new Date(val).toISOString().split("T")[0] : "-",
           },
-          { key: "category", label: "Category", className: "hidden md:table-cell" }
+          {
+            key: "category",
+            label: "Category",
+            className: "hidden md:table-cell",
+          },
         ]}
-        emptyText="No transactions found." 
+        emptyText="No transactions found."
       />
     </div>
   );

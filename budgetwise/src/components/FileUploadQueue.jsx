@@ -6,11 +6,15 @@ export default function FileUploadQueue() {
   const [results, setResults] = useState([]);
   const [uploading, setUploading] = useState(false);
 
+  // 1. Handle File Selection
+  // When the user picks files, we convert the FileList to a regular Array.
   function onSelect(e) {
     const list = Array.from(e.target.files || []);
     setFiles(list);
   }
 
+  // 2. Upload All Files
+  // We loop through each selected file and send it to our API.
   async function uploadAll() {
     setUploading(true);
     const out = [];
@@ -18,9 +22,16 @@ export default function FileUploadQueue() {
       const fd = new FormData();
       fd.append("file", f);
       try {
-        const res = await fetch("/api/statements", { method: "POST", body: fd });
+        const res = await fetch("/api/statements", {
+          method: "POST",
+          body: fd,
+        });
         let data = {};
-        try { data = await res.json(); } catch { /* ignore parse */ }
+        try {
+          data = await res.json();
+        } catch {
+          /* ignore parse */
+        }
         out.push({ file: f.name, ok: res.ok, data });
       } catch (err) {
         out.push({ file: f.name, ok: false, data: { error: err.message } });
@@ -45,20 +56,25 @@ export default function FileUploadQueue() {
           onClick={uploadAll}
           disabled={uploading}
           className="bw-btn bw-btn-primary bw-btn-block"
-          aria-label={uploading ? 'Uploading files' : `Upload ${files.length} files`}
-          aria-busy={uploading ? 'true' : 'false'}
+          aria-label={
+            uploading ? "Uploading files" : `Upload ${files.length} files`
+          }
+          aria-busy={uploading ? "true" : "false"}
         >
           {uploading ? "Uploading..." : `Upload ${files.length} file(s)`}
         </button>
       )}
       <div className="space-y-2 text-xs">
-        {results.map(r => (
+        {results.map((r) => (
           <div key={r.file} className="bw-card p-2">
-            <strong>{r.file}</strong>: {r.ok ? "✅" : "❌"} {r.data.error || "Uploaded"}
+            <strong>{r.file}</strong>: {r.ok ? "✅" : "❌"}{" "}
+            {r.data.error || "Uploaded"}
           </div>
         ))}
         {results.length === 0 && files.length === 0 && (
-          <p className="text-[var(--color-text-muted)]">Select CSV files to upload.</p>
+          <p className="text-[var(--color-text-muted)]">
+            Select CSV files to upload.
+          </p>
         )}
       </div>
     </div>

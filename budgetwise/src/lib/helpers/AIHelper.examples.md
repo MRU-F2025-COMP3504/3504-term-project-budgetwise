@@ -5,7 +5,7 @@ This document provides comprehensive examples for using the `AIHelper` class thr
 ## Basic Setup
 
 ```javascript
-import { getAIHelper } from '@/lib/helpers/AIHelper';
+import { getAIHelper } from "@/lib/helpers/AIHelper";
 
 const aiHelper = getAIHelper();
 ```
@@ -18,11 +18,11 @@ Perfect for quick AI responses without conversation context:
 // In an API route or server component
 export async function GET(request) {
   const aiHelper = getAIHelper();
-  
+
   const response = await aiHelper.ask(
     "What are the top 3 budgeting tips for students?"
   );
-  
+
   return Response.json({ advice: response });
 }
 ```
@@ -36,7 +36,7 @@ For interactive chatbot features where context matters:
 export async function POST(request) {
   const { messages } = await request.json();
   const aiHelper = getAIHelper();
-  
+
   // Check if we have enough tokens before proceeding
   const stats = aiHelper.getUsageStats();
   if (stats.remaining < 100) {
@@ -45,13 +45,13 @@ export async function POST(request) {
       { status: 429 }
     );
   }
-  
+
   // messages format: [{ role: "user", content: "..." }, { role: "assistant", content: "..." }]
   const response = await aiHelper.chat(messages);
-  
-  return Response.json({ 
+
+  return Response.json({
     response,
-    tokensUsed: aiHelper.getUsageStats()
+    tokensUsed: aiHelper.getUsageStats(),
   });
 }
 ```
@@ -65,7 +65,7 @@ Get AI advice specifically tailored to financial topics:
 export async function POST(request) {
   const { income, expenses, goals } = await request.json();
   const aiHelper = getAIHelper();
-  
+
   const userPrompt = `
     My monthly income is $${income}.
     My current expenses are $${expenses}.
@@ -73,9 +73,9 @@ export async function POST(request) {
     
     What specific budgeting strategy would you recommend?
   `;
-  
+
   const advice = await aiHelper.getFinancialAdvice(userPrompt);
-  
+
   return Response.json({ advice });
 }
 ```
@@ -89,12 +89,12 @@ Generate adaptive quiz questions with proper validation:
 export async function POST(request) {
   const { history, userAnswer } = await request.json();
   const aiHelper = getAIHelper();
-  
+
   // Build context from previous Q&A
-  const context = history.map(item => 
-    `Q: ${item.question}\nA: ${item.answer}`
-  ).join('\n\n');
-  
+  const context = history
+    .map((item) => `Q: ${item.question}\nA: ${item.answer}`)
+    .join("\n\n");
+
   const prompt = `
     Previous questions and answers:
     ${context}
@@ -104,16 +104,16 @@ export async function POST(request) {
     Generate the next quiz question to understand their spending habits better.
     Avoid repeating topics already covered.
   `;
-  
+
   const nextQuestion = await aiHelper.generateQuizQuestion(prompt);
-  
+
   // Parse AI response (expecting JSON format)
   const parsed = JSON.parse(nextQuestion);
-  
+
   return Response.json({
     status: parsed.done ? "complete" : "question",
     question: parsed.question,
-    summary: parsed.summary
+    summary: parsed.summary,
   });
 }
 ```
@@ -142,32 +142,32 @@ Monitor and enforce token limits:
 export async function POST(request) {
   const aiHelper = getAIHelper();
   const stats = aiHelper.getUsageStats();
-  
+
   // Warn user if approaching limit
   if (stats.percentUsed > 80) {
     console.warn(`⚠️ Token usage at ${stats.percentUsed}%`);
   }
-  
+
   // Block requests if over limit
   if (stats.remaining < 50) {
     return Response.json(
-      { 
+      {
         error: "Daily token limit reached",
-        resetTime: "Tokens reset at midnight"
+        resetTime: "Tokens reset at midnight",
       },
       { status: 429 }
     );
   }
-  
+
   const response = await aiHelper.ask(request.body.question);
-  
-  return Response.json({ 
+
+  return Response.json({
     response,
     usage: {
       used: stats.sessionUsed,
       limit: stats.limit,
-      percentRemaining: (stats.remaining / stats.limit * 100).toFixed(1)
-    }
+      percentRemaining: ((stats.remaining / stats.limit) * 100).toFixed(1),
+    },
   });
 }
 ```
@@ -179,33 +179,32 @@ Robust error handling for production use:
 ```javascript
 export async function POST(request) {
   const aiHelper = getAIHelper();
-  
+
   try {
     const { question } = await request.json();
-    
+
     if (!question || question.trim().length === 0) {
       return Response.json(
         { error: "Question cannot be empty" },
         { status: 400 }
       );
     }
-    
+
     const response = await aiHelper.ask(question);
-    
-    return Response.json({ 
+
+    return Response.json({
       success: true,
       response,
-      cached: response === aiHelper.ask(question) // Check if it was cached
+      cached: response === aiHelper.ask(question), // Check if it was cached
     });
-    
   } catch (error) {
     console.error("AI Helper error:", error);
-    
+
     // Return user-friendly error
     return Response.json(
-      { 
+      {
         error: "Failed to get AI response. Please try again.",
-        details: error.message 
+        details: error.message,
       },
       { status: 500 }
     );
@@ -222,7 +221,7 @@ Use AI to categorize and analyze transactions:
 export async function POST(request) {
   const { transactions } = await request.json();
   const aiHelper = getAIHelper();
-  
+
   const prompt = `
     Analyze these transactions and identify spending patterns:
     ${JSON.stringify(transactions, null, 2)}
@@ -232,9 +231,9 @@ export async function POST(request) {
     2. Unusual or concerning patterns
     3. Recommendations for better budgeting
   `;
-  
+
   const analysis = await aiHelper.getFinancialAdvice(prompt);
-  
+
   return Response.json({ analysis });
 }
 ```
@@ -242,6 +241,7 @@ export async function POST(request) {
 ## Best Practices
 
 ### 1. Always Check Token Limits
+
 ```javascript
 const stats = aiHelper.getUsageStats();
 if (stats.remaining < 100) {
@@ -250,13 +250,16 @@ if (stats.remaining < 100) {
 ```
 
 ### 2. Use Appropriate Methods
+
 - `ask()` - Simple one-off questions
 - `chat()` - Conversational features with history
 - `getFinancialAdvice()` - Financial/budgeting topics
 - `generateQuizQuestion()` - Quiz/profile building
 
 ### 3. Cache-Friendly Queries
+
 Identical prompts return cached results. Structure prompts consistently:
+
 ```javascript
 // Good - consistent formatting
 await aiHelper.ask("What is a budget?");
@@ -268,6 +271,7 @@ await aiHelper.ask("what is a budget"); // Not cached (different case)
 ```
 
 ### 4. Handle Errors Gracefully
+
 ```javascript
 try {
   const response = await aiHelper.ask(prompt);

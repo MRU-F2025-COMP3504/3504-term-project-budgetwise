@@ -1,27 +1,27 @@
-import { NextResponse } from 'next/server';
-import { getSupabaseServerClient } from '@/lib/helpers/supabaseSSRClient';
+import { NextResponse } from "next/server";
+import { getSupabaseServerClient } from "@/lib/helpers/supabaseSSRClient";
 
+// GET /api/user_profile
 export async function GET(req) {
   try {
     const s = await getSupabaseServerClient();
 
-    const { data: { user }, error: userErr } = await s.auth.getUser();
-    
+    // 1. Authenticate the user
+    const {
+      data: { user },
+      error: userErr,
+    } = await s.auth.getUser();
+
     if (userErr || !user) {
-      console.error("Profile API Auth Failed:", userErr);
-      console.log("User:", user);
-      // Debug cookies
-      const { cookies } = await import('next/headers');
-      const cookieStore = cookies();
-      console.log("Cookies available:", cookieStore.getAll().map(c => c.name));
-      
-      return NextResponse.json({ error: 'Not authenticated', details: userErr?.message }, { status: 401 });
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // 2. Fetch Profile Data
+    // We look for a profile that matches the current user's ID.
     const { data, error } = await s
-      .from('User_Profile')
-      .select('profile_data, name')
-      .eq('user_id', user.id)
+      .from("User_Profile")
+      .select("profile_data, name")
+      .eq("user_id", user.id)
       .maybeSingle();
 
     if (error) {
@@ -29,32 +29,34 @@ export async function GET(req) {
     }
 
     if (!data) {
-      return NextResponse.json(
-        { error: 'Profile not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
 
-    // Construct a rich profile object
-    // 1. Get the inner 'profile' object which has the metrics
+    // 3. Structure the Data
+    // The database stores profile data in a flexible JSON column called 'profile_data'.
+    // We need to extract specific parts (like metrics, summary, insights) and organize them
+    // into a clean object for the frontend to use.
+
+    // Get the core profile metrics (income, expenses, etc.)
     const innerProfile = data.profile_data?.profile || {};
-    
-    // 2. Get the summary and insights from the root of profile_data
+
+    // Get the AI-generated summary and insights
     const summary = data.profile_data?.summary;
     const rootInsights = data.profile_data?.insights;
 
-    // 3. Merge everything
+    // Merge it all together
+    // We prioritize the 'rootInsights' if they exist, otherwise fallback to nested ones.
     const fullProfile = {
       ...innerProfile,
       summary,
       insights: rootInsights || innerProfile.insights || [],
-      name: data.name, // Ensure name from DB column is included
-      raw: data.profile_data?.raw // Include raw answers if needed
+      name: data.name, // We explicitly include the name from the separate column
+      raw: data.profile_data?.raw, // We include the raw quiz answers just in case
     };
 
     return NextResponse.json({ profile: fullProfile }, { status: 200 });
   } catch (error) {
-    console.error('❌ Error fetching user profile:', error);
+    console.error("Error fetching user profile:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
@@ -62,23 +64,30 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const s = await getSupabaseServerClient();
-
     const body = await req.json();
 
-    const { data: { user }, error: userErr } = await s.auth.getUser();
+    // 1. Authenticate the user
+    const {
+      data: { user },
+      error: userErr,
+    } = await s.auth.getUser();
     if (userErr || !user) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
+    // 2. Prepare the Data
+    // We wrap the incoming data into the structure our database expects.
     const payload = {
       user_id: user.id,
-      name: body?.name || ' ',
+      name: body?.name || " ",
       profile_data: body || {},
     };
 
+    // 3. Save to Database
+    // We use 'upsert' which means: "Insert if new, Update if exists".
     const { data, error } = await s
-      .from('User_Profile')
-      .upsert(payload, { onConflict: 'user_id' })
+      .from("User_Profile")
+      .upsert(payload, { onConflict: "user_id" })
       .select()
       .maybeSingle();
 
@@ -88,8 +97,7 @@ export async function POST(req) {
 
     return NextResponse.json({ data }, { status: 201 });
   } catch (error) {
-    console.error('❌ Error inserting user profile:', error);
+    console.error("Error inserting user profile:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-

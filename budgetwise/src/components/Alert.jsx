@@ -1,7 +1,14 @@
 "use client";
 import { useEffect } from "react";
 
-export default function Alert({ type = "info", children, onClose, autoDismiss = 4500 }) {
+export default function Alert({
+  type = "info",
+  children,
+  onClose,
+  autoDismiss = 4500,
+}) {
+  // 1. Auto-Dismiss
+  // If an autoDismiss time is provided, we set a timer to close the alert automatically.
   useEffect(() => {
     if (!onClose || !autoDismiss) return;
     const t = setTimeout(() => onClose(), autoDismiss);
@@ -29,7 +36,9 @@ export default function Alert({ type = "info", children, onClose, autoDismiss = 
         background: "var(--color-surface-2)",
       }}
     >
-      <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+      <div
+        style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}
+      >
         <div
           style={{
             width: 36,
@@ -46,7 +55,15 @@ export default function Alert({ type = "info", children, onClose, autoDismiss = 
         >
           {meta.icon}
         </div>
-        <div style={{ color: "var(--color-text)", fontSize: "0.95rem", lineHeight: 1.3 }}>{children}</div>
+        <div
+          style={{
+            color: "var(--color-text)",
+            fontSize: "0.95rem",
+            lineHeight: 1.3,
+          }}
+        >
+          {children}
+        </div>
       </div>
 
       <div style={{ marginLeft: 12 }}>
