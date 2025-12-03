@@ -134,33 +134,57 @@ export default function QuizPage() {
   return (
     <div className="bw-container mt-8">
       <div className="flex justify-center">
-        <div className="w-full max-w-[420px]">
-          <h1 className="text-2xl font-semibold mb-4">Spending Profile Quiz</h1>
-          <div className="bw-card p-6 space-y-4">
-            {error && <div className="text-red-600 text-sm">{error}</div>}
+        <div className="w-full max-w-[420px] px-4 md:px-0">
+          <h1 className="text-2xl font-semibold mb-2 text-center md:text-left">
+            Spending Profile Quiz
+          </h1>
+          <p className="text-sm text-[var(--color-text-muted)] mb-6 text-center md:text-left">
+            Don't worry if you're not sure—you can update these values in{" "}
+            <span className="font-medium text-[var(--color-text)]">
+              Settings
+            </span>{" "}
+            later.
+          </p>
+
+          <div className="bw-card p-6 space-y-6 shadow-lg">
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
             {!currentQ && (
-              <p className="text-sm">
-                {loading ? "Loading first question..." : "Preparing quiz..."}
-              </p>
+              <div className="flex flex-col items-center justify-center py-8 space-y-4">
+                <div className="w-8 h-8 border-2 border-[var(--buttoncolor1)] border-t-transparent rounded-full animate-spin" />
+                <p className="text-sm text-[var(--color-text-muted)] animate-pulse">
+                  {loading ? "Loading first question..." : "Preparing quiz..."}
+                </p>
+              </div>
             )}
             {currentQ && (
-              <>
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
                 <QuizQuestion
                   question={currentQ}
                   value={answer}
                   onChange={setAnswer}
                   disabled={loading}
                 />
-                <div className="flex justify-end mt-2">
+                <div className="flex justify-end mt-6">
                   <button
                     disabled={loading || !answer}
                     onClick={handleSubmit}
-                    className="bw-btn bw-btn-primary"
+                    className="bw-btn bw-btn-primary w-full md:w-auto flex items-center justify-center gap-2"
                   >
-                    {loading ? "Thinking..." : "Next"}
+                    {loading ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Thinking...</span>
+                      </>
+                    ) : (
+                      "Next"
+                    )}
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>

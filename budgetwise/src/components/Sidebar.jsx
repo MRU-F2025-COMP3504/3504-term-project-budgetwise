@@ -66,8 +66,8 @@ export default function Sidebar({
 
       <aside
         className={`
-        fixed top-0 left-0 h-screen bg-[var(--card-bg)] border-r border-[var(--color-border)] flex flex-col z-50 backdrop-blur-xl bg-opacity-95 shadow-xl 
-        transition-all duration-300 
+        fixed top-0 left-0 h-screen border-r border-[var(--color-border)] flex flex-col z-50 shadow-xl 
+        transition-all duration-300 glass-panel
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
         w-64 ${isCollapsed ? "md:w-20" : "md:w-64"}
       `}
@@ -83,7 +83,7 @@ export default function Sidebar({
         {/* Desktop Toggle Button */}
         <button
           onClick={toggleSidebar}
-          className="hidden md:block absolute -right-3 top-10 bg-[var(--surface-raised)] border border-[var(--color-border)] rounded-full p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-md z-50"
+          className="hidden md:block absolute -right-3 top-10 bg-[var(--surface-raised)] border border-[var(--color-border)] rounded-full p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)] shadow-md z-50 backdrop-blur-md"
         >
           {isCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
@@ -94,7 +94,7 @@ export default function Sidebar({
           onClick={handleLinkClick}
           className={`flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer ${isCollapsed ? "md:justify-center md:p-4" : "p-6"} p-6`}
         >
-          <div className="w-8 h-8 bg-[var(--buttoncolor1)] rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-500/30 shrink-0">
+          <div className="w-8 h-8 bg-gradient-to-br from-[var(--buttoncolor1)] to-purple-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-purple-500/30 shrink-0">
             <DollarSign size={20} />
           </div>
           <span
@@ -120,9 +120,9 @@ export default function Sidebar({
                   isCollapsed ? "md:justify-center md:px-2" : "px-3"
                 } px-3 ${
                   isActive
-                    ? "bg-[var(--buttoncolor1)] text-white shadow-lg shadow-indigo-500/20"
-                    : "text-[var(--color-text-muted)] hover:bg-[var(--surface-raised)] hover:text-[var(--color-text)]"
-                } ${!isCollapsed && !isActive ? "hover:translate-x-1" : ""}`}
+                    ? "bg-[var(--buttoncolor1)] text-white shadow-lg shadow-purple-500/25 border border-purple-500/20"
+                    : "text-[var(--color-text-muted)] hover:bg-[var(--surface-raised)] hover:text-[var(--color-text)] hover:translate-x-1"
+                }`}
               >
                 <Icon
                   size={20}

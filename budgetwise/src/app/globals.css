@@ -22,6 +22,14 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Glassmorphism Utility */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 /* Markdown Content Styles */
 .markdown-content ul {
   list-style-type: disc;

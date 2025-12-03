@@ -99,13 +99,13 @@ export default function DashboardPage() {
         </p>
       </header>
 
-      <div className="px-4 md:px-0">
+      <div className="px-4 md:px-0 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100 fill-mode-backwards">
         <StatSummary stats={stats} />
       </div>
 
       <div className="mt-6 grid gap-6 md:grid-cols-2 mb-8 px-4 md:px-0">
         {/* Top Categories Card */}
-        <div className="bw-card p-4 min-w-0">
+        <div className="bw-card p-4 min-w-0 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200 fill-mode-backwards">
           <h2 className="font-medium mb-2">Top Categories</h2>
           <ul className="text-sm space-y-1">
             {topCategories.map(([category, amount]) => (
@@ -131,7 +131,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Transactions Card */}
-        <div className="bw-card p-4">
+        <div className="bw-card p-4 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300 fill-mode-backwards">
           <h2 className="font-medium mb-2">Recent Transactions</h2>
           <Table
             rows={transactions.slice(0, 8)}

@@ -24,24 +24,33 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bw-border mb-6 mx-auto max-w-[1100px] mt-4">
-      <div className="flex items-center justify-between px-4 py-3">
-        <Link href="/" className="font-semibold">
+    <nav className="sticky top-4 z-40 mx-auto max-w-[1100px] rounded-2xl glass-panel mb-6 transition-all duration-300">
+      <div className="flex items-center justify-between px-6 py-3">
+        <Link
+          href="/"
+          className="font-semibold hover:opacity-80 transition-opacity"
+        >
           <img
             src="/BudgetWiseLogo.png"
             alt="BudgetWise Logo"
-            className="h-15 w-auto"
+            className="h-10 w-auto"
           />
         </Link>
         <div className="flex gap-4 text-m flex-wrap items-center">
           {loading ? (
             // Show loading state while checking auth
-            <div className="text-sm text-gray-500">Loading...</div>
+            <div className="text-sm text-[var(--color-text-muted)] animate-pulse">
+              Loading...
+            </div>
           ) : user ? (
             <>
               {/* Show nav links when signed in */}
               {signedInNavLinks.map((l) => (
-                <Link key={l.href} href={l.href} className="hover:underline">
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+                >
                   {l.label}
                 </Link>
               ))}
@@ -49,26 +58,20 @@ export default function Navbar() {
               {/* Profile icon dropdown */}
               <Menu as="div" className="relative inline-block">
                 <Menu.Button
-                  className="flex items-center justify-center w-8 h-8 rounded-full bg-[var(--buttoncolor1)] text-white font-semibold hover:bg-[var(--hovercolor1)] transition-colors"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-[var(--buttoncolor1)] to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all border border-white/10"
                   title="Profile"
                 >
                   {getUserInitial()}
                 </Menu.Button>
-                <Menu.Items
-                  className="absolute right-0 mt-2 w-48 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                  style={{
-                    backgroundColor: "var(--card-bg)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
-                >
-                  <div className="py-1">
+                <Menu.Items className="absolute right-0 mt-2 w-48 rounded-xl shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50 glass-panel overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="p-1">
                     <Menu.Item>
                       {({ active }) => (
                         <Link
                           href="/profile"
                           className={`${
                             active ? "bg-[var(--surface-raised)]" : ""
-                          } block px-4 py-2 text-sm`}
+                          } block px-4 py-2 text-sm rounded-lg transition-colors`}
                           style={{ color: "var(--textcolor1)" }}
                         >
                           Profile
@@ -80,9 +83,10 @@ export default function Navbar() {
                         <button
                           onClick={handleLogout}
                           className={`${
-                            active ? "bg-[var(--surface-raised)]" : ""
-                          } block w-full text-left px-4 py-2 text-sm`}
-                          style={{ color: "var(--textcolor1)" }}
+                            active
+                              ? "bg-red-500/10 text-red-400"
+                              : "text-[var(--textcolor1)]"
+                          } block w-full text-left px-4 py-2 text-sm rounded-lg transition-colors`}
                         >
                           Logout
                         </button>

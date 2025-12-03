@@ -1,30 +1,30 @@
 /* Centralized CSS variables for theming */
 :root {
-  /* Cozy, low-contrast dark palette (overhaul) */
-  --app-bg: #1e1f22; /* app background */
-  --card-bg: #26282c; /* card surface */
-  --surface-raised: #2f3237; /* raised elements / inputs */
+  /* Deep Dark & Vibrant Palette */
+  --app-bg: #121212; /* Slightly Lighter Dark */
+  --card-bg: rgba(255, 255, 255, 0.04); /* Adjusted Glassy Surface */
+  --surface-raised: rgba(255, 255, 255, 0.09); /* Adjusted Lighter Glass */
 
   /* Button / interactive colors */
-  --buttoncolor1: #5b4b8a; /* primary (calm violet) */
-  --buttoncolor2: #3d7d6b; /* accent (muted teal) */
-  --buttoncolor3: #b68b3c; /* tertiary (warm amber) */
-  --hovercolor1: color-mix(in srgb, var(--buttoncolor1) 88%, white 12%);
-  --hovercolor2: color-mix(in srgb, var(--buttoncolor2) 88%, white 12%);
-  --hovercolor3: color-mix(in srgb, var(--buttoncolor3) 88%, white 12%);
+  --buttoncolor1: #9333ea; /* Vibrant Purple */
+  --buttoncolor2: #10b981; /* Vibrant Emerald */
+  --buttoncolor3: #f59e0b; /* Warm Amber */
+  --hovercolor1: #a855f7; /* Lighter Purple */
+  --hovercolor2: #34d399; /* Lighter Emerald */
+  --hovercolor3: #fbbf24; /* Lighter Amber */
 
   /* Status colors */
-  --status-danger: #d95858;
-  --status-warning: #e6b65a;
-  --status-success: #4aa883;
+  --status-danger: #ef4444;
+  --status-warning: #f59e0b;
+  --status-success: #10b981;
 
   /* Text tiers */
-  --textcolor1: #eceef2; /* primary text */
-  --textcolor2: #c9ced6; /* secondary strong */
-  --textcolor3: #a3abb7; /* secondary muted */
-  --secondarytext1: #a3abb7; /* subtle 1 */
-  --secondarytext2: #8b929d; /* subtle 2 */
-  --secondarytext3: #747b85; /* subtle 3 */
+  --textcolor1: #ffffff; /* Pure White */
+  --textcolor2: #e5e7eb; /* Light Gray */
+  --textcolor3: #9ca3af; /* Muted Gray */
+  --secondarytext1: #9ca3af;
+  --secondarytext2: #6b7280;
+  --secondarytext3: #4b5563;
 
   /* Back-compat mapping */
   --color-bg: var(--app-bg);
@@ -38,32 +38,15 @@
   --color-warning: var(--status-warning);
   --color-success: var(--status-success);
 
-  --radius: 12px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.28);
+  --radius: 16px; /* Slightly rounder */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.4); /* Deep diffused shadow */
 
   /* Focus ring + input tokens */
-  --focus-ring-color: color-mix(
-    in oklab,
-    var(--buttoncolor1) 38%,
-    transparent 62%
-  );
+  --focus-ring-color: rgba(147, 51, 234, 0.5);
   --input-bg: var(--surface-raised);
   --input-border: rgba(255, 255, 255, 0.1);
-  --input-border-hover: rgba(255, 255, 255, 0.16);
-  --input-text: var(--textcolor1);
-  --input-placeholder: var(--secondarytext2);
-  --input-ring: 0 0 0 3px var(--focus-ring-color);
-
-  /* Focus ring + input tokens (dark mapping lives above; keep same here) */
-  --focus-ring-color: color-mix(
-    in oklab,
-    var(--buttoncolor1) 38%,
-    transparent 62%
-  );
-  --input-bg: var(--surface-raised);
-  --input-border: rgba(0, 0, 0, 0.06);
-  --input-border-hover: rgba(0, 0, 0, 0.12);
+  --input-border-hover: rgba(255, 255, 255, 0.2);
   --input-text: var(--textcolor1);
   --input-placeholder: var(--secondarytext2);
   --input-ring: 0 0 0 3px var(--focus-ring-color);
@@ -116,7 +99,18 @@
   color: var(--color-text);
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+.bw-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 .bw-card-muted {
   background: var(--color-surface-2);
@@ -136,18 +130,30 @@
 .bw-table {
   border-collapse: separate;
   border-spacing: 0;
+  width: 100%;
 }
 .bw-table th {
   position: sticky;
   top: 0;
-  backdrop-filter: saturate(120%) blur(6px);
+  background: var(--surface-raised);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--textcolor3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-.bw-table td,
-.bw-table th {
-  border-color: rgba(255, 255, 255, 0.08);
+.bw-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: var(--textcolor1);
 }
-.bw-table tr:nth-child(even) td {
-  background: color-mix(in oklab, var(--color-surface) 92%, white 8%);
+.bw-table tr:last-child td {
+  border-bottom: none;
+}
+.bw-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 /* -------------------------------------------------- */
